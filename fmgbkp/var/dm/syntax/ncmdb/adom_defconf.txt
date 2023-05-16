@@ -1,0 +1,1 @@
+### Empty default config for any new type adom without predefined config

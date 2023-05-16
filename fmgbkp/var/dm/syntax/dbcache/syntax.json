@@ -1,0 +1,259 @@
+{
+	"macro": {
+		"DOM_GLOBAL":  1,
+		"DOM_VDOM":    2,
+	},
+	"obj": {
+		"__hitcount_value": {
+			"category": 50002,
+			"domain": "$DOM_GLOBAL",
+			"type": "table",
+			"mkey": "uuid",
+			"attr": {
+				"uuid": {
+					"type": "string", "sz": 36 
+				},
+				"uuid1": {
+					"type": "int64",
+					"default": 0
+				},
+				"uuid2": {
+					"type": "int64",
+					"default": 0
+				},
+				"policyid": {
+					"type": "int32",
+					"default": 0
+				},
+				"policyname": {
+					"type": "string", "sz": 64 
+				},
+				"bytes": {
+					"type": "int64",
+					"default": 0
+				},
+				"pkts": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"hit_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"session_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"active_session": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_sess": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_sess": {
+					"type": "int32",
+					"default": 0
+				}
+			}
+		},
+		"__hitcount6_value": {
+			"category": 50003,
+			"domain": "$DOM_GLOBAL",
+			"type": "table",
+			"mkey": "uuid",
+			"attr": {
+				"uuid": {
+					"type": "string", "sz": 36 
+				},
+				"uuid1": {
+					"type": "int64",
+					"default": 0
+				},
+				"uuid2": {
+					"type": "int64",
+					"default": 0
+				},
+				"policyid": {
+					"type": "int32",
+					"default": 0
+				},
+				"policyname": {
+					"type": "string", "sz": 64 
+				},
+				"bytes": {
+					"type": "int64",
+					"default": 0
+				},
+				"pkts": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"hit_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"session_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"active_session": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_sess": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_sess": {
+					"type": "int32",
+					"default": 0
+				}
+
+			}
+		},
+		"__hitcount_p_value": {
+			"category": 50004,
+			"domain": "$DOM_GLOBAL",
+			"type": "table",
+			"mkey": "uuid",
+			"attr": {
+				"uuid": {
+					"type": "string", "sz": 36 
+				},
+				"uuid1": {
+					"type": "int64",
+					"default": 0
+				},
+				"uuid2": {
+					"type": "int64",
+					"default": 0
+				},
+				"policyid": {
+					"type": "int32",
+					"default": 0
+				},
+				"policyname": {
+					"type": "string", "sz": 64 
+				},
+				"bytes": {
+					"type": "int64",
+					"default": 0
+				},
+				"pkts": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"hit_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"session_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"active_session": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_sess": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_sess": {
+					"type": "int32",
+					"default": 0
+				}
+			}
+		},
+		"__hitcount_s_value": {
+			"category": 50005,
+			"domain": "$DOM_GLOBAL",
+			"type": "table",
+			"mkey": "uuid",
+			"attr": {
+				"uuid": {
+					"type": "string", "sz": 36 
+				},
+				"uuid1": {
+					"type": "int64",
+					"default": 0
+				},
+				"uuid2": {
+					"type": "int64",
+					"default": 0
+				},
+				"policyid": {
+					"type": "int32",
+					"default": 0
+				},
+				"policyname": {
+					"type": "string", "sz": 64 
+				},
+				"bytes": {
+					"type": "int64",
+					"default": 0
+				},
+				"pkts": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_hit": {
+					"type": "int32",
+					"default": 0
+				},
+				"hit_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"session_count": {
+					"type": "int64",
+					"default": 0
+				},
+				"active_session": {
+					"type": "int64",
+					"default": 0
+				},
+				"first_sess": {
+					"type": "int32",
+					"default": 0
+				},
+				"last_sess": {
+					"type": "int32",
+					"default": 0
+				}
+			}
+		}
+	}
+}
+
+

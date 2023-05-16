@@ -1,0 +1,224 @@
+{
+"macro": {
+	"GLOBAL_OBJ":   1,
+	"VDOM_OBJ":     2,
+
+	"RTM_DATA_T_INTEGER":		2,
+	"RTM_DATA_T_UNSIGNED":		66,
+	"RTM_DATA_T_COUNTER":		65,
+	"RTM_DATA_T_COUNTER64":		70,
+	"RTM_DATA_T_GAUGE":		66,
+	"RTM_DATA_T_REAL":		9,
+	"RTM_DATA_T_STRING":		4,
+	"RTM_DATA_T_CONTAINER":		192,
+
+	"REST_AGENT_T_STATUS":		0,
+	"REST_AGENT_T_MONITOR":		1,
+	"REST_AGENT_T_HISTORY":		2,
+
+	"REST_AGENT_SCOPE_LIMIT":	0,
+	"REST_AGENT_SCOPE_ALLDEV":	1,
+
+	"PROXY_PAYLOAD_T_JSON":		0,
+	"PROXY_PAYLOAD_T_STRING":	1,
+
+	"ENABLE_OPTIONS": { 
+		"disable":	0,
+		"enable":	1
+	}
+},
+
+"obj": {
+
+"/rtm/monitor": {
+	"domain": "$GLOBAL_OBJ",
+	"type": "table",
+	"mkey": "name",
+	"attr": {
+		"name": {
+			"type": "string", "sz": 64
+		},
+		"type": {
+			"type": "int32",
+			"opts": {
+				"integer": "$RTM_DATA_T_INTEGER",
+				"unsigned": "$RTM_DATA_T_UNSIGNED",
+				"counter": "$RTM_DATA_T_COUNTER",
+				"counter64": "$RTM_DATA_T_COUNTER64",
+				"gauge": "$RTM_DATA_T_GAUGE"
+			},
+			"default": 0
+		},
+		"value": {
+			"type": "user", "sz": 128
+		},
+		"idx": {
+			"type": "string", "sz": 128
+		},
+		"name-oid": {
+			"type": "string", "sz": 128
+		},
+		"max": {
+			"type": "string", "sz": 128
+		}
+	}
+},
+
+"/rest/monitor": {
+	"domain": "$GLOBAL_OBJ",
+	"type": "table",
+	"mkey": "name",
+	"attr": {
+		"name": {
+			"type": "string", "sz": 64
+		},
+		"type": {
+			"type": "int32",
+			"opts": {
+				"integer": "$RTM_DATA_T_INTEGER",
+				"unsigned": "$RTM_DATA_T_UNSIGNED",
+				"counter": "$RTM_DATA_T_COUNTER",
+				"counter64": "$RTM_DATA_T_COUNTER64",
+				"gauge": "$RTM_DATA_T_GAUGE",
+				"real": "$RTM_DATA_T_REAL",
+				"string": "$RTM_DATA_T_STRING",
+				"container": "$RTM_DATA_T_CONTAINER"
+			},
+			"default": 0
+		},
+		"atype": {
+			"type": "int32",
+			"opts": {
+				"status": "$REST_AGENT_T_STATUS",
+				"monitor": "$REST_AGENT_T_MONITOR",
+				"history": "$REST_AGENT_T_HISTORY"
+			},
+			"default": 0
+		},
+		"post-url": {
+			"type": "string", "sz": 1024
+		},
+		"method": {
+			"type": "string", "sz": 1024
+		},
+		"url": {
+			"type": "string", "sz": 1024
+		},
+		"payload": {
+			"type": "string", "sz": 1024
+		},
+		"prefix": {
+			"type": "string", "sz": 1024
+		},
+		"payload-type": {
+			"type": "int32",
+			"opts": {
+				"json": "$PROXY_PAYLOAD_T_JSON",
+				"string": "$PROXY_PAYLOAD_T_STRING"
+			},
+			"default": 0
+		}
+
+	}
+},
+
+"/rtm/profile": {
+	"domain": "$VDOM_OBJ",
+	"type": "table",
+	"mkey": "name",
+	"attr": {
+		"name": {
+			"type": "string", "sz": 64
+		}
+	},
+	"subobj": {
+		"chart": {
+			"type": "table",
+			"attr": {
+				"name": {
+					"type": "string", "sz": 256
+				},
+				"monitor": {
+					"type": "string", "sz": 256,
+					"ref": ["/rtm/monitor"]
+				},
+				"pinterval": {
+					"type": "int32"
+				},
+				"cinterval": {
+					"type": "int32"
+				},
+				"idx-name": {
+					"type": "string", "sz": 128
+				},
+				/* Later we could add more threshode value like min/max, when it is 0, then it means disable. */
+				"threshold": {
+					"type": "int32"
+				}
+			}
+		}
+	}
+},
+
+"/rest/profile": {
+	"domain": "$VDOM_OBJ",
+	"type": "table",
+	"mkey": "name",
+	"attr": {
+		"name": {
+			"type": "string", "sz": 64
+		},
+		"scope": {
+			"type": "int32",
+			"opts": {
+				"limit": "$REST_AGENT_SCOPE_LIMIT",
+				"alldev": "$REST_AGENT_SCOPE_ALLDEV"
+			},
+			"default": 0
+		}
+	},
+	"subobj": {
+		"task": {
+			"type": "table",
+			"attr": {
+				"name": {
+					"type": "string", "sz": 256
+				},
+				"monitor": {
+					"type": "string", "sz": 256,
+					"ref": ["rest/monitor"]
+				},
+				"idx-name": {
+					"type": "string", "sz": 128
+				},
+
+				"check-interval": {
+					"type": "int32"
+				},
+				"post-interval": {
+					"type": "int32"
+				},
+				"max-cache": {
+					"type": "int32"
+				},
+				"timeout": {
+					"type": "int32"
+				},
+				"polling-only": {
+					"type": "int32",
+					"opts": "$ENABLE_OPTIONS"
+				},
+				"no-etag-check": {
+					"type": "int32",
+					"opts": "$ENABLE_OPTIONS"
+				}
+			}
+		}
+	}
+}
+
+
+}
+}
+
+

@@ -1,0 +1,481 @@
+
+config sql-report dataset
+
+    edit "fdd-Attacks-Timeline"
+        set description "All Attacks by Time Period"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select $flex_timescale(timestamp) as timescale, sum(total) as total, description from ###(select $flex_timestamp as timestamp, count(*) as total, description from $log where $filter and description is not null group by timestamp, description order by timestamp desc)### t group by timescale, description order by timescale desc"
+        set protected enable
+    next
+
+    edit "fdd-Attackers-Timeline"
+        set description "All Attackers by Time Period"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select $flex_timescale(timestamp) as timescale, sum(total) as total, sip from ###(select $flex_timestamp as timestamp, count(*) as total, sip from $log where $filter and ipstr(`sip`) is not null group by timestamp, sip order by timestamp desc)### t group by timescale, sip order by timescale desc"
+        set protected enable
+    next
+
+    edit "fdd-Top-Attack-Types"
+        set description "Top Attack Types List"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select type, description, count(*) as total from $log where $filter and description is not null group by type, description order by total desc"
+        set protected enable
+    next
+
+    edit "fdd-Top-Attacks"
+        set description "Top Attacks"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select sip, description, count(*) as total from $log where $filter and ipstr(`sip`) is not null group by sip, description order by total desc"
+        set protected enable
+    next
+
+    edit "fdd-Top-Destinations-by-Type"
+        set description "Top Attack Destination List"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select type, dip, count(*) as total from $log where $filter and description is not null and ipstr(`dip`) is not null group by type, dip order by total desc"
+        set protected enable
+    next
+
+    edit "fdd-Top-Destinations"
+        set description "Top Destination"
+        set log-type attack
+        set dev-type FortiDDoS
+        set query "select dip, description, count(*) as total from $log where $filter and ipstr(`dip`) is not null group by dip, description order by total desc"
+        set protected enable
+    next
+
+end
+
+
+config sql-report chart
+
+    edit "fdd-Attacks-Timeline"
+        set disp-name "Attacks by Time Period"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Attacks Timeline"
+        set dataset "fdd-Attacks-Timeline"
+        set chart-type bar
+        set order-by "timescale"
+        config table-columns
+            edit 1
+                set header "Time Stamp"
+                set data-binding "timescale"
+                set column-attr time
+                set data-top 0
+            next
+            edit 2
+                set header "Description"
+                set data-type drilldown
+                set data-binding "description"
+                set data-top 10
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fdd-Attackers-Timeline"
+        set disp-name "Attackers by Time Period"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Attackers Timeline"
+        set dataset "fdd-Attackers-Timeline"
+        set chart-type bar
+        set order-by "timescale"
+        config table-columns
+            edit 1
+                set header "Time Stamp"
+                set data-binding "timescale"
+                set column-attr time
+                set data-top 0
+            next
+            edit 2
+                set header "Attacker"
+                set data-type drilldown
+                set data-binding "sip"
+                set data-top 10
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fdd-Top20-Attacks"
+        set disp-name "Top 20 Attacks"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Top 20 Attacks"
+        set dataset "fdd-Top-Attacks"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Attack Source"
+                set data-binding "sip"
+                set data-top 20
+            next
+            edit 2
+                set header "Description"
+                set data-type drilldown
+                set data-binding "description"
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fdd-Top20-Attack-Types"
+        set disp-name "Top 20 Attack Types"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Top 20 Attack Types"
+        set dataset "fdd-Top-Attack-Types"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Type"
+                set data-binding "type"
+                set data-top 20
+            next
+            edit 2
+                set header "Description"
+                set data-type drilldown
+                set data-binding "description"
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+
+    edit "fdd-Top20-Destinations"
+        set disp-name "Top 20 Destinations"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Top 20 Destinations"
+        set dataset "fdd-Top-Destinations"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Destination"
+                set data-binding "dip"
+                set data-top 20
+            next
+            edit 2
+                set header "Description"
+                set data-type drilldown
+                set data-binding "description"
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+            next
+        end
+        set protected enable
+    next
+    edit "fdd-Top20-Destinations-by-Type"
+        set disp-name "Top 20 Destinations by Type"
+        set category "FortiDDoS"
+        set dev-type FortiDDoS
+        set description "Top 20 Destinations by Type"
+        set dataset "fdd-Top-Destinations-by-Type"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Type"
+                set data-binding "type"
+                set data-top 20
+            next
+            edit 2
+                set header "Destination"
+                set data-type drilldown
+                set data-binding "dip"
+            next
+            edit 3
+                set header "Total"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+
+end
+
+config sql-report macro
+    edit "Top-Attack-Source-IP"
+        set disp-name "Source IP of top attack"
+        set description "Source IP of top attack"
+        set dataset "fdd-Top-Attacks"
+        set data-binding "sip"
+        set dev-type FortiDDoS
+        set protected enable
+    next
+
+    edit "Top-Attack-Destination"
+        set disp-name "Top attack destination"
+        set description "Top attack destination"
+        set dataset "fdd-Top-Destinations"
+        set data-binding "dip"
+        set dev-type FortiDDoS
+        set protected enable
+    next
+end
+
+config sql-report layout
+    edit 1000050001
+        set is-template enable
+        set dev-type FortiDDoS
+        set category "FortiDDoS"
+        set title "Template - FortiDDos Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Attacks and attackers by time period. Top 20 attacks, attack types, destinations and destinations by type."
+        set body "<fazchart mkey=\"fdd-Attacks-Timeline\" title=\"Attacks by Time Period\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Attackers-Timeline\" title=\"Attackers by Time Period\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Attacks\" title=\"Top 20 Attacks\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Attack-Types\" title=\"Top 20 Attack Types\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Destinations\" title=\"Top 20 Destinations\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Destinations-by-Type\" title=\"Top 20 Destinations by Type\" width=\"100%\"></fazchart>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90111
+                next
+                edit 90203
+                next
+            end
+        set protected enable
+    next
+end
+
+config sql-report schedule
+     edit "1000050001"
+         set is-template enable
+         set description "FortiDDoS Default Report"
+         set schedule-type every-n-weeks
+         set schedule-frequency 1
+         set schedule-valid-start 00:00 2012/10/01
+         set time-period last-7-days
+         set display-table-contents enable
+         set output-format pdf
+         set dev-type FortiDDoS
+         set schedule-color "#5484ED"
+         config report-layout
+             edit 1000050001
+             next
+         end
+         config devices
+            edit All_FortiDDoS
+            next
+         end
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90111
+        set folder-name "FortiDDoS Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90203
+        set folder-name "SOC Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end
+
+config sql-report layout
+    edit 1
+        set  is-template disable
+        set dev-type FortiDDoS
+        set category "FortiDDoS"
+        set title "FortiDDos Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Attacks and attackers by time period. Top 20 attacks, attack types, destinations and destinations by type."
+        set body "<fazchart mkey=\"fdd-Attacks-Timeline\" title=\"Attacks by Time Period\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Attackers-Timeline\" title=\"Attackers by Time Period\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Attacks\" title=\"Top 20 Attacks\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Attack-Types\" title=\"Top 20 Attack Types\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Destinations\" title=\"Top 20 Destinations\" width=\"100%\"></fazchart><fazchart mkey=\"fdd-Top20-Destinations-by-Type\" title=\"Top 20 Destinations by Type\" width=\"100%\"></fazchart>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 111
+                next
+                edit 203
+                next
+            end
+        set  protected disable
+    next
+end
+
+config sql-report schedule
+    edit 1
+         set  is-template disable
+         set description "FortiDDoS Default Report"
+         set schedule-type every-n-weeks
+         set schedule-frequency 1
+         set schedule-valid-start 00:00 2012/10/01
+         set time-period last-7-days
+         set display-table-contents enable
+         set output-format pdf
+         set dev-type FortiDDoS
+         set schedule-color "#5484ED"
+         config report-layout
+         edit 1
+             next
+         end
+         config devices
+            edit All_FortiDDoS
+            next
+         end
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default"
+        set protected disable
+    next
+    edit 111
+        set folder-name "FortiDDoS Reports"
+        set parent-id 99999
+        set protected disable
+    next
+    edit 203
+        set folder-name "SOC Reports"
+        set parent-id 99999
+        set protected disable
+    next
+    edit 205
+        set folder-name "Outbreak Alert Reports"
+        set parent-id 99999
+        set protected disable
+    next
+end
+config sql-report schedule
+end

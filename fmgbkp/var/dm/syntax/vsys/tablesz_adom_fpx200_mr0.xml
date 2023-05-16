@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<pkgobj v="1.0">
+<version v="200" mr="0" branchpt="49"/>
+	<objs tag="adom-obj">
+		<obj name="webfilter ftgd-local-cat" id="38" tablesz="52"/>
+		<obj name="webfilter urlfilter" id="47" tablesz="1000"/>
+		<obj name="webfilter ftgd-local-rating" id="51" tablesz="12000"/>
+		<obj name="spamfilter bword" id="56" tablesz="256"/>
+		<obj name="spamfilter dnsbl" id="60" tablesz="256"/>
+		<obj name="spamfilter mheader" id="64" tablesz="256"/>
+		<obj name="spamfilter iptrust" id="67" tablesz="256"/>
+		<obj name="system fortiguard" id="70" tablesz="0"/>
+		<obj name="ips custom" id="85" tablesz="1024"/>
+		<obj name="ips global" id="86" tablesz="0"/>
+		<obj name="system dhcp server" id="135" tablesz="256"/>
+		<obj name="firewall address" id="140" tablesz="100000"/>
+		<obj name="firewall address6" id="141" tablesz="100000"/>
+		<obj name="firewall addrgrp" id="142" tablesz="20000"/>
+		<obj name="user adgrp" id="255" tablesz="8192"/>
+		<obj name="user radius" id="145" tablesz="10"/>
+		<obj name="user ldap" id="146" tablesz="64"/>
+		<obj name="user local" id="147" tablesz="5000"/>
+		<obj name="user peer" id="148" tablesz="5000"/>
+		<obj name="user peergrp" id="149" tablesz="256"/>
+		<obj name="user group" id="152" tablesz="800"/>
+		<obj name="vpn ipsec phase1-interface" id="160" tablesz="256"/>
+		<obj name="vpn ipsec phase2-interface" id="161" tablesz="256"/>
+		<obj name="firewall service custom" id="167" tablesz="4096"/>
+		<obj name="firewall service group" id="168" tablesz="1000"/>
+		<obj name="firewall schedule onetime" id="170" tablesz="5000"/>
+		<obj name="firewall schedule recurring" id="171" tablesz="1024"/>
+		<obj name="firewall ippool" id="172" tablesz="256"/>
+		<obj name="firewall vip" id="173" tablesz="256"/>
+		<obj name="firewall vipgrp" id="175" tablesz="256"/>
+		<obj name="firewall addrgrp6" id="179" tablesz="8192"/>
+		<obj name="firewall policy" id="181" pkg="1" tablesz="200000"/>
+		<obj name="ips sensor" id="288" tablesz="1000"/>
+		<obj name="log custom-field" id="292" tablesz="1000"/>
+		<obj name="user tacacs+" id="293" tablesz="10"/>
+		<obj name="ips settings" id="1026" tablesz="0"/>
+		<obj name="application list" id="1028" tablesz="1000"/>
+		<obj name="dlp sensor" id="1038" tablesz="1500"/>
+		<obj name="vpn ssl web portal" id="1054" tablesz="256"/>
+		<obj name="system replacemsg-image" id="1075" tablesz="31"/>
+		<obj name="system replacemsg-group" id="1076" tablesz="200"/>
+		<obj name="webfilter content" id="1327" tablesz="2000"/>
+		<obj name="webfilter content-header" id="1329" tablesz="256"/>
+		<obj name="firewall schedule group" id="1338" tablesz="256"/>
+		<obj name="vpn ssl web host-check-software" id="1370" tablesz="256"/>
+		<obj name="webfilter profile" id="1413" tablesz="20000"/>
+		<obj name="antivirus profile" id="1420" tablesz="500"/>
+		<obj name="spamfilter profile" id="1433" tablesz="256"/>
+		<obj name="firewall profile-protocol-options" id="1440" tablesz="500"/>
+		<obj name="firewall profile-group" id="1453" tablesz="20000"/>
+		<obj name="system object-tag" id="150" tablesz="4096"/>
+		<obj name="user fortitoken" id="184" tablesz="256"/>
+		<obj name="web-proxy forward-server" id="273" tablesz="256"/>
+		<obj name="dlp filepattern" id="335" tablesz="12500"/>
+		<obj name="dlp fp-sensitivity" id="337" tablesz="128"/>
+		<obj name="icap profile" id="344" tablesz="0"/>
+		<obj name="user fsso" id="321" tablesz="5"/>
+		<obj name="system sms-server" id="390" tablesz="512"/>
+		<obj name="spamfilter bwl" id="397" tablesz="256"/>
+		<obj name="user password-policy" id="408" tablesz="256"/>
+		<obj name="user fsso-polling" id="409" tablesz="100"/>
+		<obj name="firewall ippool6" id="420" tablesz="256"/>
+		<obj name="firewall service category" id="384" tablesz="10000"/>
+		<obj name="system geoip-override" id="467" tablesz="512"/>
+		<obj name="application custom" id="474" tablesz="256"/>
+		<obj name="vpn ssl web realm" id="503" tablesz="256"/>
+		<obj name="web-proxy forward-server-group" id="1526" tablesz="256"/>
+		<obj name="user pop3" id="1561" tablesz="10"/>
+		<obj name="web-proxy profile" id="1560" tablesz="256"/>
+		<obj name="firewall ssl-ssh-profile" id="1563" tablesz="500"/>
+		<obj name="system custom-language" id="1584" tablesz="512"/>
+		<obj name="log threat-weight" id="1610" tablesz="0"/>
+		<obj name="system geoip-country" id="1629" tablesz="0"/>
+		<obj name="webfilter categories" id="1630" tablesz="0"/>
+		<obj name="firewall shaping-policy" id="1640" pkg="1" tablesz="256"/>
+		<obj name="firewall central-snat-map" id="1642" pkg="1" tablesz="256"/>
+		<obj name="dnsfilter profile" id="1693" tablesz="256"/>
+		<obj name="web-proxy wisp" id="1712" tablesz="256"/>
+		<obj name="user krb-keytab" id="1734" tablesz="256"/>
+		<obj name="application categories" id="1759" tablesz="0"/>
+		<obj name="firewall shaping-profile" id="1765" tablesz="512"/>
+		<obj name="dnsfilter domain-filter" id="1879" tablesz="256"/>
+		<obj name="firewall internet-service" id="1886" tablesz="0"/>
+		<obj name="firewall internet-service-custom" id="1829" tablesz="256"/>
+		<obj name="firewall proxy-address" id="1841" tablesz="24576"/>
+		<obj name="firewall proxy-addrgrp" id="1843" tablesz="4096"/>
+		<obj name="system sdn-connector" id="1888" tablesz="16"/>
+		<obj name="user domain-controller" id="2000" tablesz="256"/>
+		<obj name="system external-resource" id="2028" tablesz="512"/>
+		<obj name="ssh-filter profile" id="2059" tablesz="256"/>
+		<obj name="firewall ssh local-ca" id="2068" tablesz="256"/>
+		<obj name="cifs domain-controller" id="1985" tablesz="256"/>
+		<obj name="cifs profile" id="1986" tablesz="256"/>
+		<obj name="user saml" id="2590" tablesz="256"/>
+		<obj name="credential-store domain-controller" id="2759" tablesz="256"/>
+		<obj name="firewall decrypted-traffic-mirror" id="2820" tablesz="256"/>
+		<obj name="web-proxy pac-policy" id="3042" pkg="1" tablesz="256"/>
+		<obj name="web-proxy isolator-server" id="3043" tablesz="256"/>
+		<obj name="image-analyzer profile" id="3044" tablesz="256"/>
+		<obj name="icap remote-server" id="3045" tablesz="256"/>
+	</objs>
+</pkgobj>

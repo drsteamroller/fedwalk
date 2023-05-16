@@ -1,0 +1,2545 @@
+{
+	"macro": {
+		"ADOM_TYPE_OPTIONS": {
+			"ems": 0,
+			"gms": 1,
+			"provider": 2 
+		},
+		"ADOM_FLAGS_OPTIONS": {
+			"migration": 1,
+			"db_export": 4,
+			"no_vpn_console": 8,
+			"backup": 16,
+			"other_devices": 32,
+			"is_autosync": 512,
+			"per_device_wtp": 1024,
+			"policy_check_on_install": 4096,
+			"install_on_policy_check_fail": 8192,
+			"auto_push_cfg": 16384,
+			"per_device_fsw": 65536 
+		},
+		"ADOM_RESTRICTED_TYPE_OPTIONS": {
+			"fos": 1,
+			"fsw": 512,
+			"foc": 2,
+			"fml": 4,
+			"faz": 128,
+			"fwb": 16,
+			"fch": 8,
+			"fct": 64,
+			"log": 32,
+			"fmg": 1024,
+			"fsa": 256,
+			"fdd": 2048,
+			"fac": 4096,
+			"fpx": 8192,
+			"fna": 16384,
+			"ffw": 32768,
+			"fsr": 65536,
+			"fad": 131072,
+			"fdc": 262144,
+			"fap": 524288,
+			"fxt": 1048576,
+			"fts": 2097152,
+			"fai": 4194304,
+			"fwc": 8388608,
+			"fis": 16777216,
+			"fed": 33554432,
+			"fabric": 268435455 
+		},
+		"OS_VER_OPTIONS": {
+			"unknown": -1,
+			"0.0": 0,
+			"1.0": 1,
+			"2.0": 2,
+			"3.0": 3,
+			"4.0": 4,
+			"5.0": 5,
+			"6.0": 6,
+			"7.0": 7,
+			"8.0": 8,
+			"9.0": 9 
+		},
+		"OS_TYPE_OPTIONS": {
+			"unknown": -1,
+			"fos": 0,
+			"fsw": 1,
+			"foc": 2,
+			"fml": 3,
+			"faz": 4,
+			"fwb": 5,
+			"fch": 6,
+			"fct": 7,
+			"log": 8,
+			"fmg": 9,
+			"fsa": 10,
+			"fdd": 11,
+			"fac": 12,
+			"fpx": 13,
+			"fna": 14,
+			"ffw": 15,
+			"fsr": 16,
+			"fad": 17,
+			"fdc": 18,
+			"fap": 19,
+			"fxt": 20,
+			"fts": 21,
+			"fai": 22,
+			"fwc": 23,
+			"fis": 24,
+			"fed": 25 
+		},
+		"GRP_TYPE_OPTIONS": {
+			"normal": 0,
+			"default": 1,
+			"auto": 2,
+			"cluster": 3 
+		},
+		"GRP_CLUSTER_TYPE_OPTIONS": {
+			"unknown": -1,
+			"vwan": 0,
+			"sase": 1 
+		},
+		"DEV_FLAGS_OPTIONS": {
+			"has_hdd": 1,
+			"vdom_enabled": 2,
+			"discover": 8,
+			"reload": 16,
+			"interim_build": 1024,
+			"offline_mode": 4096,
+			"backup_mode": 131072,
+			"is_model": 262144,
+			"fips_mode": 524288,
+			"ip-conflict": 268435456,
+			"faz-autosync": 536870912,
+			"linked_to_model": 67108864,
+			"azure_vwan_nva": 8589934592,
+			"fgsp_configured": 17179869184,
+			"need_reset": 34359738368,
+			"cnf_mode": 68719476736,
+			"sase_managed": 137438953472 
+		},
+		"DEV_AUTO_MGMT_OPTIONS": {
+			"auto-push": 1,
+			"auto-pull": 2,
+			"keep-psk": 4,
+			"dev-register-act": 16,
+			"dev-online-act": 32 
+		},
+		"DEV_ROLE_OPTIONS": {
+			"master": 0,
+			"ha-slave": 1,
+			"autoscale-slave": 2 
+		},
+		"MGMT_MODE_OPTIONS": {
+			"unreg": 0,
+			"fmg": 1,
+			"faz": 2,
+			"fmgfaz": 3 
+		},
+		"CONN_MODE_OPTIONS": {
+			"active": 0,
+			"passive": 1 
+		},
+		"VDOM_OPMODE_OPTIONS": {
+			"nat": 1,
+			"transparent": 2 
+		},
+		"VDOM_VDOM_TYPE_OPTIONS": {
+			"traffic": 1,
+			"admin": 2 
+		},
+		"VDOM_FLAGS_OPTIONS": {
+			"ip-conflict": 2 
+		},
+		"DB_STATUS_OPTIONS": {
+			"unknown": 0,
+			"nomod": 1,
+			"mod": 2 
+		},
+		"CONF_STATUS_OPTIONS": {
+			"unknown": 0,
+			"insync": 1,
+			"outofsync": 2 
+		},
+		"DM_ST_OPTIONS": {
+			"none": 0,
+			"unknown": 1,
+			"checkedin": 2,
+			"inprogress": 3,
+			"installed": 4,
+			"aborted": 5,
+			"sched": 6,
+			"retry": 7,
+			"canceled": 8,
+			"pending": 9,
+			"retrieved": 10,
+			"changed_conf": 11,
+			"sync_fail": 12,
+			"timeout": 13,
+			"rev_revert": 14,
+			"auto_updated": 15 
+		},
+		"CONN_STATUS_OPTIONS": {
+			"UNKNOWN": 0,
+			"up": 1,
+			"down": 2 
+		},
+		"HA_MODE_OPTIONS": {
+			"standalone": 0,
+			"AP": 1,
+			"AA": 2,
+			"ELBC": 3,
+			"DUAL": 4,
+			"fmg-enabled": 5,
+			"autoscale": 6,
+			"unknown": 7 
+		},
+		"INTF_MODE_OPTIONS": {
+			"unknown": 0,
+			"static": 1,
+			"dhcp": 2,
+			"pppoe": 3 
+		},
+		"INTF_DUPLEX_OPTIONS": {
+			"unknown": 0,
+			"half": 1,
+			"full": 2,
+			"auto": 3 
+		},
+		"ENABLE_OPTIONS": {
+			"disable": 0,
+			"enable": 1 
+		},
+		"SCRIPT_TYPE_OPTIONS": {
+			"cli": 1,
+			"tcl": 2,
+			"cligrp": 3 
+		},
+		"SRPT_SCHEDULE_TYPE_OPTIONS": {
+			"auto": 1,
+			"onetime": 2,
+			"daily": 3,
+			"weekly": 4,
+			"monthly": 4 
+		},
+		"SOURCE_OPTIONS": {
+			"fmg": 0,
+			"faz": 1 
+		},
+		"SCRIPT_TARGET_OPTIONS": {
+			"device_database": 0,
+			"remote_device": 1,
+			"adom_database": 2 
+		},
+		"WEEK_DAY_OPTIONS": {
+			"unknown": -1,
+			"sun": 0,
+			"mon": 1,
+			"tue": 2,
+			"wed": 3,
+			"thu": 4,
+			"fri": 5,
+			"sat": 6 
+		},
+		"SCRIPT_FL_OSTYPE_OPTIONS": {
+			"unknown": -1,
+			"fos": 0 
+		},
+		"SCRIPT_FL_OSVER_OPTIONS": {
+			"unknown": -1,
+			"4.00": 400,
+			"5.00": 500,
+			"6.00": 600 
+		},
+		"HA_MEMB_ROLE": {
+			"slave": 0,
+			"master": 1 
+		},
+		"HA_MEMB_FLAGS": {
+			"chassis_member": 1,
+			"is_model": 2 
+		},
+		"FOSLIC_TYPE_OPTIONS": {
+			"temporary": 0,
+			"trial": 1,
+			"regular": 2,
+			"trial_expired": 3 
+		},
+		"FOSLIC_UTM_OPTIONS": {
+			"fw": 1,
+			"av": 2,
+			"ips": 4,
+			"app": 8,
+			"url": 16,
+			"utm": 32,
+			"fwb": 64 
+		},
+		"CLUSTER_TYPE_OPTIONS": {
+			"ha": 0,
+			"autoscale": 1 
+		},
+		"CLUSTER_FLAGS_OPTIONS": {
+			"is_model": 1 
+		},
+		"ONBOARD_RULE_TYPE_OPTIONS": {
+			"maintenance": 1,
+			"template": 2 
+		},
+		"ONBOARD_RULE_FLAGS_OPTIONS": {
+			"specify-oldsn": 1,
+			"retrieve": 2 
+		}
+	},
+	"obj": {
+		"device": {
+			"category": 0,
+			"canon_name": "device",
+			"type": "table",
+			"meta fields": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"mgmt_uuid": {
+					"type": "string",
+					"sz": 36,
+					"read_only": 1 
+				},
+				"sn": {
+					"type": "string",
+					"sz": 16,
+					"read_only": 1 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"platform_str": {
+					"type": "string",
+					"sz": 32,
+					"read_only": 1 
+				},
+				"os_type": {
+					"type": "int32",
+					"opts": "$OS_TYPE_OPTIONS",
+					"default": -1,
+					"read_only": 1 
+				},
+				"os_ver": {
+					"type": "int32",
+					"opts": "$OS_VER_OPTIONS",
+					"default": -1,
+					"read_only": 1 
+				},
+				"mgmt_mode": {
+					"type": "int32",
+					"opts": "$MGMT_MODE_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"conn_mode": {
+					"type": "int32",
+					"opts": "$CONN_MODE_OPTIONS",
+					"default": 1,
+					"read_only": 1 
+				},
+				"version": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"build": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"branch_pt": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"beta": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"mr": {
+					"type": "int16",
+					"default": -1,
+					"read_only": 1 
+				},
+				"patch": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"maxvdom": {
+					"type": "int32",
+					"default": 10,
+					"read_only": 1 
+				},
+				"av_ver": {
+					"type": "string",
+					"sz": 32,
+					"read_only": 1 
+				},
+				"ips_ver": {
+					"type": "string",
+					"sz": 32,
+					"read_only": 1 
+				},
+				"app_ver": {
+					"type": "string",
+					"sz": 32,
+					"read_only": 1 
+				},
+				"flags": {
+					"type": "uint64",
+					"opts": "$DEV_FLAGS_OPTIONS",
+					"default": 0,
+					"excluded": false 
+				},
+				"adm_usr": {
+					"type": "string",
+					"sz": 36 
+				},
+				"adm_pass": {
+					"type": "passwd",
+					"sz": 128 
+				},
+				"ip": {
+					"type": "string",
+					"sz": 46 
+				},
+				"tunnel_ip": {
+					"type": "string",
+					"sz": 46,
+					"internal": 1,
+					"read_only": 1 
+				},
+				"tunnel_cookie": {
+					"type": "string",
+					"sz": 127,
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt_if": {
+					"type": "string",
+					"sz": 16,
+					"read_only": 1 
+				},
+				"opts": {
+					"type": "uint64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"db_status": {
+					"type": "int32",
+					"opts": "$DB_STATUS_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"conf_status": {
+					"type": "int32",
+					"opts": "$CONF_STATUS_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"last_resync": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"conn_status": {
+					"type": "int32",
+					"opts": "$CONN_STATUS_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"last_checked": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"ha_mode": {
+					"type": "int32",
+					"opts": "$HA_MODE_OPTIONS",
+					"default": 0 
+				},
+				"ha_group_id": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"ha_group_name": {
+					"type": "string",
+					"sz": 48,
+					"read_only": 1 
+				},
+				"dev_status": {
+					"type": "int32",
+					"opts": "$DM_ST_OPTIONS",
+					"default": 1,
+					"read_only": 1 
+				},
+				"checksum": {
+					"type": "string",
+					"sz": 50,
+					"read_only": 1 
+				},
+				"hdisk_size": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"logdisk_size": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"faz.quota": {
+					"type": "uint32" 
+				},
+				"faz.used": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"faz.full_act": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"faz.perm": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"mgt_vdom": {
+					"type": "string",
+					"sz": 63 
+				},
+				"vm_status": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"vm_cpu": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"vm_cpu_limit": {
+					"type": "int16",
+					"read_only": 1 
+				},
+				"vm_mem": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"vm_mem_limit": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"lic_flags": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"lic_region": {
+					"type": "string",
+					"sz": 2,
+					"read_only": 1 
+				},
+				"tab_status": {
+					"type": "string",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"vm_lic_expire": {
+					"type": "uint32",
+					"read_only": 1 
+				},
+				"hostname": {
+					"type": "string",
+					"sz": 127 
+				},
+				"hw_rev_major": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"hw_rev_minor": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"node_flags": {
+					"type": "int32",
+					"internal": 1 
+				},
+				"source": {
+					"type": "int32",
+					"opts": "$SOURCE_OPTIONS",
+					"default": 1,
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[0]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[1]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[2]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[3]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[4]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[5]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[6]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"mgmt.__data[7]": {
+					"type": "int64",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"longitude": {
+					"type": "double" 
+				},
+				"latitude": {
+					"type": "double" 
+				},
+				"location_from": {
+					"type": "string",
+					"sz": 31 
+				},
+				"foslic_type": {
+					"type": "int32",
+					"opts": "$FOSLIC_TYPE_OPTIONS",
+					"default": 0 
+				},
+				"foslic_utm": {
+					"type": "int32",
+					"opts": "$FOSLIC_UTM_OPTIONS",
+					"default": 0,
+					"excluded": false 
+				},
+				"foslic_cpu": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"foslic_ram": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"foslic_inst_time": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"foslic_last_sync": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"foslic_dr_site": {
+					"type": "int32",
+					"opts": "$ENABLE_OPTIONS",
+					"default": 0 
+				},
+				"psk": {
+					"type": "string",
+					"sz": 128 
+				},
+				"fap_cnt": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"fsw_cnt": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"fex_cnt": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"ips_ext": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"prefer_img_ver": {
+					"type": "string",
+					"sz": 32 
+				},
+				"module_sn": {
+					"type": "string",
+					"sz": 16,
+					"read_only": 1 
+				},
+				"role": {
+					"type": "int32",
+					"opts": "$DEV_ROLE_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"prio": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"hyperscale": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"nsxt_service_name": {
+					"type": "string",
+					"sz": 128,
+					"read_only": 1 
+				},
+				"private_key_status": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"private_key": {
+					"type": "string",
+					"sz": 176,
+					"read_only": 1 
+				},
+				"auto_mgmt": {
+					"type": "uint64",
+					"opts": "$DEV_AUTO_MGMT_OPTIONS",
+					"default": 0,
+					"excluded": false,
+					"internal": 1 
+				},
+				"eip": {
+					"type": "string",
+					"sz": 46,
+					"read_only": 1 
+				},
+				"first_tunnel_up": {
+					"type": "int32",
+					"read_only": 1 
+				}
+			},
+			"subobj": {
+				"ha_slave": {
+					"category": 1,
+					"canon_name": "ha_memb",
+					"type": "table",
+					"mkey": "sn",
+					"attr": {
+						"did": {
+							"ref": [ "device\/name" ],
+							"type": "int64",
+							"internal": 1 
+						},
+						"idx": {
+							"type": "int32" 
+						},
+						"prio": {
+							"type": "int32" 
+						},
+						"sn": {
+							"type": "string",
+							"sz": 16 
+						},
+						"name": {
+							"type": "string",
+							"sz": 48 
+						},
+						"status": {
+							"type": "int32" 
+						},
+						"flags": {
+							"type": "int16",
+							"opts": "$HA_MEMB_FLAGS",
+							"default": 0,
+							"internal": 1 
+						},
+						"role": {
+							"type": "int32",
+							"opts": "$HA_MEMB_ROLE",
+							"default": 0 
+						},
+						"conf_status": {
+							"type": "int32" 
+						}
+					}
+				},
+				"vdom": {
+					"category": 22,
+					"canon_name": "devicedomain",
+					"type": "table",
+					"meta fields": 1,
+					"mkey": "name",
+					"attr": {
+						"devid": {
+							"ref": [ "device\/name" ],
+							"type": "int64",
+							"internal": 1 
+						},
+						"name": {
+							"type": "string",
+							"sz": 48 
+						},
+						"rtm_prof_id": {
+							"type": "int32" 
+						},
+						"flags": {
+							"type": "uint32",
+							"opts": "$VDOM_FLAGS_OPTIONS",
+							"default": 0,
+							"internal": 1 
+						},
+						"node_flags": {
+							"type": "int32",
+							"internal": 1 
+						},
+						"opmode": {
+							"type": "int32",
+							"opts": "$VDOM_OPMODE_OPTIONS",
+							"default": 1 
+						},
+						"comments": {
+							"type": "string",
+							"sz": 128 
+						},
+						"tab_status": {
+							"type": "string",
+							"internal": 1 
+						},
+						"ext_flags": {
+							"type": "int32",
+							"internal": 1 
+						},
+						"status": {
+							"type": "string" 
+						},
+						"vpn_id": {
+							"type": "int32" 
+						},
+						"vdom_type": {
+							"type": "int32",
+							"opts": "$VDOM_VDOM_TYPE_OPTIONS",
+							"default": 1 
+						}
+					}
+				},
+				"onboard_rule": {
+					"category": 34,
+					"canon_name": "onboard_rule",
+					"type": "table",
+					"internal": 1,
+					"mkey": "name",
+					"attr": {
+						"name": {
+							"type": "string",
+							"sz": 48 
+						},
+						"seq": {
+							"type": "seqnum" 
+						},
+						"type": {
+							"type": "int16",
+							"opts": "$ONBOARD_RULE_TYPE_OPTIONS",
+							"default": 0 
+						},
+						"did": {
+							"ref": [ "device\/name" ],
+							"type": "uint64",
+							"internal": 1 
+						},
+						"adm_usr": {
+							"type": "string",
+							"sz": 36 
+						},
+						"adm_pass": {
+							"type": "passwd",
+							"sz": 128 
+						},
+						"sn": {
+							"type": "string",
+							"sz": 16 
+						},
+						"old_sn": {
+							"type": "string",
+							"sz": 16 
+						},
+						"flags": {
+							"type": "int16",
+							"opts": "$ONBOARD_RULE_FLAGS_OPTIONS",
+							"default": 0 
+						}
+					}
+				}
+			}
+		},
+		"adom": {
+			"category": 3,
+			"canon_name": "adom",
+			"type": "table",
+			"meta fields": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"state": {
+					"type": "int32",
+					"default": 1,
+					"read_only": 1 
+				},
+				"mode": {
+					"type": "int32",
+					"opts": "$ADOM_TYPE_OPTIONS",
+					"default": 1,
+					"read_only": 1 
+				},
+				"os_ver": {
+					"type": "int32",
+					"opts": "$OS_VER_OPTIONS",
+					"default": 7 
+				},
+				"mr": {
+					"type": "int16",
+					"default": 2 
+				},
+				"flags": {
+					"type": "int32",
+					"opts": "$ADOM_FLAGS_OPTIONS",
+					"default": 0,
+					"excluded": false 
+				},
+				"mig_os_ver": {
+					"type": "int32",
+					"opts": "$OS_VER_OPTIONS",
+					"default": 7,
+					"read_only": 1 
+				},
+				"mig_mr": {
+					"type": "int16",
+					"default": 2,
+					"read_only": 1 
+				},
+				"obj_customize": {
+					"type": "string",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"tab_status": {
+					"type": "string",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"logview_customize": {
+					"type": "string",
+					"internal": 1,
+					"read_only": 1 
+				},
+				"restricted_prds": {
+					"type": "int64",
+					"opts": "$ADOM_RESTRICTED_TYPE_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"log_db_retention_hours": {
+					"type": "int32",
+					"default": 1440 
+				},
+				"log_file_retention_hours": {
+					"type": "int32",
+					"default": 8760 
+				},
+				"log_disk_quota": {
+					"type": "int32" 
+				},
+				"log_disk_quota_split_ratio": {
+					"type": "int32",
+					"default": 70 
+				},
+				"log_disk_quota_alert_thres": {
+					"type": "int32",
+					"default": 90 
+				},
+				"uuid": {
+					"type": "string",
+					"sz": 36 
+				},
+				"create_time": {
+					"type": "int32",
+					"read_only": 1 
+				},
+				"workspace_mode": {
+					"type": "int32" 
+				}
+			}
+		},
+		"group": {
+			"category": 2,
+			"canon_name": "device_group",
+			"type": "table",
+			"meta fields": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"type": {
+					"type": "int32",
+					"opts": "$GRP_TYPE_OPTIONS",
+					"default": 0,
+					"read_only": 1 
+				},
+				"os_type": {
+					"type": "int32",
+					"opts": "$OS_TYPE_OPTIONS",
+					"default": -1 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"id": {
+					"type": "string",
+					"sz": 36,
+					"read_only": 1 
+				},
+				"cluster_type": {
+					"type": "int32",
+					"opts": "$GRP_CLUSTER_TYPE_OPTIONS",
+					"default": -1,
+					"read_only": 1 
+				}
+			}
+		},
+		"metafield": {
+			"category": 4,
+			"canon_name": "meta_field",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"val_sz": {
+					"type": "int32" 
+				},
+				"otype": {
+					"type": "int32" 
+				},
+				"mtype": {
+					"type": "int32" 
+				},
+				"mode": {
+					"type": "int32" 
+				},
+				"status": {
+					"type": "int32",
+					"default": 1 
+				},
+				"rank": {
+					"type": "int32" 
+				}
+			}
+		},
+		"slot": {
+			"category": 7,
+			"canon_name": "slot",
+			"type": "table",
+			"internal": 1,
+			"mkey": "slot_idx",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"did": {
+					"ref": [ "device\/name" ],
+					"type": "int64" 
+				},
+				"type": {
+					"type": "int16" 
+				},
+				"slot_idx": {
+					"type": "int16" 
+				}
+			}
+		},
+		"interface": {
+			"category": 8,
+			"canon_name": "interface",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"did": {
+					"ref": [ "device\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int16" 
+				},
+				"slot_idx": {
+					"type": "int16" 
+				},
+				"ip": {
+					"type": "ip4" 
+				},
+				"prefix": {
+					"type": "int16" 
+				},
+				"prefix6": {
+					"type": "int16" 
+				},
+				"ip6_1": {
+					"type": "uint32" 
+				},
+				"ip6_2": {
+					"type": "uint32" 
+				},
+				"ip6_3": {
+					"type": "uint32" 
+				},
+				"ip6_4": {
+					"type": "uint32" 
+				},
+				"mode": {
+					"type": "int32",
+					"opts": "$INTF_MODE_OPTIONS",
+					"default": 0 
+				},
+				"status": {
+					"type": "int32",
+					"opts": "$CONN_STATUS_OPTIONS",
+					"default": 0 
+				},
+				"speed": {
+					"type": "uint32" 
+				},
+				"duplex": {
+					"type": "int32",
+					"opts": "$INTF_DUPLEX_OPTIONS",
+					"default": 0 
+				},
+				"link_status": {
+					"type": "int32",
+					"opts": "$CONN_STATUS_OPTIONS",
+					"default": 0 
+				}
+			}
+		},
+		"chassis\/sensors\/volt": {
+			"category": 9,
+			"canon_name": "chs_volt_sensor",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"board": {
+					"type": "int64" 
+				},
+				"state": {
+					"type": "int16" 
+				},
+				"conv_M": {
+					"type": "int16" 
+				},
+				"conv_B": {
+					"type": "float" 
+				},
+				"conv_R_exp": {
+					"type": "int16" 
+				},
+				"conv_func": {
+					"type": "int16" 
+				},
+				"conv_fmt": {
+					"type": "int16" 
+				},
+				"conv_max": {
+					"type": "float" 
+				},
+				"conv_min": {
+					"type": "float" 
+				},
+				"mask": {
+					"type": "int16" 
+				},
+				"addr_id": {
+					"type": "int16" 
+				},
+				"addr_lun": {
+					"type": "int16" 
+				},
+				"addr_idx": {
+					"type": "int16" 
+				},
+				"voltage": {
+					"type": "float" 
+				},
+				"unc": {
+					"type": "float" 
+				},
+				"uc": {
+					"type": "float" 
+				},
+				"unr": {
+					"type": "float" 
+				},
+				"lnc": {
+					"type": "float" 
+				},
+				"lc": {
+					"type": "float" 
+				},
+				"lnr": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/sensors\/current": {
+			"category": 10,
+			"canon_name": "chs_current_sensor",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"board": {
+					"type": "int64" 
+				},
+				"state": {
+					"type": "int16" 
+				},
+				"conv_M": {
+					"type": "int16" 
+				},
+				"conv_B": {
+					"type": "float" 
+				},
+				"conv_R_exp": {
+					"type": "int16" 
+				},
+				"conv_func": {
+					"type": "int16" 
+				},
+				"conv_fmt": {
+					"type": "int16" 
+				},
+				"conv_max": {
+					"type": "float" 
+				},
+				"conv_min": {
+					"type": "float" 
+				},
+				"mask": {
+					"type": "int16" 
+				},
+				"addr_id": {
+					"type": "int16" 
+				},
+				"addr_lun": {
+					"type": "int16" 
+				},
+				"addr_idx": {
+					"type": "int16" 
+				},
+				"current": {
+					"type": "float" 
+				},
+				"unc": {
+					"type": "float" 
+				},
+				"uc": {
+					"type": "float" 
+				},
+				"unr": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/sensors\/temperature": {
+			"category": 11,
+			"canon_name": "chs_temp_sensor",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"board": {
+					"type": "int64" 
+				},
+				"state": {
+					"type": "int16" 
+				},
+				"conv_M": {
+					"type": "int16" 
+				},
+				"conv_B": {
+					"type": "float" 
+				},
+				"conv_R_exp": {
+					"type": "int16" 
+				},
+				"conv_func": {
+					"type": "int16" 
+				},
+				"conv_fmt": {
+					"type": "int16" 
+				},
+				"conv_max": {
+					"type": "float" 
+				},
+				"conv_min": {
+					"type": "float" 
+				},
+				"mask": {
+					"type": "int16" 
+				},
+				"addr_id": {
+					"type": "int16" 
+				},
+				"addr_lun": {
+					"type": "int16" 
+				},
+				"addr_idx": {
+					"type": "int16" 
+				},
+				"temp": {
+					"type": "int16" 
+				},
+				"unc": {
+					"type": "int16" 
+				},
+				"uc": {
+					"type": "int16" 
+				},
+				"unr": {
+					"type": "int16" 
+				}
+			}
+		},
+		"chassis\/pem": {
+			"category": 12,
+			"canon_name": "chs_pem",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"pres": {
+					"type": "int16" 
+				},
+				"temp_state": {
+					"type": "int16" 
+				},
+				"temp_addr_id": {
+					"type": "int16" 
+				},
+				"temp_addr_lun": {
+					"type": "int16" 
+				},
+				"temp_addr_idx": {
+					"type": "int16" 
+				},
+				"temp_temp": {
+					"type": "int16" 
+				},
+				"temp_unc": {
+					"type": "int16" 
+				},
+				"temp_uc": {
+					"type": "int16" 
+				},
+				"temp_unr": {
+					"type": "int16" 
+				},
+				"feed_48V_0_before": {
+					"type": "int16" 
+				},
+				"feed_48V_0_after": {
+					"type": "int16" 
+				},
+				"feed_48V_1_before": {
+					"type": "int16" 
+				},
+				"feed_48V_1_after": {
+					"type": "int16" 
+				},
+				"feed_48V_2_before": {
+					"type": "int16" 
+				},
+				"feed_48V_2_after": {
+					"type": "int16" 
+				},
+				"feed_48V_3_before": {
+					"type": "int16" 
+				},
+				"feed_48V_3_after": {
+					"type": "int16" 
+				},
+				"state_mask": {
+					"type": "int32" 
+				}
+			}
+		},
+		"chassis\/fan": {
+			"category": 13,
+			"canon_name": "chs_fan_tray",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"pres": {
+					"type": "int16" 
+				},
+				"bus_24V": {
+					"type": "int16" 
+				},
+				"bus_48V_A_before": {
+					"type": "int16" 
+				},
+				"bus_48V_A_after": {
+					"type": "int16" 
+				},
+				"bus_48V_A_fuse": {
+					"type": "int16" 
+				},
+				"bus_48V_B_before": {
+					"type": "int16" 
+				},
+				"bus_48V_B_after": {
+					"type": "int16" 
+				},
+				"bus_48V_B_fuse": {
+					"type": "int16" 
+				},
+				"fan_tach_0": {
+					"type": "int16" 
+				},
+				"fan_tach_1": {
+					"type": "int16" 
+				},
+				"fan_threshold_0": {
+					"type": "int16" 
+				},
+				"fan_threshold_1": {
+					"type": "int16" 
+				},
+				"min_level": {
+					"type": "int16" 
+				},
+				"max_level": {
+					"type": "int16" 
+				},
+				"norm_level": {
+					"type": "int16" 
+				},
+				"curr_level": {
+					"type": "int16" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/shm": {
+			"category": 14,
+			"canon_name": "chs_shm",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"volt_state": {
+					"type": "int16" 
+				},
+				"ipmb_id": {
+					"type": "int16" 
+				},
+				"hw_addr": {
+					"type": "int16" 
+				},
+				"pres": {
+					"type": "int16" 
+				},
+				"state": {
+					"type": "int16" 
+				},
+				"temp_state": {
+					"type": "int16" 
+				},
+				"temp_addr_id": {
+					"type": "int16" 
+				},
+				"temp_addr_lun": {
+					"type": "int16" 
+				},
+				"temp_addr_idx": {
+					"type": "int16" 
+				},
+				"temp_temp": {
+					"type": "int16" 
+				},
+				"temp_unc": {
+					"type": "int16" 
+				},
+				"temp_uc": {
+					"type": "int16" 
+				},
+				"temp_unr": {
+					"type": "int16" 
+				},
+				"bus_48V_A_before": {
+					"type": "int16" 
+				},
+				"bus_48V_A_after": {
+					"type": "int16" 
+				},
+				"bus_48V_A_fuse": {
+					"type": "int16" 
+				},
+				"bus_48V_B_before": {
+					"type": "int16" 
+				},
+				"bus_48V_B_after": {
+					"type": "int16" 
+				},
+				"bus_48V_B_fuse": {
+					"type": "int16" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/power": {
+			"category": 15,
+			"canon_name": "chs_power_feed",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"max_ext_current": {
+					"type": "float" 
+				},
+				"max_int_current": {
+					"type": "float" 
+				},
+				"min_voltage": {
+					"type": "float" 
+				},
+				"pwr_avail": {
+					"type": "float" 
+				},
+				"pwr_used": {
+					"type": "float" 
+				},
+				"fru_0_slot": {
+					"type": "int16" 
+				},
+				"fru_0_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_0_fru_id": {
+					"type": "int16" 
+				},
+				"fru_1_slot": {
+					"type": "int16" 
+				},
+				"fru_1_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_1_fru_id": {
+					"type": "int16" 
+				},
+				"fru_2_slot": {
+					"type": "int16" 
+				},
+				"fru_2_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_2_fru_id": {
+					"type": "int16" 
+				},
+				"fru_3_slot": {
+					"type": "int16" 
+				},
+				"fru_3_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_3_fru_id": {
+					"type": "int16" 
+				},
+				"fru_4_slot": {
+					"type": "int16" 
+				},
+				"fru_4_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_4_fru_id": {
+					"type": "int16" 
+				},
+				"fru_5_slot": {
+					"type": "int16" 
+				},
+				"fru_5_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_5_fru_id": {
+					"type": "int16" 
+				},
+				"fru_6_slot": {
+					"type": "int16" 
+				},
+				"fru_6_hw_addr": {
+					"type": "int16" 
+				},
+				"fru_6_fru_id": {
+					"type": "int16" 
+				}
+			}
+		},
+		"chassis\/sap": {
+			"category": 16,
+			"canon_name": "chs_sap",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"temp_state": {
+					"type": "int16" 
+				},
+				"pres": {
+					"type": "int16" 
+				},
+				"telco_alarm": {
+					"type": "int16" 
+				},
+				"telco_alarm_addr_id": {
+					"type": "int16" 
+				},
+				"telco_alarm_addr_lun": {
+					"type": "int16" 
+				},
+				"telco_alarm_addr_idx": {
+					"type": "int16" 
+				},
+				"air_filter": {
+					"type": "int16" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/ext_card": {
+			"category": 17,
+			"canon_name": "chs_ext_card",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"board": {
+					"type": "int64" 
+				},
+				"volt_state": {
+					"type": "int16" 
+				},
+				"current_state": {
+					"type": "int16" 
+				},
+				"temp_state": {
+					"type": "int16" 
+				},
+				"ipmb_id": {
+					"type": "int16" 
+				},
+				"fru_id": {
+					"type": "int16" 
+				},
+				"type": {
+					"type": "int16" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/link": {
+			"category": 18,
+			"canon_name": "chs_link",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"board": {
+					"type": "int64" 
+				},
+				"peer_slot": {
+					"type": "int16" 
+				},
+				"peer_hw_addr": {
+					"type": "int16" 
+				},
+				"peer_fru_id": {
+					"type": "int16" 
+				},
+				"type": {
+					"type": "int16" 
+				},
+				"local_channel": {
+					"type": "int16" 
+				},
+				"remote_channel": {
+					"type": "int16" 
+				},
+				"status": {
+					"type": "int32" 
+				}
+			}
+		},
+		"chassis\/slot": {
+			"category": 19,
+			"canon_name": "chs_slot",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"volt_state": {
+					"type": "int16" 
+				},
+				"current_state": {
+					"type": "int16" 
+				},
+				"temp_state": {
+					"type": "int16" 
+				},
+				"ipmb_id": {
+					"type": "int16" 
+				},
+				"hw_addr": {
+					"type": "int16" 
+				},
+				"hotswap_lun": {
+					"type": "int16" 
+				},
+				"hotswap_idx": {
+					"type": "int16" 
+				},
+				"state": {
+					"type": "int16" 
+				},
+				"did": {
+					"type": "int64" 
+				},
+				"ha_memb": {
+					"type": "int64" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/eeprom": {
+			"category": 20,
+			"canon_name": "chs_eeprom",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"cid": {
+					"ref": [ "chassis\/chassis\/name" ],
+					"type": "int64" 
+				},
+				"idx": {
+					"type": "int32" 
+				},
+				"addr_id": {
+					"type": "int16" 
+				},
+				"addr_lun": {
+					"type": "int16" 
+				},
+				"addr_idx": {
+					"type": "int16" 
+				},
+				"pres": {
+					"type": "int16" 
+				},
+				"board_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"board_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"board_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_manufacturer": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_name": {
+					"type": "string",
+					"sz": 128 
+				},
+				"product_part_number": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_version": {
+					"type": "string",
+					"sz": 48 
+				},
+				"product_sn": {
+					"type": "string",
+					"sz": 48 
+				},
+				"pwr_used": {
+					"type": "float" 
+				}
+			}
+		},
+		"chassis\/chassis": {
+			"category": 21,
+			"canon_name": "chassis",
+			"type": "table",
+			"meta fields": 1,
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"ip": {
+					"type": "ip4" 
+				},
+				"authtype": {
+					"type": "int32" 
+				},
+				"admin": {
+					"type": "string",
+					"sz": 15 
+				},
+				"passwd": {
+					"type": "passwd",
+					"sz": 15 
+				},
+				"type": {
+					"type": "int16" 
+				}
+			}
+		},
+		"um\/lic": {
+			"category": 23,
+			"canon_name": "um_lic",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"sn": {
+					"ref": [ "device\/sn" ],
+					"type": "string",
+					"sz": 100 
+				},
+				"lic_type": {
+					"type": "string",
+					"sz": 4 
+				},
+				"support_code": {
+					"type": "string",
+					"sz": 2 
+				},
+				"expire_time": {
+					"type": "int32" 
+				}
+			}
+		},
+		"um\/dev_obj_ver": {
+			"category": 24,
+			"canon_name": "um_dev_obj_ver",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"sn": {
+					"ref": [ "device\/sn" ],
+					"type": "string",
+					"sz": 100 
+				},
+				"obj_type": {
+					"type": "string",
+					"sz": 18 
+				},
+				"major": {
+					"type": "uint32" 
+				},
+				"minor": {
+					"type": "uint32" 
+				},
+				"update_time": {
+					"type": "int32" 
+				}
+			}
+		},
+		"script": {
+			"category": 25,
+			"canon_name": "script",
+			"type": "table",
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 71 
+				},
+				"type": {
+					"type": "int32",
+					"opts": "$SCRIPT_TYPE_OPTIONS",
+					"default": 0 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"content": {
+					"type": "string" 
+				},
+				"modification_time": {
+					"type": "string",
+					"sz": 32 
+				},
+				"target": {
+					"type": "int32",
+					"opts": "$SCRIPT_TARGET_OPTIONS",
+					"default": 0 
+				},
+				"filter_hostname": {
+					"type": "string",
+					"sz": 48 
+				},
+				"filter_serial": {
+					"type": "string",
+					"sz": 16 
+				},
+				"filter_ostype": {
+					"type": "int32",
+					"opts": "$SCRIPT_FL_OSTYPE_OPTIONS",
+					"default": -1 
+				},
+				"filter_osver": {
+					"type": "int32",
+					"opts": "$SCRIPT_FL_OSVER_OPTIONS",
+					"default": -1 
+				},
+				"filter_platform": {
+					"type": "string",
+					"sz": 48 
+				},
+				"filter_build": {
+					"type": "int32" 
+				},
+				"filter_device": {
+					"ref": [ "device\/name" ],
+					"type": "int64" 
+				}
+			},
+			"subobj": {
+				"script_schedule": {
+					"category": 26,
+					"canon_name": "script_schedule",
+					"type": "table",
+					"mkey": "name",
+					"attr": {
+						"name": {
+							"type": "string",
+							"sz": 48 
+						},
+						"script": {
+							"ref": [ "script\/name" ],
+							"type": "int64",
+							"internal": 1 
+						},
+						"device": {
+							"ref": [ "device\/name" ],
+							"type": "int64" 
+						},
+						"type": {
+							"type": "int32",
+							"opts": "$SRPT_SCHEDULE_TYPE_OPTIONS",
+							"default": 0 
+						},
+						"datetime": {
+							"type": "string",
+							"sz": 32 
+						},
+						"day_of_week": {
+							"type": "int32",
+							"opts": "$WEEK_DAY_OPTIONS",
+							"default": 0 
+						},
+						"timestamp": {
+							"type": "int64",
+							"internal": 1 
+						},
+						"user": {
+							"type": "string",
+							"sz": 36,
+							"internal": 1 
+						},
+						"run_on_db": {
+							"type": "int32",
+							"opts": "$ENABLE_OPTIONS",
+							"default": 0 
+						}
+					}
+				}
+			}
+		},
+		"revision": {
+			"category": 28,
+			"canon_name": "revision",
+			"type": "table",
+			"mkey": "version",
+			"attr": {
+				"version": {
+					"type": "seqnum" 
+				},
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				},
+				"created_by": {
+					"type": "string",
+					"sz": 128 
+				},
+				"created_time": {
+					"type": "uint64" 
+				},
+				"locked": {
+					"type": "int32" 
+				}
+			}
+		},
+		"um\/account": {
+			"category": 29,
+			"canon_name": "um_account",
+			"type": "table",
+			"internal": 1,
+			"mkey": "sn",
+			"attr": {
+				"sn": {
+					"type": "string",
+					"sz": 16 
+				},
+				"accountid": {
+					"type": "string",
+					"sz": 128 
+				}
+			}
+		},
+		"workflow": {
+			"category": 30,
+			"canon_name": "workflow",
+			"type": "table",
+			"mkey": "sessionid",
+			"attr": {
+				"sessionid": {
+					"type": "seqnum" 
+				},
+				"name": {
+					"type": "string",
+					"sz": 256 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 1024 
+				},
+				"create_user": {
+					"type": "string",
+					"sz": 64 
+				},
+				"create_time": {
+					"type": "string",
+					"sz": 36 
+				},
+				"submit_user": {
+					"type": "string",
+					"sz": 64 
+				},
+				"submit_time": {
+					"type": "string",
+					"sz": 36 
+				},
+				"audit_user": {
+					"type": "string",
+					"sz": 64 
+				},
+				"audit_time": {
+					"type": "string",
+					"sz": 36 
+				},
+				"revid": {
+					"type": "int32" 
+				},
+				"state": {
+					"type": "int32" 
+				},
+				"flags": {
+					"type": "int32",
+					"internal": 1 
+				}
+			},
+			"subobj": {
+				"wflog": {
+					"category": 31,
+					"canon_name": "workflow_log",
+					"type": "table",
+					"mkey": "seq",
+					"attr": {
+						"seq": {
+							"type": "seqnum" 
+						},
+						"sessionid": {
+							"type": "seqnum" 
+						},
+						"action": {
+							"type": "int32" 
+						},
+						"user": {
+							"type": "string",
+							"sz": 64 
+						},
+						"time": {
+							"type": "string",
+							"sz": 36 
+						},
+						"desc": {
+							"type": "string",
+							"sz": 1024 
+						},
+						"flags": {
+							"type": "int32",
+							"internal": 1 
+						}
+					}
+				}
+			}
+		},
+		"cluster": {
+			"category": 32,
+			"canon_name": "cluster",
+			"type": "table",
+			"internal": 1,
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"id": {
+					"type": "int32" 
+				},
+				"type": {
+					"type": "int32",
+					"opts": "$CLUSTER_TYPE_OPTIONS",
+					"default": 0 
+				},
+				"master": {
+					"type": "string",
+					"sz": 16 
+				},
+				"flags": {
+					"type": "uint32",
+					"opts": "$CLUSTER_FLAGS_OPTIONS",
+					"default": 0 
+				}
+			}
+		},
+		"folder": {
+			"category": 33,
+			"canon_name": "folder",
+			"type": "table",
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 48 
+				},
+				"parent": {
+					"type": "uint64" 
+				},
+				"desc": {
+					"type": "string",
+					"sz": 128 
+				}
+			}
+		}
+	}
+}

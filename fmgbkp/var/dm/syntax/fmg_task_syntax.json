@@ -1,0 +1,204 @@
+{
+	"macro": {
+		"STATE_OPTIONS": {
+			"pending": 0,
+			"running": 1,
+			"cancelling": 2,
+			"cancelled": 3,
+			"done": 4,
+			"error": 5,
+			"aborting": 6,
+			"aborted": 7,
+			"warning": 8,
+			"to_continue": 9,
+			"unknown": 10 
+		},
+		"SRC_OPTIONS": {
+			"device manager": 0,
+			"security console": 1,
+			"global object": 2,
+			"config installation": 3,
+			"script installation": 4,
+			"check point": 5,
+			"import objects": 6,
+			"import interfaces and zones": 7,
+			"import policy": 8,
+			"ems policy": 9,
+			"policy check": 10,
+			"assignment": 11,
+			"object assignment": 12,
+			"cloning package": 13,
+			"certificate enrollment": 14,
+			"install objects": 15,
+			"unknown": 16,
+			"install device": 17,
+			"fwm": 18,
+			"integrity check": 19,
+			"cloning policy block": 20,
+			"import config": 21,
+			"generate controllers": 22 
+		}
+	},
+	"obj": {
+		"task": {
+			"type": "table",
+			"category": 1,
+			"mkey": "id",
+			"attr": {
+				"id": {
+					"type": "seqnum" 
+				},
+				"state": {
+					"type": "uint32",
+					"opts": "$STATE_OPTIONS",
+					"default": 0 
+				},
+				"src": {
+					"type": "int32",
+					"opts": "$SRC_OPTIONS",
+					"default": 0 
+				},
+				"flags": {
+					"type": "uint32",
+					"default": 0 
+				},
+				"percent": {
+					"type": "uint32",
+					"default": 0 
+				},
+				"tot_percent": {
+					"type": "uint32",
+					"default": 0 
+				},
+				"num_lines": {
+					"type": "int32",
+					"default": 0 
+				},
+				"num_err": {
+					"type": "int32",
+					"default": 0 
+				},
+				"num_warn": {
+					"type": "int32",
+					"default": 0 
+				},
+				"num_done": {
+					"type": "int32",
+					"default": 0 
+				},
+				"pid": {
+					"type": "int32",
+					"default": 0 
+				},
+				"adom": {
+					"extref": [ "dvmdb\/adom\/name" ],
+					"type": "uint64",
+					"default": 0 
+				},
+				"start_tm": {
+					"type": "int32",
+					"default": 0 
+				},
+				"end_tm": {
+					"type": "int32",
+					"default": 0 
+				},
+				"user": {
+					"type": "string",
+					"sz": 37,
+					"default": "" 
+				},
+				"title": {
+					"type": "string",
+					"sz": 513,
+					"default": "" 
+				}
+			},
+			"subobj": {
+				"line": {
+					"type": "table",
+					"category": 2,
+					"mkey": "name",
+					"ckey": "vdom",
+					"attr": {
+						"state": {
+							"type": "uint32",
+							"opts": "$STATE_OPTIONS",
+							"default": 0 
+						},
+						"err": {
+							"type": "int32",
+							"default": 0 
+						},
+						"percent": {
+							"type": "uint32",
+							"default": 0 
+						},
+						"name": {
+							"type": "string",
+							"sz": 128,
+							"default": "" 
+						},
+						"vdom": {
+							"extref": [ "dvmdb\/devicedomain\/name" ],
+							"type": "string",
+							"sz": 49,
+							"default": "" 
+						},
+						"ip": {
+							"type": "string",
+							"sz": 46,
+							"default": "" 
+						},
+						"oid": {
+							"extref": [ "dvmdb\/device\/name" ],
+							"type": "uint32",
+							"default": 0 
+						},
+						"detail": {
+							"type": "string",
+							"sz": 513,
+							"default": "" 
+						},
+						"start_tm": {
+							"type": "int32",
+							"default": 0 
+						},
+						"end_tm": {
+							"type": "int32",
+							"default": 0 
+						}
+					},
+					"subobj": {
+						"history": {
+							"type": "table",
+							"category": 3,
+							"attr": {
+								"name": {
+									"type": "string",
+									"sz": 128,
+									"default": "" 
+								},
+								"vdom": {
+									"extref": [ "dvmdb\/devicedomain\/name" ],
+									"type": "string",
+									"sz": 49,
+									"default": "" 
+								},
+								"percent": {
+									"type": "uint32",
+									"default": 0 
+								},
+								"detail": {
+									"type": "string",
+									"sz": 513,
+									"default": "" 
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

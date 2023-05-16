@@ -1,0 +1,400 @@
+
+config sql-report dataset
+    edit "fdc-Top-Attacker-IP-By-Incident"
+        set description "Top Attackers IPs by Incidents"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select distinct attackerip, sum(num_incidents) as num_incidents from ###(select attackerip, victimip, service, action, operation, victimport, count(*) as num_incidents from $log where $filter and incidentid is not null group by attackerip, victimip, service, action, operation, victimport order by num_incidents desc)### t where attackerip is not null and action='Incident_Detection' and operation != 'FortiGuard_Web_Filtering' group by attackerip order by num_incidents desc"
+        set protected enable
+    next
+    edit "fdc-Top-Victim-IP-By-Incident"
+        set description "Top Victim IPs by Incidents"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select victimip, sum(num_incidents) as num_incidents from ###(select attackerip, victimip, service, action, operation, victimport, count(*) as num_incidents from $log where $filter and incidentid is not null group by attackerip, victimip, service, action, operation, victimport order by num_incidents desc)### t where victimip is not null and action='Incident_Detection' and operation != 'FortiGuard_Web_Filtering' group by victimip order by num_incidents desc" 
+        set protected enable
+    next
+    edit "fdc-Top-Services-By-Incidents"
+        set description "Top Services by Incidents"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select service, sum(num_incidents) as num_incidents from ###(select attackerip, victimip, service, action, operation, victimport, count(*) as num_incidents from $log where $filter and incidentid is not null group by attackerip, victimip, service, action, operation, victimport order by num_incidents desc)### t where service is not null and victimport is not null and action='Incident_Detection' and operation != 'FortiGuard_Web_Filtering' group by service order by num_incidents desc"
+        set protected enable
+    next
+    edit "fdc-Failed-Login-By-User"
+        set description "Top Failed Login by Username"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select username, sum(total_num) as total_num from ###(select nethost, username, attackerip, operation, subtype, count(*) as total_num from $log where $filter group by nethost, username, attackerip, operation, subtype order by total_num desc)### t where operation in ('Authentication_Failure', 'Logon_Fail_via_net_share') group by username order by total_num desc"
+        set protected enable
+    next
+    edit "fdc-Malicious-Files-By-Incident"
+        set description "Top Malicious Files by Incidents"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select distinct regexp_replace(msg, ':Zone.Identifier','') as msg_short, sum(num_incidents) as num_incidents from ###(select msg, operation, count(*) as total_num, count(incidentid) as num_incidents from $log where $filter group by msg, operation order by total_num desc, num_incidents desc)### t where operation like '%file%' group by msg_short order by num_incidents desc"
+        set protected enable
+    next
+    edit "fdc-Attack-Tool-Based-On-IPS-Alerts"
+        set description "Top Attack Tool Based On IPS Alerts"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select distinct msg, sum(total_num) as total_num from ###(select msg, operation, count(*) as total_num, count(incidentid) as num_incidents from $log where $filter group by msg, operation order by total_num desc, num_incidents desc)### t where operation in ('IPS_attack', 'attack') group by msg order by total_num desc"
+        set protected enable
+    next
+    edit "fdc-Attacker-IPs-Based-On-IPS-Alerts"
+        set description "Top Attacker IPs Based on IPS Alerts"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select attackerip, sum(total_num) as total_num from ###(select nethost, username, attackerip, operation, subtype, count(*) as total_num from $log where $filter group by nethost, username, attackerip, operation, subtype order by total_num desc)### t where operation = 'IPS_attack' group by attackerip order by total_num desc"
+        set protected enable
+    next
+    edit "fdc-Top-Malicious-URL-Access-Based-On-Web-Filter-Alerts"
+        set description "Top Malicious URL Access Based on Web Filter Alerts"
+        set log-type event
+        set dev-type FortiDeceptor
+        set query "select nethost, sum(total_num) as total_num from ###(select nethost, username, attackerip, operation, subtype, count(*) as total_num from $log where $filter group by nethost, username, attackerip, operation, subtype order by total_num desc)### t where operation = 'FortiGuard_Web_Filtering' and subtype = 'attack' group by nethost order by total_num desc"
+        set protected enable
+    next
+end
+
+
+config sql-report chart
+    edit "fdc-Top-Attacker-IP-By-Incident"
+        set disp-name "FortiDeceptor-Top Attacker IPs By Incidents"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Attackers IPs by Incidents"
+        set dataset "fdc-Top-Attacker-IP-By-Incident"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header "Attacker IP"
+                set data-binding "attackerip"
+                set data-top 10
+            next
+            edit 2
+                set header "Incidents"
+                set data-binding "num_incidents"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Top-Victim-IP-By-Incident"
+        set disp-name "FortiDeceptor-Top Victim IPs By Incident"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Victim IPs by Incidents"
+        set dataset "fdc-Top-Victim-IP-By-Incident"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header "Top Victim IP"
+                set data-binding "victimip"
+                set data-top 10
+            next
+            edit 2
+                set header "Incidents"
+                set data-binding "num_incidents"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Top-Services-By-Incidents"
+        set disp-name "FortiDeceptor-Top Services By Incidents"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Services by Incidents"
+        set dataset "fdc-Top-Services-By-Incidents"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Service"
+                set data-binding "service"
+                set data-top 10
+            next
+            edit 2
+                set header "# of Incidents"
+                set data-binding "num_incidents"
+                set data-top 10
+                set data-type aggregate
+                set legend "Service"
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Failed-Login-By-User"
+        set disp-name "FortiDeceptor-Top Failed Login By Username"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Failed Login by Username"
+        set dataset "fdc-Failed-Login-By-User"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "username"
+                set data-top 10
+            next
+            edit 2
+                set header "Logins"
+                set data-binding "total_num"
+                set data-top 3
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Malicious-Files-By-Incident"
+        set disp-name "FortiDeceptor-Top Malicious Files By Incidents"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Malicious Files by Incidents"
+        set dataset "fdc-Malicious-Files-By-Incident"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header "Malicious File"
+                set data-binding "msg_short"
+                set data-top 10
+            next
+            edit 2
+                set header "# of Incidents"
+                set data-binding "num_incidents"
+                set data-top 3
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Attack-Tool-Based-On-IPS-Alerts"
+        set disp-name "FortiDeceptor-Top Attack Tools Based On IPS Alerts"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Attack Tools Based On IPS Alerts"
+        set dataset "fdc-Attack-Tool-Based-On-IPS-Alerts"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "IPS Method"
+                set data-binding "msg"
+                set data-top 10
+            next
+            edit 2
+                set header "# of Alerts"
+                set data-binding "total_num"
+                set column-attr count
+                set data-top 3
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Attacker-IPs-Based-On-IPS-Alerts"
+        set disp-name "FortiDeceptor-Top Attacker IPs Based On IPS Alerts"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Attacker IPs Based on IPS Alerts"
+        set dataset "fdc-Attacker-IPs-Based-On-IPS-Alerts"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Attacker IP"
+                set data-binding "attackerip"
+                set data-top 10
+            next
+            edit 2
+                set header "# of IPS Attacks"
+                set data-binding "total_num"
+                set data-top 3
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fdc-Top-Malicious-URL-Access-Based-On-Web-Filter-Alerts"
+        set disp-name "FortiDeceptor-Top Malicious URL Based On Web Filter Alerts"
+        set category "FortiDeceptor"
+        set dev-type FortiDeceptor
+        set description "Top 10 Malicious URL Access Based on Web Filter Alerts"
+        set dataset "fdc-Top-Malicious-URL-Access-Based-On-Web-Filter-Alerts"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header "Malicious URL"
+                set data-binding "nethost"
+                set data-top 10
+            next
+            edit 2
+                set header "# of Alerts"
+                set data-binding "total_num"
+                set data-top 3
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+end
+
+
+config sql-report layout
+    edit 1000050001
+        set is-template enable
+        set dev-type FortiDeceptor
+        set category "FortiDeceptor"
+        set title "Template - FortiDeceptor Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Present a quick summary of incidents and alerts generated by FortiDeceptor"
+        set body "<h2>Summary</h2><p>FortiDeceptor is based on deception technology that complements an organization&rsquo;s existing breach protection strategy, designed to deceive, expose and eliminate attacks originating from either external or internal sources before any real damage occurs.</p><p>This&nbsp;report&nbsp;provides a quick summary of&nbsp;incidents and alerts generated by FortiDeceptor.</p><p>&nbsp;</p><h2>Top 10 Attackers by Incidents</h2><p>FortiDeceptor provides early breach detection and block attackers before they can gain access to sensitive company assets, and assists security operations teams to identify those threats. Attacks can come in from many different sources and IP&#39;s, both external and internal.&nbsp;</p><p>The following chart provides the Top 10 Attackers IPs by count of number of Incidents</p><fazchart mkey=\"fdc-Top-Attacker-IP-By-Incident\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Victim IP by Incidents</h2><p>Cyber&nbsp;criminals are constantly evolving their methods of&nbsp;attacking and gaining access to networks. It is important for security operations teams to have up to the minute information about attempted attacks on company assets and which devices should be quarantined, analyzed and disinfected as needed.&nbsp;&nbsp;</p><p>The following chart provides the Top 10 Victims&nbsp;IPs by count of number of Incidents</p><fazchart mkey=\"fdc-Top-Victim-IP-By-Incident\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Services by Incidents</h2><p>Cyber attacks and breaches take advantage of many different services and protocols. Security teams need to be aware of the services being used so that they can analyze and understand attacker Tactics, Techniques and Procedures and can build improved policies and defenses.&nbsp;&nbsp;</p><p>The following chart provides the Top 10 Services by count of number of Incidents.</p><fazchart mkey=\"fdc-Top-Services-By-Incidents\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Failed Login by Username</h2><p>A more effective way of catching attackers is to get them in and catch them in a trap when they are not using brute force to get in, instead using employee credentials as a more efficient way in.<br />Deception Lures provides fake Username &amp; Password to deceive attacker by using them and expose their malicious activities.</p><p>&nbsp;The following chart provides the Top 10 Failed Fake Login Attempts by Username</p><fazchart mkey=\"fdc-Failed-Login-By-User\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Malicious Files by Incidents</h2><p>Deception deceive Threat actor to engage with a fake assets instead of real one. once a threat actor compromise a decoy, malicious tools &amp; binaries will get loaded into the decoy for lateral movement and more hacking activities.</p><p>The following chart provides a list of the Top 10 Malicious Files detected by the Deception Decoys</p><fazchart mkey=\"fdc-Malicious-Files-By-Incident\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Attack Tool based on The Decoys &nbsp;IPS Alerts</h2><p>Intrusion prevention systems help to detect malicious attempts to exploit known vulnerabilities on networks. It is important for security teams to be up-to-date on IPS attacks so they can focus on implementing the latest security measures and patches for those threats.&nbsp;&nbsp;</p><p>The following chart provides a list of the Top 10 Attack Tools/Methods based on the Decoy IPS Alerts</p><fazchart mkey=\"fdc-Attack-Tool-Based-On-IPS-Alerts\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Attacker IPs based on The Decoys IPS Alerts</h2><p>Hackers use attacks such as port scanning, DDoS and many other methods attempting to exploit known vulnerabilities and gain access to network&nbsp;and company assets. Security operations teams need to quickly identify the IP&#39;s of these attackers to identify and block their attempts to do harm.&nbsp;&nbsp;&nbsp;</p><p>The following chart provides a list of the Top 10 Attack IPs based on Decoy &nbsp;IPS Alerts</p><fazchart mkey=\"fdc-Attacker-IPs-Based-On-IPS-Alerts\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2>Top 10 Malicious URLs based on The Decoys Web Filter Alerts</h2><p>Deception deceive Threat actor to engage with a fake assets instead of real one. When a threat actor compromise a decoy, an Internet connection will be used to &nbsp;maintain back-door or download more hacking tools. Security operations teams need to be aware of what URL&#39;s and websites are being flagged by the Decoy so that they can adjust security policies and rules as needed&nbsp;</p><p>The following chart provides a list of the Top 10 Malicious URLs based on the Decoy Web Filter Alerts</p><fazchart mkey=\"fdc-Top-Malicious-URL-Access-Based-On-Web-Filter-Alerts\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90118
+                next
+            end
+        set protected enable
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90118
+        set folder-name "FortiDeceptor Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config alert basic-handler
+    edit 70000
+        set name "Default-FDC-Honey-Pot-Detection"
+        set description "Default event handler for FortiDeceptor Honey Pot event detection"
+        config rule
+            edit 1
+                set name "Attack detected by FDC"
+                set devtype FortiDeceptor
+                set severity medium
+                set logtype "event"
+                set extrainfo "IP ${attackerip} connected to deceptive IP ${victimip}, Service: ${service}, Message: ${msg}"
+                set extrainfo-type custom
+                set subject "Attack: $groupby1 detected by FDC"
+                set groupby1 "attackerip"
+                set groupby2 "operation"
+                set eventstatus "open"
+                set tags "Default,FortiDeceptor"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "subtype=\"attack\""
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fdc"
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end

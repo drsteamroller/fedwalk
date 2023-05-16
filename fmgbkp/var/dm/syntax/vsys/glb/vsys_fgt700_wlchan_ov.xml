@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xml version="700" mr="0" branch="444">
+  <branch br="9">
+    <country code="144" dmn="59" iso="LK" name="SRI LANKA"/>
+    <country code="704" dmn="59" iso="VN" name="VIET NAM"/>
+  </branch>
+  <branch br="66">
+    <country code="4" dmn="55" iso="AF" name="AFGHANISTAN"/>
+    <country code="8" dmn="55" iso="AL" name="ALBANIA"/>
+    <country code="12" dmn="54" iso="DZ" name="ALGERIA"/>
+    <country code="16" dmn="58" iso="AS" name="AMERICAN SAMOA"/>
+    <country code="24" dmn="55" iso="AO" name="ANGOLA"/>
+    <country code="31" dmn="55" iso="AZ" name="AZERBAIJAN"/>
+    <country code="32" dmn="58" iso="AR" name="ARGENTINA"/>
+    <country code="36" dmn="228" iso="AU" name="AUSTRALIA"/>
+    <country code="40" dmn="55" iso="AT" name="AUSTRIA"/>
+    <country code="44" dmn="58" iso="BS" name="BAHAMAS"/>
+    <country code="48" dmn="54" iso="BH" name="BAHRAIN"/>
+    <country code="50" dmn="227" iso="BD" name="BANGLADESH"/>
+    <country code="51" dmn="48" iso="AM" name="ARMENIA"/>
+    <country code="52" dmn="228" iso="BB" name="BARBADOS"/>
+    <country code="56" dmn="55" iso="BE" name="BELGIUM"/>
+    <country code="60" dmn="58" iso="BM" name="BERMUDA"/>
+    <country code="64" dmn="55" iso="BT" name="BHUTAN"/>
+    <country code="68" dmn="228" iso="BO" name="BOLIVIA"/>
+    <country code="70" dmn="55" iso="BA" name="BOSNIA AND HERZEGOVINA"/>
+    <country code="72" dmn="55" iso="BW" name="BOTSWANA"/>
+    <country code="76" dmn="228" iso="BR" name="BRAZIL"/>
+    <country code="84" dmn="228" iso="BZ" name="BELIZE"/>
+    <country code="96" dmn="54" iso="BN" name="BRUNEI DARUSSALAM"/>
+    <country code="100" dmn="55" iso="BG" name="BULGARIA"/>
+    <country code="104" dmn="55" iso="MM" name="MYANMAR"/>
+    <country code="112" dmn="55" iso="BY" name="BELARUS"/>
+    <country code="116" dmn="59" iso="KH" name="CAMBODIA"/>
+    <country code="120" dmn="55" iso="CM" name="CAMEROON"/>
+    <country code="124" dmn="58" iso="CA" name="CANADA"/>
+    <country code="136" dmn="58" iso="KY" name="CAYMAN ISLANDS"/>
+    <country code="140" dmn="55" iso="CF" name="CENTRAL AFRICA REPUBLIC"/>
+    <country code="144" dmn="54" iso="LK" name="SRI LANKA"/>
+    <country code="148" dmn="55" iso="TD" name="CHAD  "/>
+    <country code="152" dmn="228" iso="CL" name="CHILE"/>
+    <country code="156" dmn="91" iso="CN" name="CHINA"/>
+    <country code="158" dmn="92" iso="TW" name="TAIWAN"/>
+    <country code="162" dmn="228" iso="CX" name="CHRISTMAS ISLAND"/>
+    <country code="170" dmn="228" iso="CO" name="COLOMBIA"/>
+    <country code="175" dmn="55" iso="YT" name="MAYOTTE"/>
+    <country code="178" dmn="55" iso="CG" name="CONGO REPUBLIC"/>
+    <country code="180" dmn="55" iso="CD" name="DEMOCRATIC REPUBLIC OF CONGO"/>
+    <country code="188" dmn="228" iso="CR" name="COSTA RICA"/>
+    <country code="191" dmn="55" iso="HR" name="CROATIA"/>
+    <country code="196" dmn="55" iso="CY" name="CYPRUS"/>
+    <country code="203" dmn="55" iso="CZ" name="CZECH REPUBLIC"/>
+    <country code="204" dmn="55" iso="BJ" name="BENIN"/>
+    <country code="208" dmn="55" iso="DK" name="DENMARK"/>
+    <country code="212" dmn="58" iso="DM" name="DOMINICA"/>
+    <country code="214" dmn="228" iso="DO" name="DOMINICAN REPUBLIC"/>
+    <country code="218" dmn="228" iso="EC" name="ECUADOR"/>
+    <country code="222" dmn="228" iso="SV" name="EL SALVADOR"/>
+    <country code="231" dmn="55" iso="ET" name="ETHIOPIA"/>
+    <country code="233" dmn="55" iso="EE" name="ESTONIA"/>
+    <country code="234" dmn="55" iso="FO" name="FAEROE ISLANDS"/>
+    <country code="242" dmn="228" iso="FJ" name="FIJI"/>
+    <country code="246" dmn="55" iso="FI" name="FINLAND"/>
+    <country code="250" dmn="55" iso="FR" name="FRANCE"/>
+    <country code="254" dmn="55" iso="GF" name="FRENCH GUIANA"/>
+    <country code="258" dmn="55" iso="PF" name="FRENCH POLYNESIA"/>
+    <country code="268" dmn="55" iso="GE" name="GEORGIA"/>
+    <country code="276" dmn="55" iso="DE" name="GERMANY"/>
+    <country code="288" dmn="55" iso="GH" name="GHANA"/>
+    <country code="292" dmn="55" iso="GI" name="GIBRALTAR"/>
+    <country code="300" dmn="55" iso="GR" name="GREECE"/>
+    <country code="304" dmn="55" iso="GL" name="GREENLAND"/>
+    <country code="308" dmn="228" iso="GD" name="GRENADA"/>
+    <country code="312" dmn="55" iso="GP" name="GUADELOUPE"/>
+    <country code="316" dmn="16" iso="GU" name="GUAM"/>
+    <country code="320" dmn="228" iso="GT" name="GUATEMALA"/>
+    <country code="328" dmn="228" iso="GY" name="GUYANA"/>
+    <country code="332" dmn="58" iso="HT" name="HAITI"/>
+    <country code="340" dmn="228" iso="HN" name="HONDURAS"/>
+    <country code="344" dmn="228" iso="HK" name="HONG KONG"/>
+    <country code="348" dmn="55" iso="HU" name="HUNGARY"/>
+    <country code="352" dmn="55" iso="IS" name="ICELAND"/>
+    <country code="356" dmn="225" iso="IN" name="INDIA"/>
+    <country code="360" dmn="69" iso="ID" name="INDONESIA"/>
+    <country code="368" dmn="55" iso="IQ" name="IRAQ"/>
+    <country code="372" dmn="55" iso="IE" name="IRELAND"/>
+    <country code="376" dmn="54" iso="IL" name="ISRAEL"/>
+    <country code="380" dmn="55" iso="IT" name="ITALY"/>
+    <country code="384" dmn="55" iso="CI" name="COTE_D_IVOIRE"/>
+    <country code="388" dmn="228" iso="JM" name="JAMAICA"/>
+    <country code="392" dmn="64" iso="JP" name="JAPAN"/>
+    <country code="393" dmn="65" iso="JP" name="JAPAN1"/>
+    <country code="394" dmn="72" iso="JP" name="JAPAN2"/>
+    <country code="395" dmn="67" iso="JP" name="JAPAN3"/>
+    <country code="396" dmn="74" iso="JP" name="JAPAN4"/>
+    <country code="397" dmn="75" iso="JP" name="JAPAN5"/>
+    <country code="398" dmn="61" iso="KZ" name="KAZAKHSTAN"/>
+    <country code="400" dmn="54" iso="JO" name="JORDAN"/>
+    <country code="404" dmn="55" iso="KE" name="KENYA"/>
+    <country code="410" dmn="95" iso="KR" name="KOREA REPUBLIC"/>
+    <country code="412" dmn="94" iso="KR" name="KOREA REPUBLIC3"/>
+    <country code="414" dmn="54" iso="KW" name="KUWAIT"/>
+    <country code="418" dmn="59" iso="LA" name="LAOS"/>
+    <country code="422" dmn="55" iso="LB" name="LEBANON"/>
+    <country code="426" dmn="55" iso="LS" name="LESOTHO"/>
+    <country code="428" dmn="55" iso="LV" name="LATVIA"/>
+    <country code="434" dmn="55" iso="LY" name="LIBYA"/>
+    <country code="438" dmn="55" iso="LI" name="LIECHTENSTEIN"/>
+    <country code="440" dmn="55" iso="LT" name="LITHUANIA"/>
+    <country code="442" dmn="55" iso="LU" name="LUXEMBOURG"/>
+    <country code="446" dmn="224" iso="MO" name="MACAU SAR"/>
+    <country code="450" dmn="55" iso="MG" name="MADAGASCAR"/>
+    <country code="454" dmn="228" iso="MW" name="MALAWI"/>
+    <country code="458" dmn="224" iso="MY" name="MALAYSIA"/>
+    <country code="462" dmn="54" iso="MV" name="MALDIVES"/>
+    <country code="466" dmn="55" iso="ML" name="MALI"/>
+    <country code="470" dmn="55" iso="MT" name="MALTA"/>
+    <country code="474" dmn="55" iso="MQ" name="MARTINIQUE"/>
+    <country code="478" dmn="55" iso="MR" name="MAURITANIA"/>
+    <country code="480" dmn="59" iso="MU" name="MAURITIUS"/>
+    <country code="484" dmn="228" iso="MX" name="MEXICO"/>
+    <country code="492" dmn="55" iso="MC" name="MONACO"/>
+    <country code="498" dmn="55" iso="MD" name="REPUBLIC OF MOLDOVA"/>
+    <country code="499" dmn="55" iso="ME" name="MONTENEGRO"/>
+    <country code="504" dmn="54" iso="MA" name="MOROCCO"/>
+    <country code="508" dmn="55" iso="MZ" name="MOZAMBIQUE"/>
+    <country code="511" dmn="0" iso="DB" name="DEBUG"/>
+    <country code="512" dmn="55" iso="OM" name="OMAN"/>
+    <country code="516" dmn="55" iso="NA" name="NAMIBIA"/>
+    <country code="524" dmn="227" iso="NP" name="NEPAL"/>
+    <country code="528" dmn="55" iso="NL" name="NETHERLANDS"/>
+    <country code="530" dmn="55" iso="AN" name="NETHERLANDS ANTILLES"/>
+    <country code="533" dmn="58" iso="AW" name="ARUBA"/>
+    <country code="548" dmn="228" iso="VU" name="VANUATU"/>
+    <country code="554" dmn="228" iso="NZ" name="NEW ZEALAND"/>
+    <country code="558" dmn="58" iso="NI" name="NICARAGUA"/>
+    <country code="562" dmn="55" iso="NE" name="NIGER"/>
+    <country code="578" dmn="55" iso="NO" name="NORWAY"/>
+    <country code="580" dmn="58" iso="MP" name="NORTHERN MARIANA ISLANDS"/>
+    <country code="583" dmn="228" iso="FM" name="MICRONESIA"/>
+    <country code="584" dmn="58" iso="MH" name="MARSHALL ISLANDS"/>
+    <country code="585" dmn="58" iso="PW" name="PALAU"/>
+    <country code="586" dmn="227" iso="PK" name="PAKISTAN"/>
+    <country code="591" dmn="228" iso="PA" name="PANAMA"/>
+    <country code="598" dmn="228" iso="PG" name="PAPUA NEW GUINEA"/>
+    <country code="600" dmn="228" iso="PY" name="PARAGUAY"/>
+    <country code="604" dmn="228" iso="PE" name="PERU"/>
+    <country code="608" dmn="224" iso="PH" name="PHILIPPINES"/>
+    <country code="616" dmn="55" iso="PL" name="POLAND"/>
+    <country code="620" dmn="55" iso="PT" name="PORTUGAL"/>
+    <country code="630" dmn="16" iso="PR" name="PUERTO RICO"/>
+    <country code="634" dmn="54" iso="QA" name="QATAR"/>
+    <country code="638" dmn="55" iso="RE" name="REUNION"/>
+    <country code="642" dmn="55" iso="RO" name="ROMANIA"/>
+    <country code="643" dmn="61" iso="RU" name="RUSSIA"/>
+    <country code="646" dmn="55" iso="RW" name="RWANDA"/>
+    <country code="652" dmn="55" iso="BL" name="SAINT BARTHELEMY"/>
+    <country code="659" dmn="58" iso="KN" name="SAINT KITTS AND NEVIS"/>
+    <country code="662" dmn="58" iso="LC" name="SAINT LUCIA"/>
+    <country code="663" dmn="55" iso="MF" name="SAINT MARTIN"/>
+    <country code="666" dmn="55" iso="PM" name="SAINT PIERRE AND MIQUELON"/>
+    <country code="670" dmn="58" iso="VC" name="SAINT VINCENT AND GRENADIENS"/>
+    <country code="682" dmn="55" iso="SA" name="SAUDI ARABIA"/>
+    <country code="686" dmn="54" iso="SN" name="SENEGAL"/>
+    <country code="688" dmn="55" iso="RS" name="REPUBLIC OF SERBIA"/>
+    <country code="694" dmn="55" iso="SL" name="SIERRA LEONE"/>
+    <country code="702" dmn="224" iso="SG" name="SINGAPORE"/>
+    <country code="703" dmn="55" iso="SK" name="SLOVAKIA"/>
+    <country code="704" dmn="224" iso="VN" name="VIET NAM"/>
+    <country code="705" dmn="55" iso="SI" name="SLOVENIA"/>
+    <country code="710" dmn="55" iso="ZA" name="SOUTH AFRICA"/>
+    <country code="716" dmn="55" iso="ZW" name="ZIMBABWE"/>
+    <country code="724" dmn="55" iso="ES" name="SPAIN"/>
+    <country code="740" dmn="55" iso="SR" name="SURINAME"/>
+    <country code="752" dmn="55" iso="SE" name="SWEDEN"/>
+    <country code="756" dmn="55" iso="CH" name="SWITZERLAND"/>
+    <country code="764" dmn="59" iso="TH" name="THAILAND"/>
+    <country code="768" dmn="55" iso="TG" name="TOGO"/>
+    <country code="780" dmn="228" iso="TT" name="TRINIDAD AND TOBAGO"/>
+    <country code="784" dmn="55" iso="AE" name="UNITED ARAB EMIRATES"/>
+    <country code="788" dmn="55" iso="TN" name="TUNISIA"/>
+    <country code="792" dmn="55" iso="TR" name="TURKEY"/>
+    <country code="795" dmn="54" iso="TM" name="TURKMENISTAN"/>
+    <country code="796" dmn="55" iso="TC" name="TURKS AND CAICOS"/>
+    <country code="800" dmn="55" iso="UG" name="UGANDA"/>
+    <country code="804" dmn="62" iso="UA" name="UKRAINE"/>
+    <country code="807" dmn="55" iso="MK" name="MACEDONIA, FYRO"/>
+    <country code="818" dmn="226" iso="EG" name="EGYPT"/>
+    <country code="826" dmn="55" iso="GB" name="UNITED KINGDOM"/>
+    <country code="833" dmn="55" iso="IM" name="ISLE OF MAN"/>
+    <country code="834" dmn="55" iso="TZ" name="TANZANIA"/>
+    <country code="841" dmn="58" iso="US" name="UNITED STATES2"/>
+    <country code="842" dmn="18" iso="PS" name="UNITED STATES (PUBLIC SAFETY)"/>
+    <country code="850" dmn="58" iso="VI" name="VIRGIN ISLANDS"/>
+    <country code="854" dmn="55" iso="BF" name="BURKINA-FASO"/>
+    <country code="858" dmn="228" iso="UY" name="URUGUAY"/>
+    <country code="860" dmn="54" iso="UZ" name="UZBEKISTAN"/>
+    <country code="862" dmn="228" iso="VE" name="VENEZUELA"/>
+    <country code="876" dmn="55" iso="WF" name="WALLIS AND FUTUNA"/>
+    <country code="887" dmn="55" iso="YE" name="YEMEN"/>
+    <country code="894" dmn="55" iso="ZM" name="ZAMBIA"/>
+    <country code="4006" dmn="76" iso="JP" name="JAPAN6"/>
+    <country code="4007" dmn="128" iso="JP" name="JAPAN7"/>
+    <country code="4008" dmn="129" iso="JP" name="JAPAN8"/>
+    <country code="4009" dmn="130" iso="JP" name="JAPAN9"/>
+    <country code="4010" dmn="131" iso="JP" name="JAPAN10"/>
+    <country code="4011" dmn="132" iso="JP" name="JAPAN11"/>
+    <country code="4012" dmn="133" iso="JP" name="JAPAN12"/>
+    <country code="4013" dmn="134" iso="JP" name="JAPAN13"/>
+    <country code="4014" dmn="135" iso="JP" name="JAPAN14"/>
+    <country code="4015" dmn="136" iso="JP" name="JAPAN15"/>
+    <country code="4016" dmn="137" iso="JP" name="JAPAN16"/>
+    <country code="4017" dmn="138" iso="JP" name="JAPAN17"/>
+    <country code="4018" dmn="139" iso="JP" name="JAPAN18"/>
+    <country code="4019" dmn="140" iso="JP" name="JAPAN19"/>
+    <country code="4020" dmn="141" iso="JP" name="JAPAN20"/>
+    <country code="4021" dmn="142" iso="JP" name="JAPAN21"/>
+    <country code="4022" dmn="143" iso="JP" name="JAPAN22"/>
+    <country code="4023" dmn="144" iso="JP" name="JAPAN23"/>
+    <country code="4024" dmn="145" iso="JP" name="JAPAN24"/>
+    <country code="4025" dmn="240" iso="JP" name="JAPAN25"/>
+    <country code="4026" dmn="241" iso="JP" name="JAPAN26"/>
+    <country code="4027" dmn="242" iso="JP" name="JAPAN27"/>
+    <country code="4028" dmn="244" iso="JP" name="JAPAN28"/>
+    <country code="4029" dmn="245" iso="JP" name="JAPAN29"/>
+    <country code="4030" dmn="248" iso="JP" name="JAPAN30"/>
+    <country code="4031" dmn="249" iso="JP" name="JAPAN31"/>
+    <country code="4032" dmn="250" iso="JP" name="JAPAN32"/>
+    <country code="4033" dmn="251" iso="JP" name="JAPAN33"/>
+    <country code="4034" dmn="246" iso="JP" name="JAPAN34"/>
+    <country code="4035" dmn="247" iso="JP" name="JAPAN35"/>
+    <country code="4036" dmn="243" iso="JP" name="JAPAN36"/>
+    <country code="4037" dmn="252" iso="JP" name="JAPAN37"/>
+    <country code="4038" dmn="253" iso="JP" name="JAPAN38"/>
+    <country code="4039" dmn="254" iso="JP" name="JAPAN39"/>
+    <country code="4040" dmn="255" iso="JP" name="JAPAN40"/>
+    <country code="4041" dmn="208" iso="JP" name="JAPAN41"/>
+    <country code="4042" dmn="209" iso="JP" name="JAPAN42"/>
+    <country code="4043" dmn="210" iso="JP" name="JAPAN43"/>
+    <country code="4044" dmn="211" iso="JP" name="JAPAN44"/>
+    <country code="4045" dmn="212" iso="JP" name="JAPAN45"/>
+    <country code="4046" dmn="213" iso="JP" name="JAPAN46"/>
+    <country code="4047" dmn="214" iso="JP" name="JAPAN47"/>
+    <country code="4048" dmn="215" iso="JP" name="JAPAN48"/>
+    <country code="4049" dmn="216" iso="JP" name="JAPAN49"/>
+    <country code="4050" dmn="217" iso="JP" name="JAPAN50"/>
+    <country code="4051" dmn="218" iso="JP" name="JAPAN51"/>
+    <country code="4052" dmn="219" iso="JP" name="JAPAN52"/>
+    <country code="4053" dmn="220" iso="JP" name="JAPAN53"/>
+    <country code="4054" dmn="221" iso="JP" name="JAPAN54"/>
+    <country code="4057" dmn="222" iso="JP" name="JAPAN57"/>
+    <country code="4058" dmn="146" iso="JP" name="JAPAN58"/>
+    <country code="4059" dmn="147" iso="JP" name="JAPAN59"/>
+    <country code="5000" dmn="35" iso="AU" name="AUSTRALIA2"/>
+    <country code="5001" dmn="58" iso="CA" name="CANADA2"/>
+    <country code="5002" dmn="48" iso="BE" name="BELGIUM2"/>
+  </branch>
+  <branch br="218">
+    <country code="788" dmn="55" iso="TN" name="TUNISIA"/>
+  </branch>
+  <branch br="227">
+    <country code="788" dmn="55" iso="TN" name="TUNISIA"/>
+  </branch>
+  <branch br="276">
+    <country code="376" dmn="54" iso="IL" name="ISRAEL"/>
+  </branch>
+  <branch br="288">
+    <country code="804" dmn="62" iso="UA" name="UKRAINE"/>
+  </branch>
+  <branch br="366">
+    <country code="400" dmn="54" iso="JO" name="JORDAN"/>
+  </branch>
+</xml>

@@ -1,0 +1,197 @@
+{
+	"macro": {
+		"ENABLE_OPTIONS": {
+			"disable": 0,
+			"enable": 1 
+		},
+		"INST_TYPE_OPTIONS": {
+			"none": 0,
+			"rev": 1 
+		}
+	},
+	"obj": {
+		"restart/tunnel": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				}
+			}
+		},
+
+		"start/tunnel": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"force": {
+ 					"type": "int16",
+					"opts": "$ENABLE_OPTIONS"
+ 				},
+ 				"usr": {
+					"type": "string"
+ 				},
+ 				"passwd": {
+					"type": "password"
+ 				}
+			}
+		},
+
+		"push/config": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"type": {
+ 					"type": "int16",
+					"opts": "$INST_TYPE_OPTIONS"
+ 				},
+				"revno": {
+ 					"type": "int32"
+ 				},
+				"script": {
+					"type": "string"
+				}
+			}
+		},
+
+		"reset/device": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"assigned_ip": {
+					"type": "string"
+				}
+			}
+		},
+
+		"probe/device": {
+			"type": "command",
+			"attr": {
+				"ip": {
+					"type": "string"
+				},
+				"usr": {
+					"type": "string"
+				},
+				"passwd": {
+					"type": "string"
+				},
+				"force_probe": {
+ 					"type": "int16",
+					"opts": "$ENABLE_OPTIONS"
+ 				}
+			}
+		},
+
+		"del/tunnel": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"assigned_ip": {
+					"type": "string"
+				}
+			}
+		},
+
+		"del/device": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				}
+			}
+		},
+
+		"json/rpc": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"req": {
+					"type": "string"
+				}
+			}
+		},
+
+		"start/probe/session": {
+			"type": "command",
+			"attr": {
+				"ip": {
+					"type": "string"
+				},
+				"usr": {
+					"type": "string"
+				},
+				"passwd": {
+					"type": "string"
+				},
+				"force_probe": {
+ 					"type": "int16",
+					"opts": "$ENABLE_OPTIONS"
+ 				}
+			}
+		},
+
+		"del/probe/session": {
+			"type": "command",
+			"attr": {
+				"device_sn": {
+					"type": "string"
+				}
+			}
+		},
+
+		"unset/retry": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				}
+			}
+		},
+
+		"get/checkin": {
+			"type": "command",
+			"attr": {
+				"device": {
+					"refer": "dvmdb/device"
+				},
+				"usr": {
+					"type": "string"
+				}
+			}
+		},
+
+		"update/device/oid": {
+			"type": "command",
+			"attr": {
+				"new_oid": {
+					"type": "uint64"
+				},
+				"sn": {
+					"type": "string"
+				}
+			}
+		},
+
+		"session": {
+			"attr": {
+				"name": {"type": "string"},
+				"oid": {"type": "int64"},
+				"ip": {"type": "string"},
+				"sn": {"type": "string"},
+				"tun": {"type": "string"},
+				"uptime": {"type": "int64"}
+			}
+		}
+
+	}
+}

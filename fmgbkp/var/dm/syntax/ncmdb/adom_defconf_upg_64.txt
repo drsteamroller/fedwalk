@@ -1,0 +1,1758 @@
+
+config sql-report dataset
+    edit "fct-Installed-Feature-Summary"
+        set description "Installed Feature Summary"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select subtype, count(distinct fctuid) as totalnum from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### t where subtype is not null group by subtype order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Device-by-Operating-System"
+        set description "Device by OS"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select os_short as os, count(distinct fctuid) as totalnum from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### t where os_short is not null group by os order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Installed-FortiClient-Version"
+        set description "FortiClient Version"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select fctver as fctver_short, count(distinct fctuid) as totalnum from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### t where fctver is not null group by fctver order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Endpoint-Profile-Deployment"
+        set description "Endpoint Profile Deployment"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select profile, count(distinct fctuid) as totalnum from ###(select uid as fctuid, coalesce(nullifna(usingpolicy), 'No Profile') as profile from $log where $filter group by uid, profile)### t group by profile order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Client-Summary"
+        set description "Client Summary"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select hostname, deviceip, os_short as os, profile, fctver, from_itime(max(itime)) as last_seen from ###(select hostname, deviceip, regexp_replace(os, '\\(build.*', '') as os_short, nullifna(usingpolicy) as profile, fctver, max(itime) as itime from $log where $filter and os is not null group by hostname, deviceip, os_short, profile, fctver order by itime desc)### t group by hostname, deviceip, os, profile, fctver order by last_seen desc"
+        set protected enable
+    next
+
+    edit "fct-Total-Threats-Found"
+        set description "Total Threats Found"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select utmevent_s as utmevent, count(distinct threat) as totalnum from ###(select coalesce(nullifna(lower(utmevent)), 'unknown') as utmevent_s, threat from $log where $filter and threat is not null and utmaction='blocked' group by utmevent_s, threat)### t group by utmevent order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Top-AV-Threats-Detected"
+        set description "Top AV Threats Detected"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select threat, sum(totalnum) as totalnum from ((select threat, sum(totalnum) as totalnum from ###(select threat, count(*) as totalnum from $log-fct-traffic where $filter and threat is not null and lower(utmevent)='antivirus' group by threat order by totalnum desc)### t group by threat) union all (select threat, sum(totalnum) as totalnum from ###(select virus as threat, count(*) as totalnum from $log-fct-event where $filter and virus is not null group by threat order by totalnum desc)### t group by threat)) t group by threat order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Top-Infected-Devices-with-Botnet"
+        set description "Top Infected Devices with Botnet"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select hostname, count(*) as totalnum from $log where $filter and hostname is not null and lower(utmevent) in ('webfilter', 'appfirewall') and lower(threat) like '%botnet%' group by hostname order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Top-Infected-Devices-with-Virus-Malware"
+        set description "Top Infected Devices with Virus Malware"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select hostname, sum(totalnum) as totalnum from ((select hostname, sum(totalnum) as totalnum from ###(select hostname, count(*) as totalnum from $log-fct-traffic where $filter and hostname is not null and lower(utmevent) in ('antivirus', 'antimalware') group by hostname order by totalnum desc)### t group by hostname) union all (select hostname, sum(totalnum) as totalnum from ###(select hostname, count(*) as totalnum from $log-fct-event where $filter and hostname is not null and virus is not null group by hostname order by totalnum desc)### t group by hostname)) t group by hostname order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-All-Antivirus-Antimalware-Detections"
+        set description "All Antivirus and Antimalware Detections"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select threat, hostname, hostuser, utmaction, from_dtime(max(dtime)) as last_seen from ((select threat, hostname, hostuser, utmaction, max(dtime) as dtime from ###(select threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, max(dtime) as dtime from $log-fct-traffic where $filter and lower(utmevent) in ('antivirus', 'antimalware') group by threat, hostname, hostuser, utmaction order by threat)### t group by threat, hostname, hostuser, utmaction) union all (select threat, hostname, hostuser, utmaction, max(dtime) as dtime from ###(select virus as threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, action as utmaction, max(dtime) as dtime from $log-fct-event where $filter and (logflag is null or logflag&8=0) and virus is not null group by threat, hostname, hostuser, utmaction order by threat)### t group by threat, hostname, hostuser, utmaction)) t group by threat, hostname, hostuser, utmaction order by threat"
+        set protected enable
+    next
+    edit "fct-Web-Filter-Violations"
+        set description "Web Filter Violations"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select hostuser, hostname, string_agg(distinct remotename, ',') as remotename, utmaction, sum(total) as totalnum, from_dtime(max(dtime)) as last_seen from ###(select remotename, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, count(*) as total, max(dtime) as dtime from $log where $filter and lower(utmevent)='webfilter' and utmaction='blocked' group by remotename, hostname, hostuser, utmaction order by total desc)### t group by hostuser, hostname, utmaction order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Application-Firewall"
+        set description "Application Firewall"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select threat, hostname, hostuser, utmaction, from_dtime(max(dtime)) as last_seen from ###(select threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, max(dtime) as dtime from $log where $filter and lower(utmevent)='appfirewall' and utmaction='blocked' group by threat, hostname, hostuser, utmaction order by dtime desc)### t1 left join app_mdata t2 on t1.threat=t2.name group by threat, risk, hostname, hostuser, utmaction order by risk desc"
+        set protected enable
+    next
+    edit "fct-Errors-and-Alerts"
+        set description "Errors and Alerts"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select msg, hostname, hostuser, from_dtime(max(dtime)) as last_seen from ###(select msg, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, max(dtime) as dtime from $log where $filter and level in ('error', 'alert') group by msg, hostname, hostuser order by dtime desc)### t group by msg, hostname, hostuser order by last_seen desc"
+      set protected enable
+    next
+    edit "fct-Threats-by-Top-Devices"
+        set description "Threats by Top Devices"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select hostname, count(*) as totalnum from $log where $filter and hostname is not null and utmevent is not null and utmaction='blocked' group by hostname order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-vuln-Device-Vulnerabilities"
+        set description "Vulnerabilities Detected by User/Device"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select vulnseverity, (CASE vulnseverity WHEN 'Critical' THEN 5 WHEN 'High' THEN 4 WHEN 'Medium' THEN 3 WHEN 'Info' THEN 2 WHEN 'Low' THEN 1 ELSE 0 END) as severity_number, count(distinct vulnname) as vuln_num from ###(select vulnseverity, devid, vulnname from $log where $filter and nullifna(vulnseverity) is not null and nullifna(vulnname) is not null group by vulnseverity, vulnname, devid)### t group by vulnseverity order by severity_number desc"
+        set protected enable
+    next
+    edit "fct-vuln-Category-Type-Vulnerabilities"
+        set description "Vulnerabilities Detected by Category Type"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select vulncat, count(distinct vulnname) as totalnum from ###(select vulncat, vulnname from $log where $filter and nullifna(vulncat) is not null and nullifna(vulnname) is not null group by vulncat, vulnname)### t group by vulncat order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerabilities-by-OS"
+        set description "Forticlient Vulnerabilities by OS"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select os, count(distinct vulnname) as totalnum from ###(select os, vulnname from $log where $filter and nullifna(os) is not null and nullifna(vulnname) is not null group by os, vulnname)### t group by os order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-vuln-Devices-by-Vulnerability-Risk-Level"
+        set description "Number Vulnerability by Device and Risk Level"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select vulnseverity, (case when vulnseverity='Critical' then 5 when vulnseverity='High' then 4 when vulnseverity='Medium' then 3 when vulnseverity='Low' then 2 when vulnseverity='Info' then 1 else 0 end) as severity_number, count(distinct vulnname) as vuln_num, count(distinct devid) as dev_num from ###(select vulnseverity, devid, vulnname from $log where $filter and nullifna(vulnseverity) is not null and nullifna(vulnname) is not null and nullifna(devid) is not null group by vulnseverity, vulnname, devid)### t group by vulnseverity order by dev_num desc, severity_number desc"
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerability-Trend"
+        set description "Vulnerability Trend"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select $flex_timescale(timestamp) as hodex, count(distinct vulnname) as total_num from ###(select $flex_timestamp as timestamp, vulnname from $log where $filter and nullifna(vulnname) is not null group by timestamp, vulnname order by timestamp desc)### t group by hodex order by hodex"
+        set protected enable
+    next
+    edit "fct-vuln-Details-by-Risk-Level-Device"
+        set description "Vulnerability Details for Each Risk Level by Device"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select hostname, os, vulnseverity, count(distinct vulnname) as vuln_num, count(distinct products) as products, count(distinct cve_id) as cve_count from ###(select hostname, os, vulnname, vulnseverity, vulnid from $log where $filter and vulnname is not null and vulnseverity is not null and hostname is not null group by hostname, os, vulnname, vulnseverity, vulnid)### t1 left join fct_mdata t2 on t1.vulnid=t2.vid::int group by hostname, os, vulnseverity order by vuln_num desc, hostname"
+        set protected enable
+    next
+    edit "fct-vuln-Details-by-Device-User"
+        set description "Vulnerability Details by Device User"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select hostname, ('<div>' || vulnname || '</div>') as vulnname, vulnseverity, vulncat, string_agg(distinct products, ',') as products, string_agg(distinct cve_id, ',') as cve_list, ('<a href=' || String_agg(DISTINCT vendor_link, ',') || '>Remediation Info</a>') as vendor_link from ###(select hostname, vulnname, vulnseverity, vulncat, vulnid from $log where $filter and vulnname is not null and hostname is not null group by hostname, vulnname, vulnseverity, vulncat, vulnid)### t1 inner join fct_mdata t2 on t1.vulnid=t2.vid::int group by hostname, vulnname, vulnseverity, vulncat order by hostname"
+        set protected enable
+    next
+    edit "fct-vuln-Remediation-by-Device"
+        set description "Remediate The Vulnerability Found on Device"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select hostname, ('<div>' || vulnname || '</div>') as vulnname, vulnseverity, string_agg(distinct vendor_link, ',') as vendor_link from ###(select hostname, vulnname, vulnseverity, vulnid from $log where $filter and vulnname is not null and hostname is not null group by hostname, vulnname, vulnseverity, vulnid)### t1 inner join fct_mdata t2 on t1.vulnid=t2.vid::int group by hostname, vulnname, vulnseverity order by vulnseverity, hostname"
+        set protected enable
+    next
+    edit "fct-vuln-Remediation-by-Vulnerability"
+        set description "Remediation by Vulnerability"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select ('<b>' || vulnname || '</b><br/><br/>' || 'Description<br/><div style=word-break:normal>' || description || '</div><br/><br/>' || 'Affected Products<br/>' || products || '<br/><br/>' || 'Impact<br/>' || impact || '<br/><br/>' || 'Recommended Actions<br/>' || vendor_link || '<br/><br/><br/>') as remediation from ###(select devid, vulnname, vulnseverity, (case vulnseverity when 'low' then 1 when 'info' then 2 when 'medium' then 3 when 'high' then 4 when 'critical' then 5 else 0 end) as severity_level, vulnid from $log where $filter and vulnname is not null group by devid, vulnname, vulnseverity, severity_level, vulnid order by severity_level)### t1 inner join fct_mdata t2 on t1.vulnid=t2.vid::int group by remediation order by remediation"
+        set protected enable
+    next
+    edit "fct-vuln-Top-30-Targeted-High-Risk-Vulnerabilities"
+        set description "Top 30 Targeted High Risk Vulnerabilities"
+        set dev-type FortiClient
+        set log-type fct-netscan
+        set query "select t3.cve_id, score, string_agg(distinct products, ',') as products, ('<a href=' || String_agg(vendor_link, ',') || '>Mitigation Infomation</a>') as vendor_link from ###(select vulnid from $log where $filter group by vulnid)### t1 inner join fct_mdata t2 on t2.vid=t1.vulnid::text inner join fct_cve_score t3 on strpos(t2.cve_id, t3.cve_id) > 0 group by t3.cve_id, score order by score desc, t3.cve_id"
+        set protected enable
+    next
+
+    edit "fct-Endpoints-by-FortiGate"
+        set description "Endpoints by FortiGate"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select fgtserial, count(distinct fctuid) as totalnum from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### t where fgtserial is not null group by fgtserial order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Top-Malware-Detections"
+        set description "Top Infected Devices with Malware"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select hostname, fctuid, sum(totalnum) as totalnum from ((select hostname, fctuid, sum(totalnum) as totalnum from ###(select threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, max(dtime) as dtime, uid as fctuid, count(*) as totalnum from $log-fct-traffic where $filter and lower(utmevent) in ('antivirus', 'antimalware') group by threat, hostname, hostuser, utmaction, uid order by threat)### t group by hostname, fctuid) union all (select hostname, fctuid, sum(totalnum) as totalnum from ###(select virus as threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, action as utmaction, max(dtime) as dtime, uid as fctuid, count(*) as totalnum from $log-fct-event where $filter and (logflag is null or logflag&8=0) and virus is not null group by threat, hostname, hostuser, utmaction, uid order by threat)### t group by hostname, fctuid)) t group by hostname, fctuid order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Top10-Malware-Detections"
+        set description "Top 10 Infected Devices with Malware"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select threat, hostname, hostuser, utmaction, fctuid, sum(totalnum) as totalnum from ((select threat, hostname, hostuser, utmaction, fctuid, sum(totalnum) as totalnum from ###(select threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, max(dtime) as dtime, uid as fctuid, count(*) as totalnum from $log-fct-traffic where $filter and lower(utmevent) in ('antivirus', 'antimalware') group by threat, hostname, hostuser, utmaction, uid order by threat)### t group by threat, hostname, hostuser, utmaction, fctuid) union all (select threat, hostname, hostuser, utmaction, fctuid, sum(totalnum) as totalnum from ###(select virus as threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, action as utmaction, max(dtime) as dtime, uid as fctuid, count(*) as totalnum from $log-fct-event where $filter and (logflag is null or logflag&8=0) and virus is not null group by threat, hostname, hostuser, utmaction, uid order by threat)### t group by threat, hostname, hostuser, utmaction, fctuid)) t where utmaction != 'pass' group by threat, hostname, hostuser, utmaction, fctuid order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Devices-with-Botnet"
+        set description "Infected Devices with Botnet"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select threat, hostname, coalesce(nullifna(`user`), 'Unknown') as hostuser, utmaction, uid as fctuid, count(*) as totalnum from $log where $filter and hostname is not null and lower(utmevent) in ('webfilter', 'appfirewall') and lower(threat) like '%botnet%' group by threat, hostname, hostuser, utmaction, fctuid order by totalnum desc"
+        set protected enable
+    next
+
+    edit "fct-Compliance-by-FortiGate"
+        set description "FortiClinet Compliance by FortiGate Enforcing"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select fgtserial, count(distinct fctuid) as totalnum from (select fgtserial, fctuid, max(compliance_flag) as compliance_flag from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### tt group by fgtserial, fctuid) t where compliance_flag = 1 group by fgtserial order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Compliance-Status"
+        set description "Number of FortiClinets by Compliance Status"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select (case compliance_flag when 1 then 'Compliant' else 'Non-Compliant' end) as compliance, count(distinct fctuid) as totalnum from (select fctuid, max(compliance_flag) as compliance_flag from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### tt group by fctuid) t group by compliance order by totalnum desc"
+        set protected enable
+    next
+    edit "fct-Non-Compliant-Endpoints"
+        set description "Non-compliant Endpoints"
+        set dev-type FortiClient
+        set log-type fct-event
+        set query "select t1.fgtserial, t3.srcintf, t2.epname as hostname, t2.mac, 'Non-Compliant' as status from (select fgtserial, fctuid, max(compliance_flag) as compliance_flag from ###(select uid as fctuid, regexp_replace(os, '\\(build.*', '') as os_short, fctver, subtype, fgtserial, max(case when msg like 'Compliance rules%applied' then 1 else 0 end) as compliance_flag from $log where $filter and subtype != 'admin' group by uid, os_short, fctver, subtype, fgtserial)### tt group by fgtserial, fctuid) t1 left join $ADOM_ENDPOINT t2 on t1.fctuid = t2.fctuid left join $ADOM_EPEU_DEVMAP t3 on t2.epid = t3.epid where compliance_flag = 0 group by t1.fctuid, t1.fgtserial, t3.srcintf, t2.epname, t2.mac"
+        set protected enable
+    next
+
+    edit "fct-Traffic-Web-Hits"
+        set description "Web Traffic Trend"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select $flex_timescale(timestamp) as hodex, sum(requests) as requests from ###(select $flex_timestamp as timestamp, count(*) as requests from $log where $filter and lower(utmevent)='webfilter' group by timestamp order by timestamp desc)### t group by hodex order by hodex"
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Allowed-Web-Cat"
+        set description "Top Visited Web Categories"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select category, sum(requests) as requests from ###(select fct_webcat(threat) as category, remotename as website, count(*) as requests from $log where $filter and direction='outbound' and threat is not null and utmaction='passthrough' and lower(utmevent)='webfilter' group by category, website order by requests desc)### t group by category order by requests desc"
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Allowed-Website"
+        set description "Top Visited Websites"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select website, string_agg(distinct category, ', ') as agg_category, sum(requests) as requests from ###(select fct_webcat(threat) as category, remotename as website, count(*) as requests from $log where $filter and direction='outbound' and threat is not null and utmaction='passthrough' and lower(utmevent)='webfilter' group by category, website order by requests desc)### t where website is not null group by website order by requests desc"
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Category-By-Website-Session"
+        set description "Top Web Categories by Website Session"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select fct_webcat(threat) as category, remotename as website, count(*) as requests from $log where $filter and nullifna(threat) is not null and lower(utmevent)='webfilter' group by category, website order by requests desc"
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Web-Users-By-Website"
+        set description "Top Web Users by Website"
+        set dev-type FortiClient
+        set log-type fct-traffic
+        set query "select coalesce(nullifna(`user`), ipstr(`srcip`)) as user_src, remotename as website, count(*) as requests from $log where $filter and direction='outbound' and remotename is not null and utmaction='passthrough' and lower(utmevent)='webfilter' group by user_src, website order by requests desc"
+        set protected enable
+    next
+        
+end
+
+
+config sql-report chart
+    edit "fct-Installed-Feature-Summary"
+        set disp-name "Installed Feature Summary"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Installed Feature Summary"
+        set dataset "fct-Installed-Feature-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Feature"
+                set data-type raw
+                set data-binding "subtype"
+                set data-top 30
+                set column-width 40
+            next
+            edit 2
+                set header "Total"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 60
+            next
+            edit 3
+                set header " "
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Device-by-Operating-System"
+        set disp-name "Device by OS"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Device by Operating System"
+        set dataset "fct-Device-by-Operating-System"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "os"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Installed-FortiClient-Version"
+        set disp-name "FortiClient Version: Installed"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Installed FortiClient Version"
+        set dataset "fct-Installed-FortiClient-Version"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "fctver_short"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Endpoint-Profile-Deployment"
+        set disp-name "Endpoint Profile Deployment"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Endpoint Profile Deployment"
+        set dataset "fct-Endpoint-Profile-Deployment"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "profile"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Client-Summary"
+        set disp-name "Client Summary"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Client Summary"
+        set dataset "fct-Client-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Name"
+                set data-binding "hostname"
+                set data-top 30
+                set column-width 15
+            next
+            edit 2
+                set header "Source IP"
+                set data-binding "deviceip"
+                set column-width 15
+            next
+            edit 3
+                set header "OS"
+                set data-binding "os"
+                set column-width 30
+            next
+            edit 4
+                set header "Policy Name"
+                set data-binding "profile"
+                set column-width 10
+            next
+            edit 5
+                set header "FCT Version"
+                set data-binding "fctver"
+                set column-width 15
+            next
+            edit 6
+                set header "Last Seen"
+                set data-binding "last_seen"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+
+    edit "fct-Total-Threats-Found"
+        set disp-name "Total Threats Found"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Total Threats Found"
+        set dataset "fct-Total-Threats-Found"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Name"
+                set data-binding "utmevent"
+                set data-top 0
+                set column-width 30
+            next
+            edit 2
+                set header "Number of Threats"
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 3
+                set header " "
+                set data-binding "totalnum"
+                set column-attr count
+            next
+            edit 4
+                set header "Percentage of Total"
+                set data-binding "totalnum"
+                set column-attr cal-percent
+                set column-width 20
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Top10-AV-Threats-Detected"
+        set disp-name "Top 10 AV Threats Detected"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top 10 AV Threats Detected"
+        set dataset "fct-Top-AV-Threats-Detected"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Name"
+                set data-type raw
+                set data-binding "threat"
+                set data-top 10
+                set column-width 30
+            next
+            edit 2
+                set header "Number of Detections"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 3
+                set header " "
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+            next
+            edit 4
+                set header "Percentage of Total"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr cal-percent
+                set column-width 20
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Top10-Infected-Devices-with-Botnet"
+        set disp-name "Top 10 Infected Devices with Botnet"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top 10 Infected Devices with Botnet"
+        set dataset "fct-Top-Infected-Devices-with-Botnet"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+                set column-width 30
+            next
+            edit 2
+                set header "Number of Detections"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 3
+                set header " "
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+            next
+            edit 4
+                set header "Percentage of Total"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr cal-percent
+                set column-width 20
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Top10-Infected-Devices-with-Virus-Malware"
+        set disp-name "Top 10 Infected Devices with Virus or Malware"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top 10 Infected Devices with Virus or Malware"
+        set dataset "fct-Top-Infected-Devices-with-Virus-Malware"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+                set column-width 30
+            next
+            edit 2
+                set header "Number of Detections"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 3
+                set header " "
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+            next
+            edit 4
+                set header "Percentage of Total"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr cal-percent
+                set column-width 20
+            next
+        end
+        set protected enable
+    next
+    edit "fct-All-Antivirus-Antimalware-Detections"
+        set disp-name "All Antivirus and Antimalware Detections"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "All Antivirus and Antimalware Detections"
+        set dataset "fct-All-Antivirus-Antimalware-Detections"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Threat Name"
+                set data-type raw
+                set data-binding "threat"
+                set data-top 0
+                set column-width 30
+            next
+            edit 2
+                set header "Device"
+                set data-type raw
+                set data-binding "hostname"
+                set column-width 20
+            next
+            edit 3
+                set header "User"
+                set data-type raw
+                set data-binding "hostuser"
+                set column-width 25
+            next
+            edit 4
+                set header "Action"
+                set data-type raw
+                set data-binding "utmaction"
+                set column-width 15
+            next
+            edit 5
+                set header "Last Seen"
+                set data-binding "last_seen"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Web-Filter-Violations"
+        set disp-name "Web Filter Violations"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Web Filter Violations"
+        set dataset "fct-Web-Filter-Violations"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "User"
+                set data-type raw
+                set data-binding "hostuser"
+                set data-top 30
+                set column-width 10
+            next
+            edit 2
+                set header "Site"
+                set data-type raw
+                set data-binding "remotename"
+                set column-width 40
+                set column-attr obf-url
+            next
+            edit 3
+                set header "Action"
+                set data-type raw
+                set data-binding "utmaction"
+                set column-width 10
+            next
+            edit 4
+                set header "Count"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+                set column-width 10
+            next
+            edit 5
+                set header "Device"
+                set data-type raw
+                set data-binding "hostname"
+                set column-width 10
+            next
+            edit 6
+                set header "Last Seen"
+                set data-binding "last_seen"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Application-Firewall"
+        set disp-name "Application Firewall"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Application Firewall"
+        set dataset "fct-Application-Firewall"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Application"
+                set data-type raw
+                set data-binding "threat"
+                set data-top 30
+                set column-width 30
+            next
+            edit 2
+                set header "Device"
+                set data-type raw
+                set data-binding "hostname"
+                set column-width 20
+            next
+            edit 3
+                set header "User"
+                set data-type raw
+                set data-binding "hostuser"
+                set column-width 20
+            next
+            edit 4
+                set header "Action"
+                set data-type raw
+                set data-binding "utmaction"
+                set column-width 20
+            next
+            edit 5
+                set header "Last Seen"
+                set data-binding "last_seen"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Errors-and-Alerts"
+        set disp-name "Errors and Alerts"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Errors and Alerts"
+        set dataset "fct-Errors-and-Alerts"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Description"
+                set data-type raw
+                set data-binding "msg"
+                set data-top 30
+                set column-width 30
+            next
+            edit 2
+                set header "Device"
+                set data-type raw
+                set data-binding "hostname"
+                set column-width 30
+            next
+            edit 3
+                set header "User"
+                set data-type raw
+                set data-binding "hostuser"
+                set column-width 30
+            next
+            edit 4
+                set header "Last Seen"
+                set data-binding "last_seen"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Threats-by-Top-Devices"
+        set disp-name "Threats by Top Devices"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Threats by Top Devices"
+        set dataset "fct-Threats-by-Top-Devices"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Device Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+                set column-width 40
+            next
+            edit 2
+                set header "Number of Detections"
+                set data-type raw
+                set data-binding "totalnum"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 60
+            next
+            edit 3
+                set header " "
+                set data-type raw
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Device-Vulnerabilities"
+        set disp-name "Vulnerabilities Detected by Device"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Vulnerabilities Detected by User/Device"
+        set dataset "fct-vuln-Device-Vulnerabilities"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "vulnseverity"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "vuln_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Category-Type-Vulnerabilities"
+        set disp-name "Vulnerabilities Detected by Category Type"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Vulnerabilities Detected by Category Type"
+        set dataset "fct-vuln-Category-Type-Vulnerabilities"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "vulncat"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerabilities-by-OS"
+        set disp-name "The OS Vulnerabilities Detected"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "The OS Vulnerabilities Detected"
+        set dataset "fct-vuln-Vulnerabilities-by-OS"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set data-binding "os"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerabilities-by-Risk-Level"
+        set disp-name "Number of Vulnerabilities by Risk Level"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Number of Vulnerabilities by Risk Level"
+        set dataset "fct-vuln-Devices-by-Vulnerability-Risk-Level"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "vulnseverity"
+                set data-top 20
+            next
+            edit 2
+                set header "Vulnerability"
+                set data-type aggregate
+                set data-binding "vuln_num"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Device-by-Risk-Level"
+        set disp-name "Number of Vulnerabilities by Device and Risk Level"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Number of Vulnerabilities by Device and Risk Level"
+        set dataset "fct-vuln-Devices-by-Vulnerability-Risk-Level"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Number of Device"
+                set data-binding "dev_num"
+                set column-attr count
+                set data-top 5
+            next
+            edit 2
+                set header "Risk Level"
+                set data-binding "vulnseverity"
+                set column-attr severity
+                set column-span 2
+            next
+            edit 3
+                set data-binding "vulnseverity"
+            next
+            edit 4
+                set header "Vulnerabilities"
+                set data-binding "vuln_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerability-Trend"
+        set disp-name "The Vulnerabilities Trend"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "The Vulnerabilities Trend"
+        set dataset "fct-vuln-Vulnerability-Trend"
+        set chart-type line
+        config table-columns
+            edit 1
+                set header "Date"
+                set data-binding "hodex"
+                set column-attr time
+                set data-top 168
+            next
+            edit 2
+                set data-binding "total_num"
+                set column-graph-type line-up
+                set column-attr count
+                set legend "vulnerability"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Details-by-Risk-Level-Device"
+        set disp-name "Vulnerability Details for Each Risk Level by Device"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Vulnerability Details for Each Risk Level by Device"
+        set dataset "fct-vuln-Details-by-Risk-Level-Device"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+                set column-width 17
+            next
+            edit 2
+                set header "Severity Level"
+                set data-binding "vulnseverity"
+                set column-attr severity
+                set column-span 2
+                set column-width 10
+            next
+            edit 3
+                set data-binding "vulnseverity"
+                set column-attr default
+            next
+            edit 4
+                set header "Vulnerabilities"
+                set data-binding "vuln_num"
+                set column-attr count
+            next
+            edit 5
+                set header "OS Version"
+                set data-binding "os"
+                set column-width 30
+            next
+            edit 6
+                set header "Applications"
+                set data-binding "products"
+                set column-attr count
+            next
+            edit 7
+                set header "CVE# Count"
+                set data-binding "cve_count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Details-by-Device-User"
+        set disp-name "Vulnerability Details by Device User"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Vulnerability Details by Device User"
+        set dataset "fct-vuln-Details-by-Device-User"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 25
+                set column-width 17
+            next
+            edit 2
+                set header "Vulnerability Name"
+                set data-binding "vulnname"
+                set column-width 20
+                set column-attr html
+            next
+            edit 3
+                set header "Severity"
+                set data-binding "vulnseverity"
+                set column-attr severity
+                set column-span 2
+                set column-width 10
+            next
+            edit 4
+                set data-binding "vulnseverity"
+            next
+            edit 5
+                set header "Category"
+                set data-binding "vulncat"
+            next
+            edit 6
+                set header "Application/Product"
+                set data-binding "products"
+            next
+            edit 7
+                set header "CVE"
+                set data-binding "cve_list"
+                set column-width 14
+            next
+            edit 8
+                set header "Remediation Actions"
+                set data-binding "vendor_link"
+                set column-attr html
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Remediation-by-Device"
+        set disp-name "Remediate The Vulnerability Found on Device"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Remediate The Vulnerability Found on Device"
+        set dataset "fct-vuln-Remediation-by-Device"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+                set column-width 17
+            next
+            edit 2
+                set header "Vulnerability"
+                set data-binding "vulnname"
+                set column-attr html
+            next
+            edit 3
+                set header "Risk"
+                set data-binding "vulnseverity"
+                set column-attr severity
+                set column-span 2
+                set column-width 10
+            next
+            edit 4
+                set data-binding "vulnseverity"
+            next
+            edit 5
+                set header "Actions Required"
+                set data-binding "vendor_link"
+                set column-attr url
+                set column-span 2
+                set column-width 50
+            next
+            edit 6
+                set data-binding "vendor_link"
+                set column-attr html
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Remediation-by-Vulnerability"
+        set disp-name "Remediation by Vulnerability"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Remediation by Vulnerability"
+        set dataset "fct-vuln-Remediation-by-Vulnerability"
+        set chart-type table
+        config table-columns
+            edit 1
+                set data-type raw
+                set data-binding "remediation"
+                set data-top 10
+                set column-attr html
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Top-30-Targeted-High-Risk-Vulnerabilities"
+        set disp-name "Top 30 Targeted High Risk Vulnerabilities"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Top 30 Targeted High Risk Vulnerabilities"
+        set dataset "fct-vuln-Top-30-Targeted-High-Risk-Vulnerabilities"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "CVE"
+                set data-type raw
+                set data-binding "cve_id"
+                set data-top 30
+                set column-width 20
+            next
+            edit 2
+                set header "Affected Products/Version"
+                set data-binding "products"
+                set column-width 60
+            next
+            edit 3
+                set header "Patching Information"
+                set data-binding "vendor_link"
+                set column-attr url
+                set column-width 20
+            next
+        end
+        set protected enable
+    next
+
+    edit "fct-Endpoints-by-FortiGate"
+        set disp-name "Endpoints by FortiGate"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Endpoints by FortiGate"
+        set dataset "fct-Endpoints-by-FortiGate"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "fgtserial"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Top-Malware-Detections"
+        set disp-name "Top Anti-Malware Detections"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top Anti-Malware Detections"
+        set dataset "fct-Top-Malware-Detections"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set data-binding "hostname"
+                set data-top 10
+            next
+            edit 2
+                set header "Total Number"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Top10-Malware-Detections"
+        set disp-name "Top 10 Anti-Malware Detections"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top 10 Anti-Malware Detections"
+        set dataset "fct-Top10-Malware-Detections"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Threat name"
+                set data-binding "threat"
+                set data-top 10
+            next
+            edit 2
+                set header "Device"
+                set data-binding "hostname"
+            next
+            edit 3
+                set header "User"
+                set data-binding "hostuser"
+            next
+            edit 4
+                set header "Action"
+                set data-binding "utmaction"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Devices-with-Botnet"
+        set disp-name "Devices with Botnet Detections"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Devices with Botnet Detections"
+        set dataset "fct-Devices-with-Botnet"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Threat name"
+                set data-binding "threat"
+                set data-top 10
+            next
+            edit 2
+                set header "Device"
+                set data-binding "hostname"
+            next
+            edit 3
+                set header "User"
+                set data-binding "hostuser"
+            next
+            edit 4
+                set header "Action"
+                set data-binding "utmaction"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-vuln-Vulnerability-by-Hostname"
+        set disp-name "Vulnerability by Hostname"
+        set category "Vulnerability"
+        set dev-type FortiClient
+        set description "Vulnerability Details for Each Risk Level by Device"
+        set dataset "fct-vuln-Details-by-Risk-Level-Device"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Host Name"
+                set data-type raw
+                set data-binding "hostname"
+                set data-top 10
+            next
+            edit 2
+                set header "Severity Level"
+                set data-type drilldown
+                set data-binding "vulnseverity"
+                set column-attr severity
+            next
+            edit 3
+                set header "Vulnerabilities"
+                set data-type aggregate
+                set data-binding "vuln_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Users-With-Web-Violations"
+        set disp-name "Top 20 Users with Web Violations"
+        set category "Threat"
+        set dev-type FortiClient
+        set description "Top 20 Users with Web Violations"
+        set dataset "fct-Web-Filter-Violations"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "User"
+                set data-binding "hostuser"
+                set data-top 20
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+
+    edit "fct-Compliance-by-FortiGate"
+        set disp-name "FortiGates Enforcing Compliance"
+        set category "Event"
+        set dev-type FortiClient
+        set description "FortiGate Devices with Compliance Enforcement"
+        set dataset "fct-Compliance-by-FortiGate"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Device"
+                set data-binding "fgtserial"
+                set data-top 10
+            next
+            edit 2
+                set header "# Devices"
+                set data-binding "totalnum"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Compliance-Status"
+        set disp-name "Endpoint Compliance"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Number of Compliant and Non-complicant Endpoints"
+        set dataset "fct-Compliance-Status"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "compliance"
+            next
+            edit 2
+                set header "Total Number"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Non-Compliant-Endpoints"
+        set disp-name "Non Compliant Endpoints"
+        set category "Event"
+        set dev-type FortiClient
+        set description "Non-compliant Endpoints with FortiGates"
+        set dataset "fct-Non-Compliant-Endpoints"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "FortiGate"
+                set data-binding "fgtserial"
+                set data-top 10
+            next
+            edit 2
+                set header "Source Interface"
+                set data-binding "srcintf"
+            next
+            edit 3
+                set header "Hostname"
+                set data-binding "hostname"
+            next
+            edit 4
+                set header "Device ID"
+                set data-binding "mac"
+            next
+            edit 5
+                set header "Status"
+                set data-binding "status"
+            next
+        end
+        set protected enable
+    next
+
+    edit "fct-Traffic-Web-Hits"
+        set disp-name "Web Traffic Trend"
+        set category "Traffic"
+        set dev-type FortiClient
+        set description "Trend Chart Showing Hits"
+        set dataset "fct-Traffic-Web-Hits"
+        set chart-type line
+        config table-columns
+            edit 1
+                set header "Date"
+                set data-binding "hodex"
+                set column-attr time
+                set data-top 168
+            next
+            edit 2
+                set data-binding "requests"
+                set column-graph-type line-up
+                set column-attr count
+                set legend "# of Requests"
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Allowed-Web-Cat"
+        set disp-name "Top Visited Web Categories"
+        set category "Traffic"
+        set dev-type FortiClient
+        set description "Top Visited Web Categories"
+        set dataset "fct-Traffic-Top-Allowed-Web-Cat"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Category"
+                set data-binding "category"
+                set column-attr web-cat
+                set data-top 20
+                set column-width 40
+            next
+            edit 2
+                set header "Total Request"
+                set data-binding "requests"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 60
+            next
+            edit 3
+                set data-binding "requests"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Allowed-Website"
+        set disp-name "Top Visited Websites"
+        set category "Traffic"
+        set dev-type FortiClient
+        set description "Top Visited Websites"
+        set dataset "fct-Traffic-Top-Allowed-Website"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Website"
+                set data-binding "website"
+                set data-top 20
+                set column-width 30
+            next
+            edit 2
+                set header "Category"
+                set data-binding "agg_category"
+                set column-width 30
+            next
+            edit 3
+                set header "Total Request"
+                set data-binding "requests"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 40
+            next
+            edit 4
+                set data-binding "requests"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Category-By-Website-Session"
+        set disp-name "Top Web Categories by Website Session"
+        set category "Traffic"
+        set dev-type FortiClient
+        set description "Top Web Categories by Website Session"
+        set dataset "fct-Traffic-Top-Category-By-Website-Session"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Category"
+                set data-binding "category"
+                set data-type raw
+                set column-attr web-cat
+                set data-top 20
+            next
+            edit 2
+                set header "Website"
+                set data-binding "website"
+                set data-type drilldown 
+                set data-top 20
+            next
+            edit 3
+                set header "Total Session"
+                set data-binding "requests"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fct-Traffic-Top-Web-Users-By-Website"
+        set disp-name "Top Web Users by Website"
+        set category "Traffic"
+        set dev-type FortiClient
+        set description "Top Web Users by Website"
+        set dataset "fct-Traffic-Top-Web-Users-By-Website"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "User(or IP)"
+                set data-binding "user_src"
+                set data-type raw
+                set column-attr user 
+                set data-top 20
+            next
+            edit 2
+                set header "Website"
+                set data-binding "website"
+                set data-type drilldown 
+                set data-top 20
+            next
+            edit 3
+                set header "Total Request"
+                set data-binding "requests"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+end
+
+
+config sql-report layout
+    edit 1000050001
+        set dev-type FortiClient
+        set category "FortiClient"
+        set is-template enable
+        set title "Template - FortiClient Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Summaries for Installation, OS, Device, FCT version and client summary. Threat summary by AV threats, infected devices, detections, WF violations, AP firewall, errors and alerts, total threats found."
+        set body "<h1>Endpoint Summary</h1><p>FortiClient helps to secure your network's endpoint PCs, laptops, tablets, and mobile devices.<br /><br />The following report helps you monitor and manage FortiClient detections of anti-malware, blocked applications, web filter violations, vulnerabilities and remediations, remote access and compliance.</p><fazchart mkey=\"fct-Installed-Feature-Summary\" title=\"Installed Feature Summary\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Device-by-Operating-System\" title=\"Device by OS\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Endpoints-by-FortiGate\" title=\"Endpoints by FortiGate\" filter-logic=\"and\" width=\"720\"></fazchart><h2>FortiClient Version Installed</h2><p>The following lists a count of the FortiClient versions installed on the network.</p><fazchart mkey=\"fct-Installed-FortiClient-Version\" title=\" \" filter-logic=\"and\" width=\"720\"></fazchart><h2>Endpoint Profile Deployment</h2><p>The following shows the endpoint profiles deployed by host.</p><fazchart mkey=\"fct-Endpoint-Profile-Deployment\" title=\"\" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Compliance</h1><h2>FortiGates Enforcing Compliance</h2><p>The following are the list of FortiGate devices on the network that enforce compliance and the number of associated devices.</p><fazchart mkey=\"fct-Compliance-by-FortiGate\" title=\" \" filter-logic=\"and\" width=\"720\"></fazchart><h2>Endpoint Compliance</h2><p>The following are the number of compliant, non-compliant and exempt endpoints on the network.</p><fazchart mkey=\"fct-Compliance-Status\" title=\" \" filter-logic=\"and\" width=\"720\"></fazchart><h2>Non Compliant Endpoints</h2><p>The following are endpoints identified as non-compliant with the FortiGates enforcing compliance on the network.</p><fazchart mkey=\"fct-Non-Compliant-Endpoints\" title=\" \" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Threat Summary</h1><fazchart mkey=\"fct-Threats-by-Top-Devices\" title=\"Top 10 Devices by Threats\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Top-Malware-Detections\" title=\"Anti-Malware Detections\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Top10-Malware-Detections\" title=\"Top 10 Malware Detections\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Devices-with-Botnet\" title=\"Devices with Botnet C&C\" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Endpoint Vulnerabilities</h2><p>The following is a list of the vulnerabilities detected and suggested remediation actions.</p><fazchart mkey=\"fct-vuln-Device-Vulnerabilities\" title=\"Vulnerabilities by Severity\" width=\"100%\"></fazchart><fazchart mkey=\"fct-vuln-Category-Type-Vulnerabilities\" title=\"Vulnerabilities by Category\" width=\"100%\"></fazchart><fazchart mkey=\"fct-vuln-Vulnerability-by-Hostname\" title=\"Endpoint Vulnerabilities by Hostname\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Web Violations</h2><fazchart mkey=\"fct-Users-With-Web-Violations\" title=\"Top 20 Users with Web Violations\" filter-logic=\"and\" width=\"720\"></fazchart><fazchart mkey=\"fct-Web-Filter-Violations\" title=\"Top 20 User Web Filter Violations by Count\" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Events & System Updates</h2><fazchart mkey=\"fct-Errors-and-Alerts\" title=\"Errors and Alerts\" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Web Traffic Summary</h1><p>&nbsp;</p><fazchart mkey=\"fct-Traffic-Web-Hits\" title=\"Web Traffic Trend Over Time\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fct-Traffic-Top-Allowed-Web-Cat\" title=\"Top Visited Web Categories\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fct-Traffic-Top-Allowed-Website\" title=\"Top Visited Websites\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fct-Traffic-Top-Category-By-Website-Session\" title=\"Top Web Categories by Website and Session\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fct-Traffic-Top-Web-Users-By-Website\" title=\"Top Browsing Users by Website\" width=\"100%\"></fazchart><p>&nbsp;</p><p>&nbsp;</p><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Appendix 1</h1><h2>Client Summary</h2><p>The following is a detailed list of hosts by FortiClient Version installed.</p><fazchart mkey=\"fct-Client-Summary\" title=\"\" filter-logic=\"and\" width=\"720\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Appendix 2</h1><h2>Vulnerability Remediation Details</h2><p>The following lists the remediation actions for the vulnerablities detected.</p><fazchart mkey=\"fct-vuln-Details-by-Device-User\" title=\"\" width=\"100%\"></fazchart>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90106
+                next
+                edit 90202
+                next
+                edit 90203
+                next
+            end
+        set protected enable
+    next
+    edit 1000050002
+        set dev-type FortiClient
+        set category "FortiClient"
+        set hide-rowid 1
+        set is-template enable
+        set title "Template - FortiClient Vulnerability Scan Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "The vulnerabilities detected through Forticlient scans across the network"
+        set body "<h1>Summary</h1><p>The following report provides a summary of the vulnerabilities detected through FortiClient scans across the network.</p><p>&nbsp;</p><h2>Device Vulnerabilities</h2><p>The following are vulnerabilities detected by user/device.</p><fazchart mkey=\"fct-vuln-Device-Vulnerabilities\" title=\" \" width=\"100%\"></fazchart><h2>Category Type Vulnerabilities</h2><p>The following are vulnerabilities detected by category type.</p><fazchart mkey=\"fct-vuln-Category-Type-Vulnerabilities\" title=\" \" width=\"100%\"></fazchart><h2>Vulnerabilities by OS</h2><p>The following are the OS vulnerabilities detected.</p><fazchart mkey=\"fct-vuln-Vulnerabilities-by-OS\" title=\" \" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2># Vulnerabilities by Risk Level</h2><p>The following chart displays the number of vulnerabilities by risk level.</p><fazchart mkey=\"fct-vuln-Vulnerabilities-by-Risk-Level\" title=\" \" width=\"100%\"></fazchart><h2># Devices by Vulnerability Risk Level.</h2><p>The following table displays the number of vulnerabilities on the net work by device and risk level.</p><fazchart mkey=\"fct-vuln-Device-by-Risk-Level\" title=\" \" width=\"100%\"></fazchart><h2>Vulnerability Trend</h2><p>The following chart displays the vulnerability trend over the report period.</p><fazchart mkey=\"fct-vuln-Vulnerability-Trend\" title=\" \" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Vulnerabilities by Risk Level Details</h2><p>The following provides details of the vulnerabilities for each risk level by device.</p><fazchart mkey=\"fct-vuln-Details-by-Risk-Level-Device\" title=\"Devices with Critical Vulnerabilities\" width=\"100%\"><fazfilters><fazfilter field=\"vulnseverity\" oper=\"eq\" value=\"Critical\"></fazfilter></fazfilters></fazchart><fazchart mkey=\"fct-vuln-Details-by-Risk-Level-Device\" title=\"Devices with High Vulnerabilities\" width=\"100%\"><fazfilters><fazfilter field=\"vulnseverity\" oper=\"eq\" value=\"High\"></fazfilter></fazfilters></fazchart><fazchart mkey=\"fct-vuln-Details-by-Risk-Level-Device\" title=\"Devices with Medium Vulnerabilities\" width=\"100%\"><fazfilters><fazfilter field=\"vulnseverity\" oper=\"eq\" value=\"Medium\"></fazfilter></fazfilters></fazchart><fazchart mkey=\"fct-vuln-Details-by-Risk-Level-Device\" title=\"Devices with Low Vulnerabilities\" width=\"100%\"><fazfilters><fazfilter field=\"vulnseverity\" oper=\"eq\" value=\"Low\"></fazfilter></fazfilters></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Vulnerability Details by Device User</h2><p>The following provides details of the vulnerabilities by device user.</p><fazchart mkey=\"fct-vuln-Details-by-Device-User\" title=\" \" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Remediation Actions by Device</h2><p>The following is a list of actions required to remediate the vulnerabilities found on devices in the network.</p><fazchart mkey=\"fct-vuln-Remediation-by-Device\" title=\" \" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Remediation by Vulnerability</h2><fazchart mkey=\"fct-vuln-Remediation-by-Vulnerability\" title=\" \" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2>Top 30 Targeted High Risk Vulnerabilities</h2><p>The following is an overview of the highest risk software vulnerabilities that are being exploited to target critical infrastructure organizations, along with mitigation recommendations.</p><fazchart mkey=\"fct-vuln-Top-30-Targeted-High-Risk-Vulnerabilities\" title=\" \" width=\"100%\"></fazchart><p>&nbsp;</p><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>Resources</h1><p>&nbsp;</p><p><strong>FortiClient</strong></p><p>&nbsp;</p><p>FortiClient is an industry certified all-in-one personal security suite. It includes Anti-Virus, Web Filtering, Application Firewall, VLN and more.</p><p>http://www.forticlient.com/</p><p>&nbsp;</p><p><strong>Online Virus Scan</strong></p><p>&nbsp;</p><p>Upload a suspicious file for scanning by FortiGuard AV Online Scanner.</p><p>http://www.fortiguard.com/virusscanner</p><p>&nbsp;</p><p><strong>Malware Removal Tools</strong></p><p>&nbsp;</p><p>Suspect your PC is already infected? View our malware removal tools.</p><p>http://www.fortiguard.com/malwareremoval</p><p>&nbsp;</p><p>&nbsp;</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90106
+                next
+                edit 90202
+                next
+                edit 90203
+                next
+            end
+        set protected enable
+    next
+end
+
+config sql-report schedule
+     edit "1000050001"
+         set is-template enable
+         set description "FortiClient Default Report"
+         set schedule-type every-n-weeks
+         set schedule-frequency 1
+         set schedule-valid-start 00:00 2012/10/01
+         set time-period last-7-days
+         set display-table-contents enable
+         set output-format pdf
+         set dev-type FortiClient
+         set schedule-color "#5484ED"
+         config report-layout
+             edit 1000050001
+             next
+         end
+         config devices
+            edit All_FortiClient
+            next
+         end
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90106
+        set folder-name "FortiClient Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90202
+        set folder-name "Asset and User Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90203
+        set folder-name "SOC Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config alert basic-handler
+    edit 60001
+        set name "Default-FCT-Threat-Detection-By-Endpoint"
+        set description "Default event handler for FortiClient threat detection by endpoint"
+        config rule
+            edit 1
+                set name "Sandbox detected Malware in FCT File submission"
+                set devtype FortiClient
+                set severity high
+                set logtype "fct-event"
+                set extrainfo "Malware detected in File: ${file} with Size: ${filesize}"
+                set extrainfo-type custom
+                set subject "Sandbox detected Malware in FCT File submission"
+                set groupby1 "endpoint"
+                set eventstatus "open"
+                set tags "Default,By_Endpoint,Sandbox,Malware"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "subtype=\"sandboxing\" and msg~\"Found virus\" "
+            next
+            edit 2
+                set name "Malware found by FCT AV scan on File System"
+                set devtype FortiClient
+                set severity high
+                set logtype "fct-event"
+                set extrainfo "Malware: ${virus} detected in File: ${file} with Size: ${filesize} "
+                set extrainfo-type custom
+                set subject "Malware found by FCT AV scan on File System"
+                set groupby1 "endpoint"
+                set groupby2 "virus"
+                set eventstatus "contained"
+                set tags "Default,By_Endpoint,Malware"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "subtype=\"av\" and msg~\"Found virus\""
+            next
+            edit 3
+                set name "Access to Web blocked by FCT Web Filter"
+                set devtype FortiClient
+                set severity medium
+                set logtype "fct-traffic"
+                set extrainfo "Process: ${srcname} initiated traffic to domain: ${remotename} with URL: ${url}, FortiGuard Category: ${threat}"
+                set extrainfo-type custom
+                set subject "Access to Web blocked by FCT Web Filter"
+                set groupby1 "endpoint"
+                set groupby2 "remotename"
+                set eventstatus "mitigated"
+                set tags "Default,By_Endpoint,URL,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "utmevent=\"webfilter\" and utmaction=\"blocked\""
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fct"
+    next
+    edit 60002
+        set name "Default-FCT-Threat-Detection-By-Threat"
+        set description "Default event handler for FortiClient threat detection by threat"
+        config rule
+            edit 1
+                set name "Malware found by FCT AV scan on File System"
+                set devtype FortiClient
+                set severity high
+                set logtype "fct-event"
+                set extrainfo "Malware: ${virus} detected in File: ${file} with Size: ${filesize} "
+                set extrainfo-type custom
+                set subject "Malware found by FCT AV scan on File System"
+                set groupby1 "virus"
+                set groupby2 "endpoint"
+                set eventstatus "contained"
+                set tags "Default,By_Threat,Malware"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "subtype=\"av\" and msg~\"Found virus\""
+            next
+            edit 2
+                set name "Access to Web blocked by FCT Web Filter"
+                set devtype FortiClient
+                set severity medium
+                set logtype "fct-traffic"
+                set extrainfo "Process: ${srcname} initiated traffic to domain: ${remotename} with URL: ${url}, FortiGuard Category: ${threat}"
+                set extrainfo-type custom
+                set subject "Access to Web blocked by FCT Web Filter"
+                set groupby1 "remotename"
+                set groupby2 "endpoint"
+                set eventstatus "mitigated"
+                set tags "Default,By_Threat,URL,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr "utmevent=\"webfilter\" and utmaction=\"blocked\""
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fct"
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end

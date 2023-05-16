@@ -1,0 +1,2610 @@
+
+config sql-report dataset
+    edit "threat-rating-distribution"
+        set description "FortiSandbox threat rating distribution"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select risk, count(*) as total_num from $log where $filter group by risk order by total_num desc"
+        set protected enable
+    next
+    edit "job-severity-timeline"
+        set description "FortiSandbox job severity timeline"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select $flex_timescale(timestamp) as hod, risk, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, risk, count(*) as total_num from $log where $filter group by timestamp, risk order by timestamp desc)### t group by hod, risk order by hod desc"
+        set protected enable
+    next
+    edit "targeted-hosts-with-severity"
+        set description "FortiSandbox targeted hosts with severity"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip, risk, count(*) as total_num from $log where $filter and dstip is not null group by dstip, risk order by total_num desc"
+        set protected enable
+    next
+    edit "brief-job-list"
+        set description "FortiSandbox brief job list"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select $DAY_OF_MONTH as timestamp, srcip, dstip, fname, suser, stype, risk, count(*) as cnt from $log where $filter group by timestamp, srcip, dstip, fname, suser, stype, risk order by timestamp desc"
+        set protected enable
+    next
+    edit "fsa-scan-stats-of-malware-by-name"
+        set description "FortiSandbox scan statistics of malware by name"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select mname, max(risk) as risk, count(*) as total_num from $log where $filter group by mname order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-targeted-hosts"
+        set description "FortiSandbox targeted hosts"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip, count(*) as total_num from $log where $filter and dstip is not null and risk is not null group by dstip order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-scan-stats-of-rating-by-source-os"
+        set description "FortiSandbox scan statistics of risks by vmos"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select risk, count(*) as total_num, vmos from $log where $filter group by risk, vmos order by vmos, total_num desc"
+        set protected enable
+    next
+    edit "fsa-scan-stats-count-of-file-type"
+        set description "FortiSandbox scan statistics of file type"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype, sum(job_count) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where ftype is not null group by ftype having sum(job_count)>0 order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Type-Summary-With-VM-Source"
+        set description  "FortiSandbox File Type Summary With VM Source"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select (case when ftype in ('exe','msi','upx','vbs','bat','cmd','dll','ps1','jar','wsf','vbs','pdf','doc','docx','rtf','dotx','docm','dotm','dot','xltm','pub','xls','xlsx','xltx','xlsm','xlsb','xlam','xlt','ppsx','ppt','pptx','potx','sldx','pptm','ppsm','potm','ppam','sldm','pps','pot','msg','swf','htm','js','url','lnk') then 'Executable Files'  when ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace','tar.gz','tar.gz2','tar.Z') then 'Archived' when ftype in ('.avi','.mpeg','mp3','mp4') then 'Media' when ftype is null then 'null' else 'other' end) as filetype, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc LIKE 'VM Engine%' and ftype is not null group by filetype order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Type-Details-With-VM-Source"
+        set description  "FortiSandbox File Type Details With VM Source"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select (case when ftype in ('pdf') then 'Adobe PDF' when ftype in ('swf') then 'Adobe Flash' when ftype in ('doc','docx','rtf','dotx','docm','dotm','dot','xltm','pub') then 'Microsoft Word' when ftype in ('xls','xlsx','xltx','xlsm','xlsb','xlam','xlt') then 'Microsoft Excel' when ftype in ('ppsx','ppt','pptx','potx','sldx','pptm','ppsm','potm','ppam','sldm','pps','pot') then 'Microsoft PowerPoint' when ftype in ('msg') then 'Microsoft Outlook' when ftype in ('htm','js','url','lnk') then 'Web Files' when ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace') then 'Archive Files' when ftype in ('apk') then 'Android Files' when ftype is null then 'null' else ftype end) as filetype, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc LIKE 'VM Engine%' and ftype is not null group by filetype order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Type-Summary"
+        set description  "FortiSandbox File Type Summary"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select (case when ftype in ('exe','msi','upx','vbs','bat','cmd','dll','ps1','jar','wsf','vbs','pdf','doc','docx','rtf','dotx','docm','dotm','dot','xltm','pub','xls','xlsx','xltx','xlsm','xlsb','xlam','xlt','ppsx','ppt','pptx','potx','sldx','pptm','ppsm','potm','ppam','sldm','pps','pot','msg','swf','htm','js','url','lnk') then 'Executable Files'  when ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace','tar.gz','tar.gz2','tar.Z') then 'Archived' when ftype in ('.avi','.mpeg','mp3','mp4') then 'Media' when ftype is null then 'null' else 'other' end) as filetype, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where ftype is not null group by filetype order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Type-Details"
+        set description  "FortiSandbox File Type Details"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select (case when ftype in ('pdf') then 'Adobe PDF' when ftype in ('swf') then 'Adobe Flash' when ftype in ('doc','docx','rtf','dotx','docm','dotm','dot','xltm','pub') then 'Microsoft Word' when ftype in ('xls','xlsx','xltx','xlsm','xlsb','xlam','xlt') then 'Microsoft Excel' when ftype in ('ppsx','ppt','pptx','potx','sldx','pptm','ppsm','potm','ppam','sldm','pps','pot') then 'Microsoft PowerPoint' when ftype in ('msg') then 'Microsoft Outlook' when ftype in ('htm','js','url','lnk') then 'Web Files' when ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace') then 'Archive Files' when ftype in ('apk') then 'Android Files' when ftype is null then 'null' else ftype end) as filetype, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where ftype is not null group by filetype order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Source-Stats"
+        set description  "FortiSandbox File Source Stats"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select rsrc as res_src, sum(case when risk='Clean' then total_num else 0 end) as clean, sum(case when risk='Low Risk' then total_num else 0 end) as low, sum(case when risk='Medium Risk' then total_num else 0 end) as medium, sum(case when risk='High Risk' then total_num else 0 end) as high, sum(case when risk='Malicious' then total_num else 0 end) as malicious, sum(case when risk='Unknown' then total_num else 0 end) as unknown, sum (total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc is not null and risk is not null group by res_src order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-File-Type-Stats"
+        set description  "FortiSandbox File Type Stats"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype as filetype, sum(CASE WHEN rsrc='AV Scanner' THEN total_num ELSE 0 END) as avscan, sum(CASE WHEN rsrc='Local Overwrite' THEN total_num ELSE 0 END) as local, sum(CASE WHEN rsrc='Sandboxing Result Cache' THEN total_num ELSE 0 END) as sandb, sum(CASE WHEN rsrc='VM Engine (AI)' OR rsrc='VM Engine' THEN total_num ELSE 0 END) as vmeng, sum(CASE WHEN rsrc='FSA Community Cloud' THEN total_num ELSE 0 END) as comm, sum(CASE WHEN rsrc='Static File Scan' THEN total_num ELSE 0 END) as static, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc in ('AV Scanner','Local Overwrite','Sandboxing Result Cache','VM Engine', 'VM Engine (AI)', 'FSA Community Cloud','Static File Scan') group by filetype order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-Hourly-File-Stats-Count"
+        set description  "FortiSandbox Hourly File Stats Count"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select hourstamp as hrstamp, sum(CASE WHEN rsrc='AV Scanner' THEN total_num ELSE 0 END) as avscan, sum(CASE WHEN rsrc='Local Overwrite' THEN total_num ELSE 0 END) as local, sum(CASE WHEN rsrc='Sandboxing Result Cache' THEN total_num ELSE 0 END) as sandb, sum(CASE WHEN rsrc='VM Engine (AI)' OR rsrc='VM Engine' THEN total_num ELSE 0 END) as vmeng, sum(CASE WHEN rsrc='FSA Community Cloud' THEN total_num ELSE 0 END) as comm, sum(CASE WHEN rsrc='Static File Scan' THEN total_num ELSE 0 END) as static, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc in ('AV Scanner','Local Overwrite','Sandboxing Result Cache','VM Engine', 'VM Engine (AI)', 'FSA Community Cloud','Static File Scan') group by hrstamp order by hrstamp"
+        set protected enable
+    next
+    edit "fsa-Scanned-File-Stats-By-Source"
+        set description  "FortiSandbox Scanned File Stats By Source"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select round(sum(avscan)/sum(total_num)) as avscan, round(sum(local)/sum(total_num)) as local, round(sum(sandb)/sum(total_num)) as sandb, round(sum(vmeng)/sum(total_num)) as vmeng, round(sum(comm)/sum(total_num)) as comm, round(sum(static)/sum(total_num)) as static from (select sum(CASE WHEN rsrc='AV Scanner' THEN duration ELSE 0 END) as avscan, sum(CASE WHEN rsrc='Local Overwrite' THEN duration ELSE 0 END) as local, sum(CASE WHEN rsrc='Sandboxing Result Cache' THEN duration ELSE 0 END) as sandb, sum(CASE WHEN rsrc='VM Engine (AI)' OR rsrc='VM Engine' THEN duration ELSE 0 END) as vmeng, sum(CASE WHEN rsrc='FSA Community Cloud' THEN duration ELSE 0 END) as comm, sum(CASE WHEN rsrc='Static File Scan' THEN duration ELSE 0 END) as static, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc in ('AV Scanner','Local Overwrite','Sandboxing Result Cache','VM Engine', 'VM Engine (AI)', 'FSA Community Cloud','Static File Scan') group by rsrc, duration) t"
+        set protected enable
+    next
+    edit "fsa-Hourly-Sanned-File-Stats-By-Source"
+        set description  "FortiSandbox Hourly Scanned File Stats By Source"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select hrstamp, round(sum(avscan)/sum(total_num)) as avscan, round(sum(local)/sum(total_num)) as local, round(sum(sandb)/sum(total_num)) as sandb, round(sum(vmeng)/sum(total_num)) as vmeng, round(sum(comm)/sum(total_num)) as comm, round(sum(static)/sum(total_num)) as static from (select hourstamp as hrstamp, sum(CASE WHEN rsrc='AV Scanner' THEN duration ELSE 0 END) as avscan, sum(CASE WHEN rsrc='Local Overwrite' THEN duration ELSE 0 END) as local, sum(CASE WHEN rsrc='Sandboxing Result Cache' THEN duration ELSE 0 END) as sandb, sum(CASE WHEN rsrc='VM Engine (AI)' OR rsrc='VM Engine' THEN duration ELSE 0 END) as vmeng, sum(CASE WHEN rsrc='FSA Community Cloud' THEN duration ELSE 0 END) as comm, sum(CASE WHEN rsrc='Static File Scan' THEN duration ELSE 0 END) as static, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc in ('AV Scanner','Local Overwrite','Sandboxing Result Cache','VM Engine', 'VM Engine (AI)', 'FSA Community Cloud','Static File Scan') group by hrstamp, rsrc, duration order by hrstamp) t group by hrstamp order by hrstamp"
+        set protected enable
+    next
+    edit "fsa-Totalnum-Files-Submitted-to-Sandbox"
+        set description "Total Files Submitted to Sandbox"
+        set dev-type FortiSandbox
+        set log-type event
+        set query "select count(distinct(fctuid, sha256)) as totalnum from ###(select $flex_timestamp as timestamp, fctuid, sha256, max(fname) as file, max(risk) as risk from $log where $filter and fctuid is not null and sha256 is not null group by timestamp, fctuid, sha256 order by timestamp desc)### t"
+        set protected enable
+    next
+    edit "fsa-Totalnum-of-Hosts-Affected"
+        set description "Total Number of Hosts Affected"
+        set dev-type FortiSandbox
+        set log-type event
+        set query "select count(distinct fctuid) as totalnum from ###(select $flex_timestamp as timestamp, fctuid, sha256, max(fname) as file, max(risk) as risk from $log where $filter and fctuid is not null and sha256 is not null group by timestamp, fctuid, sha256 order by timestamp desc)### t where risk::text in ('Malicious', 'Low risk', 'Medium Risk', 'High Risk')"
+        set protected enable
+    next
+    edit "fsa-Top-Endpoint-by-Number-of-Malicious-File-Detected"
+        set description "Top Endpoints by Number of Malicious Files Detected"
+        set dev-type FortiSandbox
+        set log-type event
+        set query "select coalesce(t2.epname, t2.detectkey, 'Unknown') as ep_name, coalesce(t2.osname, 'Unknown') as os_name, count(distinct sha256) as filenum from ###(select $flex_timestamp as timestamp, fctuid, sha256, max(fname) as file, max(risk) as risk from $log where $filter and fctuid is not null and sha256 is not null group by timestamp, fctuid, sha256 order by timestamp desc)### t1 left join $ADOM_ENDPOINT t2 on t1.fctuid=t2.fctuid where risk::text in ('Malicious', 'Low risk', 'Medium Risk', 'High Risk') group by ep_name, os_name order by filenum desc"
+        set protected enable
+    next
+    edit "fsa-Malicious-File-Detected-by-time"
+        set description "Malicious Files Detected by Time"
+        set dev-type FortiSandbox
+        set log-type event
+        set query "select $flex_timescale(timestamp) as timescale, count(distinct(fctuid, sha256)) as filenum from ###(select $flex_timestamp as timestamp, fctuid, sha256, max(fname) as file, max(risk) as risk from $log where $filter and fctuid is not null and sha256 is not null group by timestamp, fctuid, sha256 order by timestamp desc)### t where risk::text in ('Malicious', 'Low risk', 'Medium Risk', 'High Risk') group by timescale order by timescale"
+        set protected enable
+    next
+    edit "fsa-Malicious-File-Detected-by-host"
+        set description "Malicious Files Detected by Host"
+        set dev-type FortiSandbox
+        set log-type event
+        set query "select t1.fctuid, coalesce(t2.epname, t2.detectkey, 'Unknown') as ep_name, string_agg(distinct file, ', ') as files, count(distinct sha256) as filenum from ###(select $flex_timestamp as timestamp, fctuid, sha256, max(fname) as file, max(risk) as risk from $log where $filter and fctuid is not null and sha256 is not null group by timestamp, fctuid, sha256 order by timestamp desc)### t1 left join $ADOM_ENDPOINT t2 on t1.fctuid=t2.fctuid where risk::text in ('Malicious', 'Low risk', 'Medium Risk', 'High Risk') group by t1.fctuid, ep_name order by filenum desc"
+        set protected enable
+    next
+    edit "fsa-Top-Email-Risk-Files"
+        set description "Identified Email Risk Files"
+        set dev-type FortiSandbox
+        set log-type virus
+        set query "select malware, sum(total_num) as total_num from ###(select coalesce(nullifna(mname), 'New malware detected by Sandbox') as malware, max(risk) as risk, count(*) as total_num from $log where $filter and risk!='Clean' and mname is not null and suser like '%@%' group by malware order by risk desc, total_num desc)### t group by malware order by total_num desc"
+        set protected enable
+    next
+    edit "fsa-Total-New-Email-Malware"
+        set description "FSA Number of New Email Malware"
+        set dev-type FortiSandbox
+        set log-type virus
+        set query "select sum(total_numbers) as total_numbers, sum(total_new) as total_new, round(sum(total_new)*100/sum(total_numbers)) as percentage_hits from ###(select count(*) as total_numbers, sum(case when lower(vmos) like '%win%' then 1 else 0 end) as total_new from $log where $filter and suser like '%@%')### t"
+        set protected enable
+    next
+    edit "fsa-Email-Risk-Rating-by-File"
+        set description "FortiSandbox Email Risk Rating by File"
+        set dev-type FortiSandbox
+        set log-type virus
+        set query "select malware, max(risk) as risk, sum(total_num) as total_num from ###(select coalesce(nullifna(mname), 'New malware detected by Sandbox') as malware, max(risk) as risk, count(*) as total_num from $log where $filter and risk!='Clean' and mname is not null and suser like '%@%' group by malware order by risk desc, total_num desc)### t group by malware order by risk desc, total_num desc"
+        set protected enable
+    next
+    edit "fsa-Email-Risk-Rating-by-URL"
+        set description "FortiSandbox Email Risk Rating by URL"
+        set dev-type FortiSandbox
+        set log-type virus
+        set query "select left(url, 48) as url_short, max(risk) as risk, count(*) as total_num from $log where $filter and lower(`stype`) like '%url%' and risk!='Clean' and suser like '%@%' group by url_short order by risk desc, total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Known-Malware-Detected"
+        set description "FortiSandbox Count of Known Malware Detected"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select count(*) from ###(select sha256, coalesce(nullifna(mname), 'Unknown') as malware_name, coalesce(fname, 'n/a') as file_name, proto, risk,(case risk when 'Malicious' then 5 when 'High Risk' then 4 when 'Medium Risk' then 3 when 'Low Risk' then 2 else 1 end) as risk_num, count(*) as count_of from $log where $filter and risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by sha256, malware_name, file_name, risk, proto order by risk_num desc, count_of desc)### t where malware_name != 'Unknown'"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Unknown-Malware-Detected"
+        set description  "FortiSandbox Count of Unknown Malware Detected"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select count(*) from ###(select sha256, coalesce(nullifna(mname), 'Unknown') as malware_name, coalesce(fname, 'n/a') as file_name, proto, risk,(case risk when 'Malicious' then 5 when 'High Risk' then 4 when 'Medium Risk' then 3 when 'Low Risk' then 2 else 1 end) as risk_num, count(*) as count_of from $log where $filter and risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by sha256, malware_name, file_name, risk, proto order by risk_num desc, count_of desc)### t where malware_name = 'Unknown'"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Total-Files-Scanned"
+        set description  "FortiSandbox Count of Total Files Scanned"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select sum(job_count) as total_num from  ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Unique-Filetypes-Found"
+        set description  "FortiSandbox Count of Unique Filetypes Found"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select count(distinct ftype) as \"Unique File Types\" from ###(select distinct ftype from $log where $filter and nullifna(ftype) is not null)### t"
+        set protected enable
+    next
+    edit  "fsa-Files-Detected-Are-Executables"
+        set description  "FortiSandbox Files Detected Are Executables"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select sum(count_of) as total_num from ###(select ftype, count(*) as count_of from $log where $filter and fname is not null group by ftype)### t where ftype in ('exe','msi','upx','vbs','bat','cmd','dll','ps1','jar','wsf','vbs','pdf','doc','docx','rtf','dotx','docm','dotm','dot','xltm','pub','xls','xlsx','xltx','xlsm','xlsb','xlam','xlt','ppsx','ppt','pptx','potx','sldx','pptm','ppsm','potm','ppam','sldm','pps','pot','msg','swf','htm','js','url','lnk','ACTION','APK','APP','BAT','BIN','CMD','COM','COMMAND','CPL','CSH','EXE','GADGET','INF1','INS','INX','IPA','ISU','JOB','JSE','KSH','LNK','MSC','MSI','MSP','MST','OSX','OUT','PAF','PIF','PRG','PS1','REG','RGS','RUN','SCR','SCT','SHB','SHS','U3P','VB','VBE','VBS','VBSCRIPT','WORKFLOW','WS','WSF','WSH','0XE','73K','89K','A6P','AC','ACC','ACR','ACTM','AHK','AIR','APP','ARSCRIPT','AS','ASB','AWK','AZW2','BEAM','BTM','CEL','CELX','CHM','COF','CRT','DEK','DLD','DMC','DOCM','DOTM','DXL','EAR','EBM','EBS','EBS2','ECF','EHAM','ELF','ES','EX4','EXOPC','EZS','FAS','FKY','FPI','FRS','FXP','GS','HAM','HMS','HPF','HTA','IIM','IPF','ISP','JAR','JS','JSX','KIX','LO','LS','MAM','MCR','MEL','MPX','MRC','MS','MS','MXE','NEXE','OBS','ORE','OTM','PEX','PLX','POTM','PPAM','PPSM','PPTM','PRC','PVD','PWC','PYC','PYO','QPX','RBX','ROX','RPJ','S2A','SBS','SCA','SCAR','SCB','SCRIPT','SMM','SPR','TCP','THM','TLB','TMS','UDF','UPX','URL','VLX','VPM','WCM','WIDGET','WIZ','WPK','WPM','XAP','XBAP','XLAM','XLM','XLSM','XLTM','XQT','XYS','ZL9')"
+        set protected enable
+    next
+    edit  "fsa-Average-Scan-Time-Per-File"
+        set description  "FortiSandbox Average Scan Time Per File"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select cast(sum(total)\/sum(count) as decimal(18, 0)) as scantime_avg from ###(select sum(scanend-scanstart) as total, count(*) as count from $log where $filter and fname is not null and scanend>=scanstart)### t"
+        set protected enable
+    next
+    edit  "fsa-Files-Processed-Per-Hour"
+        set description  "FortiSandbox Files Processed Per Hour"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select cast((case when max(max_itime)>min(min_itime) then (3600*sum(job_count)/((max(max_itime)-min(min_itime)))) else 0 end) as decimal(18,0))as files_processed_per_hour from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t"
+        set protected enable
+    next
+    edit  "fsa-Most-Frequent-Attack-Victim"
+        set description  "FortiSandbox Most Frequent Attack Victim"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip, max($DAY_OF_MONTH(max_itime)) as last_seen, sum(total_num) as total_num from ###(select dstip, max(itime) as max_itime, count(*) as total_num from $log where $filter and dstip is not null and nullif(risk, 'Unknown') is not null and risk <> 'Clean' group by dstip order by total_num desc)### t group by dstip order by total_num desc limit 1"
+        set protected enable
+    next
+    edit  "fsa-Known-Malware-Detected"
+        set description  "FortiSandbox Known Malware Detected"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select malware_name as mname, file_name as fname, proto, risk, risk_num, sum(count_of) as count_of from ###(select sha256, coalesce(nullifna(mname), 'Unknown') as malware_name, coalesce(fname, 'n/a') as file_name, proto, risk,(case risk when 'Malicious' then 5 when 'High Risk' then 4 when 'Medium Risk' then 3 when 'Low Risk' then 2 else 1 end) as risk_num, count(*) as count_of from $log where $filter and risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by sha256, malware_name, file_name, risk, proto order by risk_num desc, count_of desc)### t where malware_name != 'Unknown' group by mname, fname, risk, risk_num, proto order by risk_num desc, count_of desc, mname, fname"
+        set protected enable
+    next
+    edit  "fsa-Unknown-Malware-Detected"
+        set description  "FortiSandbox Unknown Malware Detected"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select sha256, file_name as fname, proto, risk, risk_num, sum(count_of) as count_of from ###(select sha256, coalesce(nullifna(mname), 'Unknown') as malware_name, coalesce(fname, 'n/a') as file_name, proto, risk,(case risk when 'Malicious' then 5 when 'High Risk' then 4 when 'Medium Risk' then 3 when 'Low Risk' then 2 else 1 end) as risk_num, count(*) as count_of from $log where $filter and risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by sha256, malware_name, file_name, risk, proto order by risk_num desc, count_of desc)### t where malware_name = 'Unknown' and nullif(risk, 'Unknown') is not null group by sha256, fname, proto, risk, risk_num order by risk_num desc, count_of desc, fname"
+        set protected enable
+    next
+    edit  "fsa-Malware-Disposition-Breakdown"
+        set description  "FortiSandbox Malware Disposition Breakdown"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select risk, sum(count_of) as count_of from   ###(select sha256, coalesce(nullifna(mname), 'Unknown') as malware_name, coalesce(fname, 'n/a') as file_name, proto, risk,(case risk when 'Malicious' then 5 when 'High Risk' then 4 when 'Medium Risk' then 3 when 'Low Risk' then 2 else 1 end) as risk_num, count(*) as count_of from $log where $filter and risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by sha256, malware_name, file_name, risk, proto order by risk_num desc, count_of desc)### t where risk in ('Low Risk', 'Medium Risk', 'High Risk', 'Malicious') group by risk order by count_of desc"
+        set protected enable
+    next
+    edit  "fsa-Most-Popular-Filetype"
+        set description  "FortiSandbox Most Popular Filetype"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype, count(*) as \"Total\" from $log where $filter and ftype is not null group by ftype order by \"Total\" desc"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Files-Are-Archived-Compressed"
+        set description  "FortiSandbox Count of Files Are Archived Compressed"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select sum(job_count) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where fname is not null and ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace','tar.gz','tar.gz2','tar.Z')"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Files-Are-Macro-Enabled"
+        set description  "FortiSandbox Count of Files Are Macro Enabled"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select sum(count_of) as total_num from ###(select ftype, count(*) as count_of from $log where $filter and fname is not null group by ftype)### t where ftype in  ('docm','dotm','xlm','xlsm','xltm','xla','xlam','pptm','potm','ppsm','sldm','vsdm', 'vssm','vstm')"
+        set protected enable
+    next
+    edit  "fsa-Sandbox-Processing-bar"
+        set description  "FortiSandbox Sandbox Processing Bar"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select risk, sum(job_count) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where risk is not null group by risk order by total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Count-of-Filetypes-Including-Other"
+        set description  "FortiSandbox Count of Filetypes Including Other"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype, sum(job_count) as count_of from  ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t group by ftype order by count_of desc"
+        set protected enable
+    next
+    edit  "fsa-Filetype-Breakout-Malware"
+        set description  "FortiSandbox Filetype Breakout Malware"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype, sum(job_count) as count_of from  ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where ftype is not null and risk='Malicious' group by ftype order by count_of desc"
+        set protected enable
+    next
+    edit  "fsa-Compressed-File-Analysis"
+        set description  "FortiSandbox Compressed File Analysis"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select risk, sum(count_of) as count_of from (select case risk when 'Clean' then 'Clean' else 'Malicious' end as risk, sum(job_count) as count_of from  ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where fname is not null and ftype in ('cab','tgz','z','7z','tar','lzh','kgb','rar','zip','gz','xz','bz2','ace','tar.gz','tar.gz2','tar.Z') and nullif(risk, 'Unknown') is not null group by risk) t group by risk order by count_of desc, risk"
+        set protected enable
+    next
+    edit  "fsa-avg-Scantime-Per-Clean-File"
+        set description  "FortiSandbox Average Scantime Per Clean File"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select cast(sum(total)\/sum(count) as decimal(18, 0)) as scan_avg from ###(select risk, sum(scanend-scanstart) as total, count(*) as count from $log where $filter  and scanend>scanstart group by risk order by count desc)### t where risk='Clean'"
+        set protected enable
+    next
+    edit  "fsa-avg-Scantime-Per-Malicious-File"
+        set description  "FortiSandbox Average Scantime Per Malicious File"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select cast(sum(total)\/sum(count) as decimal(18, 0)) as scan_avg from ###(select risk, sum(scanend-scanstart) as total, count(*) as count from $log where $filter  and scanend>scanstart group by risk order by count desc)### t where risk='Malicious'"
+        set protected enable
+    next
+    edit  "fsa-Files-Scanned-per-Day-and-Hour"
+        set description  "FortiSandbox Files Scanned per Day and Hour"
+        set log-type event
+        set dev-type FortiSandbox
+        set query  "select hourstamp, daystamp, round(sum(cnt)/count(*)) as cnt from (select $hour_of_day(timestamp) as hourstamp, $HOUR_OF_DAY(timestamp) as hour_stamp, split_part($day_of_week(timestamp), '-', 2) as daystamp, sum(job_count) as cnt from  ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t group by timestamp, hourstamp, hour_stamp, daystamp) t group by hourstamp, daystamp order by hourstamp"
+        set protected enable
+    next
+    edit  "fsa-avg-Scantime-per-Filetype"
+        set description "FortiSandbox Average Scantime per Filetype"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select ftype, sum(count) as count_of, sum(total)\/sum(count) as avg_scantime from  ###(select ftype, sum(etime-stime) as total, count(*) as count from $log  where $filter and etime>stime and ftype is not null group by ftype order by count desc)### t  group by ftype order by avg_scantime desc"
+        set protected enable
+    next
+    edit "fsa-Targeted-Hosts-Lastseen"
+        set description "FortiSandbox Lastseen Targeted Hosts"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip, max($DAY_OF_MONTH(max_itime)) as last_seen, sum(total_num) as total_num from ###(select dstip, max(itime) as max_itime, count(*) as total_num from $log where $filter and dstip is not null and nullif(risk, 'Unknown') is not null and risk <> 'Clean' group by dstip order by total_num desc)### t group by dstip order by total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Command-and-Control-Callbacks-Count"
+        set description "FortiSandbox Command and Control Callbacks Count"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select mcate, sum(job_count) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where mcate in ('Infector','Botnet') group by mcate having sum(job_count)>0 order by total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Max-Hourly-Files-Processed"
+        set description "FortiSandbox Max Hourly Files Processed"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select stime_hod as hour_stamp, sum(job_count) as count_of from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t group by hour_stamp order by count_of desc, hour_stamp desc"
+        set protected enable
+    next
+    edit  "fsa-Most-Frequent-Malware-Category"
+        set description "FortiSandbox Most Frequent Malware Category"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select mcate, max($DAY_OF_MONTH(max_itime)) as last_seen, sum(total_num) as total_num from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where mcate is not null and mcate not in ('NotApplicable','Unknown') and nullif(risk, 'Unknown') is not null and risk <> 'Clean' group by mcate order by total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Sandbox-Threat-Detection-Processing"
+        set description "FortiSandbox Threat Detection Processing"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select rsrc, src_type, max(risk) as risk, sum(job_count) as count_of from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where rsrc is not null and risk is not null group by rsrc, src_type order by risk desc, count_of desc"
+        set protected enable
+    next
+    edit  "fsa-Peak-Daily-Total-Scan-Time"
+        set description  "FortiSandbox Peak Compute Hours Per Day"
+        set log-type event
+        set dev-type FortiSandbox
+        set query "select cast(max(scantime)\/3600 as decimal(18,2)) as peak_comp_hours from (select substring(hourstamp, 1, LENGTH(hourstamp)-6) dom, sum(duration) as scantime from ###(select $flex_timestamp as timestamp, $HOUR_OF_DAY as hourstamp, $HOUR_OF_DAY(stime) as stime_hod, fname, ftype, rsrc, risk, mcate, (case when msg like 'URL%' then 'URL' else 'FILE' end) as src_type, max(itime) as max_itime, min(itime) as min_itime, sum(CASE WHEN etime>stime THEN etime-stime ELSE 0 END) as duration, sum(CASE WHEN jobid IS NOT NULL AND risk IS NOT NULL THEN 1 ELSE 0 END) as job_count, count(*) as total_num from $log where $filter group by timestamp, hourstamp, stime_hod, fname, ftype, rsrc, risk, src_type, mcate, src_type order by hourstamp)### t where duration>0 group by dom) t"
+        set protected enable
+    next
+    edit  "fsa-Most-Frequent-CallbackIP-Domain"
+        set description "FortiSandbox Most Frequent Callback IP Domain"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip, max($DAY_OF_MONTH(max_itime)) as last_seen, sum(total_num) as total_num from ###(select dstip, mcate, max(itime) as max_itime, count(*) as total_num from $log  where $filter group by dstip, mcate order by total_num desc)### t where dstip is not null and mcate in('Infector','Botnet') group by dstip order by total_num desc"
+        set protected enable
+    next
+    edit  "fsa-Callback-Destinations"
+        set description "FortiSandbox Callback Destinations"
+        set log-type virus
+        set dev-type FortiSandbox
+        set query "select dstip as callback_ip_domain, sum(total_num) as attempts from ###(select dstip, mcate, max(itime) as max_itime, count(*) as total_num from $log  where $filter group by dstip, mcate order by total_num desc)### t where dstip is not null and mcate in('Infector','Botnet') group by dstip order by attempts desc"
+        set protected enable
+    next
+end
+
+config sql-report chart
+    edit "Threat-Rating-Distribution"
+        set disp-name "Threat Rating Distribution"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Threat Rating Distribution"
+        set dataset "threat-rating-distribution"
+        set chart-type donut
+        set include-other enable
+        set resolve-hostname disable
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "risk"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "Job-Severity-Timeline"
+        set disp-name "Job Severity Timeline"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Job Severity Timeline"
+        set dataset "job-severity-timeline"
+        set chart-type bar
+        set order-by "hod"
+        set include-other disable
+        set resolve-hostname disable
+        config table-columns
+            edit 1
+                set header "Data/Time"
+                set data-binding "hod"
+                set data-top 168
+            next
+            edit 2
+                set data-binding "risk"
+                set data-type drilldown
+                set data-top 5
+            next
+            edit 3
+                set header "Events"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+       end
+       set protected enable
+    next
+    edit "Malware-Severity-of-Targeted-Hosts"
+        set disp-name "Malware Severity of Targeted Hosts"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Malware Severity of Targeted Hosts"
+        set dataset "targeted-hosts-with-severity"
+        set chart-type table
+        set include-other enable
+        set resolve-hostname disable
+        config table-columns
+            edit 1
+                set header "Targeted Host"
+                set data-binding "dstip"
+                set data-top 25
+            next
+            edit 2
+                set header "Severity"
+                set data-binding "risk"
+                set data-top 10
+                set data-type drilldown
+            next
+            edit 3
+                set header "Events"
+                set data-binding "total_num"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "Brief-Job-List"
+        set disp-name "Brief Job List"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Brief Job List"
+        set dataset "brief-job-list"
+        set chart-type table
+        set resolve-hostname disable
+        config table-columns
+            edit 1
+                set header "Date"
+                set data-binding "timestamp"
+                set data-top 5000
+                set column-width 10
+            next
+            edit 2
+                set header "Source IP"
+                set data-binding "srcip"
+                set column-width 10
+            next
+            edit 3
+                set header "Targeted Host"
+                set data-binding "dstip"
+                set column-width 14
+            next
+            edit 4
+                set header "File Name"
+                set data-binding "fname"
+                set column-width 25
+            next
+            edit 5
+                set header "Submit User"
+                set data-binding "suser"
+                set column-width 11
+            next
+            edit 6
+                set header "Submit Type"
+                set data-binding "stype"
+                set column-width 11
+            next
+            edit 7
+                set header "Severity"
+                set data-binding "risk"
+                set column-width 10
+            next
+            edit 8
+                set header "Count"
+                set data-binding "cnt"
+                set column-width 9
+            next
+        end
+        set protected enable
+    next
+    edit "FSA-Malware-Count-By-Name"
+        set disp-name "FSA Top 20 Malware"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FSA top 20 malware by count"
+        set dataset "fsa-scan-stats-of-malware-by-name"
+        set chart-type bar
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Virus"
+                set data-binding "mname"
+                set data-top 20
+            next
+            edit 2
+                set data-binding "risk"
+                set data-type drilldown
+                set data-top 5
+            next
+            edit 3
+                set header "Amount"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+       end
+       set protected enable
+    next
+    edit "FSA-File-Type"
+        set disp-name "FSA Top 50 File Type"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FSA Top 50 File Type by job count"
+        set dataset "fsa-scan-stats-count-of-file-type"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "File Type"
+                set data-binding "ftype"
+                set data-top 50
+            next
+            edit 2
+                set header "Job Count"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+       end
+       set protected enable
+    next
+    edit "FSA-Rating-Of-OS"
+        set disp-name "FSA Top 50 Source OS"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FSA Top 50 Source OS by Rating count"
+        set dataset "fsa-scan-stats-of-rating-by-source-os"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Source OS"
+                set data-binding "vmos"
+                set data-top 20
+            next
+            edit 2
+                set header "Rating"
+                set data-type drilldown
+                set data-binding "risk"
+                set data-top 5
+            next
+            edit 3
+                set header "count"
+                set data-type aggregate
+                set data-binding "total_num"
+                set column-attr count
+            next
+       end
+       set protected enable
+    next
+    edit "FSA-Targeted-Hosts"
+        set disp-name "FSA Top 20 Targeted Hosts"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FSA Top 20 Targeted Hosts"
+        set dataset "fsa-targeted-hosts"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Hosts"
+                set data-binding "dstip"
+                set data-top 20
+            next
+            edit 2
+                set header "Count"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+       end
+       set protected enable
+    next
+    edit "fsa-File-Type-Summary-With-VM-Source"
+        set disp-name "FortiSandbox File Type Summary With VM Source"
+        set description "FortiSandbox File Type Summary With VM Source"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Type-Summary-With-VM-Source"
+        set chart-type donut
+        set include-other enable
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "filetype"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Type-Details-With-VM-Source"
+        set disp-name "FortiSandbox File Type Details With VM Source"
+        set description "FortiSandbox File Type Details With VM Source"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Type-Details-With-VM-Source"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "filetype"
+                set data-top 5
+            next
+            edit 2
+                set header "total num"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Type-Summary"
+        set disp-name "FortiSandbox File Type Summary"
+        set description "FortiSandbox File Type Summary"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Type-Summary"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "filetype"
+                set data-top 10
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Type-Details"
+        set disp-name "FortiSandbox File Type Details"
+        set description "FortiSandbox File Type Details"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Type-Details"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "filetype"
+                set data-top 10
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Source-Stats-Donut"
+        set disp-name "FortiSandbox File Source Stats Donut"
+        set description "FortiSandbox File Source Stats Donut"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Source-Stats"
+        set chart-type donut
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "res_src"
+                set data-top 10
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Source-Stats-Table"
+        set disp-name "FortiSandbox File Source Stats Table"
+        set description "FortiSandbox File Source Stats Table"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Source-Stats"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Rating Module"
+                set data-binding "res_src"
+            next
+            edit 2
+                set header "Clean"
+                set data-binding "clean"
+                set column-attr count
+            next
+            edit 3
+                set header "Low"
+                set data-binding "low"
+                set column-attr count
+            next
+            edit 4
+                set header "Medium"
+                set data-binding "medium"
+                set column-attr count
+            next
+            edit 5
+                set header "High"
+                set data-binding "high"
+                set column-attr count
+            next
+            edit 6
+                set header "Malicious"
+                set data-binding "malicious"
+                set column-attr count
+            next
+            edit 7
+                set header "Unknown"
+                set data-binding "unknown"
+                set column-attr count
+            next
+            edit 8
+                set header "Total"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-File-Type-Stats"
+        set disp-name "FortiSandbox File Type Stats"
+        set description "FortiSandbox File Type Stats"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-File-Type-Stats"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Filetype"
+                set data-binding "filetype"
+                set data-top 10
+            next
+            edit 2
+                set header "Static File Scan"
+                set data-binding "static"
+                set column-attr count
+            next
+            edit 3
+                set header "AV Scanner"
+                set data-binding "avscan"
+                set column-attr count
+            next
+            edit 4
+                set header "FSA Community Cloud"
+                set data-binding "comm"
+                set column-attr count
+            next
+            edit 5
+                set header "VM Engine"
+                set data-binding "vmeng"
+                set column-attr count
+            next
+            edit 6
+                set header "Sandboxing Result"
+                set data-binding "sandb"
+                set column-attr count
+            next
+            edit 7
+                set header "Local Overwrite"
+                set data-binding "local"
+                set column-attr count
+            next
+            edit 8
+                set header "Total"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Hourly-File-Stats-Count"
+        set disp-name "FortiSandbox Hourly File Stats Count"
+        set description "FortiSandbox Hourly File Stats Count"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Hourly-File-Stats-Count"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hour"
+                set data-binding "hrstamp"
+            next
+            edit 2
+                set header "Static File Scan"
+                set data-binding "static"
+                set column-attr count
+            next
+            edit 3
+                set header "AV Scanner"
+                set data-binding "avscan"
+                set column-attr count
+            next
+            edit 4
+                set header "FSA Community Cloud"
+                set data-binding "comm"
+                set column-attr count
+            next
+            edit 5
+                set header "VM Engine"
+                set data-binding "vmeng"
+                set column-attr count
+            next
+            edit 6
+                set header "Sandboxing Result"
+                set data-binding "sandb"
+                set column-attr count
+            next
+            edit 7
+                set header "Local Overwrite"
+                set data-binding "local"
+				set column-attr count
+            next
+            edit 8
+                set header "Total"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Scanned-File-Stats-By-Source"
+        set disp-name "FortiSandbox Scanned File Stats By Source"
+        set description "FortiSandbox Scanned File Stats By Source"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Scanned-File-Stats-By-Source"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Static File Scan"
+                set data-binding "static"
+                set column-attr timespan
+            next
+            edit 2
+                set header "AV Scanner"
+                set data-binding "avscan"
+                set column-attr timespan
+            next
+            edit 3
+                set header "FSA Community Cloud"
+                set data-binding "comm"
+                set column-attr timespan
+            next
+            edit 4
+                set header "VM Engine"
+                set data-binding "vmeng"
+                set column-attr timespan
+            next
+            edit 5
+                set header "Sandboxing Result"
+                set data-binding "sandb"
+                set column-attr timespan
+            next
+            edit 6
+                set header "Local Overwrite"
+                set data-binding "local"
+                set column-attr timespan
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Hourly-Sanned-File-Stats-By-Source"
+        set disp-name "FortiSandbox Hourly Scanned File Stats By Source"
+        set description "FortiSandbox Hourly Scanned File Stats By Source"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Hourly-Sanned-File-Stats-By-Source"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hour"
+                set data-binding "hrstamp"
+            next
+            edit 2
+                set header "Static File Scan"
+                set data-binding "static"
+                set column-attr timespan
+            next
+            edit 3
+                set header "AV Scanner"
+                set data-binding "avscan"
+                set column-attr timespan
+            next
+            edit 4
+                set header "FSA Community Cloud"
+                set data-binding "comm"
+                set column-attr timespan
+            next
+            edit 5
+                set header "VM Engine"
+                set data-binding "vmeng"
+                set column-attr timespan
+            next
+            edit 6
+                set header "Sandboxing Result"
+                set data-binding "sandb"
+                set column-attr timespan
+            next
+            edit 7
+                set header "Local Overwrite"
+                set data-binding "local"
+                set column-attr timespan
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Top-Endpoint-by-Number-of-Malicious-File-Detected"
+        set disp-name "Top Endpoints by Number of Malicious Files Detected"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Top Endpoints by Number of Malicious Files Detected"
+        set dataset "fsa-Top-Endpoint-by-Number-of-Malicious-File-Detected"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host"
+                set data-binding "ep_name"
+                set data-top 0
+            next
+            edit 2
+                set header "Malicious File Count"
+                set data-binding "filenum"
+                set column-width 20
+            next
+            edit 3
+                set header "OS"
+                set data-binding "os_name"
+                set column-width 30
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Malicious-File-Detected-Timeline"
+        set disp-name "Timeline for Malicious Files Detected"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Timeline for Malicious Files Detected"
+        set dataset "fsa-Malicious-File-Detected-by-time"
+        set chart-type line
+        config table-columns
+            edit 1
+                set data-binding "timescale"
+                set column-attr time
+            next
+            edit 2
+                set data-binding "filenum"
+                set legend "Number of Files"
+                set column-graph-type line-up
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Malicious-File-Detected-by-Host"
+        set disp-name "Top Hosts by Malicious Files Detected"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "Top Hosts by Malicious Files Detected"
+        set dataset "fsa-Malicious-File-Detected-by-host"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hosts"
+                set data-binding "ep_name"
+                set column-width 20
+            next
+            edit 2
+                set header "FCTUID"
+                set data-binding "fctuid"
+                set column-width 50
+            next
+            edit 3
+                set header "Files"
+                set data-binding "files"
+                set column-width 30
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Top-Email-Risk-Files"
+        set disp-name "Identified Email Risk Files"
+        set description "Identified Email Risk Files"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set dataset "fsa-Top-Email-Risk-Files"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Virus"
+                set data-binding "malware"
+                set data-top 10
+                set column-width 40
+            next
+            edit 2
+                set header "Total_Number"
+                set data-binding "total_num"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 60
+            next
+            edit 3
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Email-Risk-Rating-by-File"
+        set disp-name "FortiSandbox Email Risk Rating by File"
+        set description "FortiSandbox Email Risk Rating by File"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set dataset "fsa-Email-Risk-Rating-by-File"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Malware Name"
+                set data-binding "malware"
+                set data-top 10
+            next
+            edit 2
+                set header "Risk"
+                set data-binding "risk"
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Email-Risk-Rating-by-URL"
+        set disp-name "FortiSandbox Email Risk Rating by URL"
+        set description "FortiSandbox Email Risk Rating by URL"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set dataset "fsa-Email-Risk-Rating-by-URL"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "URL"
+                set data-binding "url_short"
+                set data-top 10
+                set column-width 25
+                set column-attr obf-url
+            next
+            edit 2
+                set header "Risk"
+                set data-binding "risk"
+                set column-width 25
+            next
+            edit 3
+                set header "Total Number"
+                set data-binding "total_num"
+                set column-span 2
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 4
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Top-Threat-Rating-Distribution"
+        set disp-name "Sandbox Scanning Statistics"
+        set description "Sandbox Scanning Statistics"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "threat-rating-distribution"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Risk"
+                set data-binding "risk"
+                set data-top 10
+            next
+            edit 2
+                set header "Events (Count)"
+                set data-binding "total_num"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Top-Targeted-Hosts"
+        set disp-name "Top Sandbox Hosts"
+        set description "Top Sandbox Hosts"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-targeted-hosts"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Destination IP"
+                set data-binding "dstip"
+                set data-top 10
+            next
+            edit 2
+                set header "Events (Count)"
+                set data-binding "total_num"
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Scan-Stats-of-Malware-by-Name"
+        set disp-name "Top Sandbox Malware"
+        set description "Top Sandbox Malware"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-scan-stats-of-malware-by-name"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Malware"
+                set data-binding "mname"
+                set data-top 10
+            next
+            edit 2
+                set header "Events (Count)"
+                set data-binding "total_num"
+                set column-attr count
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Known-Malware-Detected"
+        set disp-name "FortiSandbox Known Malware Detected"
+        set description "FortiSandbox Known Malware Detected"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Known-Malware-Detected"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Malware"
+                set data-binding "mname"
+                set data-top 5
+                set column-width 30
+            next
+            edit 2
+                set header "File"
+                set data-binding "fname"
+                set column-width 35
+            next
+            edit 3
+                set header "Protocol"
+                set data-binding "proto"
+            next
+            edit 4
+                set header "Severity"
+                set data-binding "risk_num"
+                set column-attr severity
+                set column-span 2
+            next
+            edit 5
+                set header "Risk"
+                set data-binding "risk"
+            next
+            edit 6
+                set header "Count"
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Unknown-Malware-Detected"
+        set disp-name "FortiSandbox Unknown Malware Detected"
+        set description "FortiSandbox Unknown Malware Detected"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Unknown-Malware-Detected"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "sha256"
+                set data-binding "sha256"
+                set column-width 35
+                set data-top 5
+            next
+            edit 2
+                set header "File"
+                set data-binding "fname"
+                set column-width 30
+            next
+            edit 3
+                set header "Protocol"
+                set data-binding "proto"
+            next
+            edit 4
+                set header "Severity"
+                set data-binding "risk_num"
+                set column-attr severity
+                set column-span 2
+            next
+            edit 5
+                set header "Risk"
+                set data-binding "risk"
+            next
+            edit 6
+                set header "Count"
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Malware-Disposition-Breakdown"
+        set disp-name "FortiSandbox Malware Disposition Breakdown"
+        set description "FortiSandbox Malware Disposition Breakdown"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Malware-Disposition-Breakdown"
+        set chart-type donut
+        set chart-style "{\"size\": \"medium\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header "Risk"
+                set data-binding "risk"
+                set data-top 5
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Sandbox-Processing-Donut"
+        set disp-name "FortiSandbox Sandbox Processing Donut"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set description "FortiSandbox Sandbox Processing Donut"
+        set dataset "fsa-Sandbox-Processing-bar"
+        set chart-type donut
+        set chart-style "{\"size\": \"big\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header "Risk"
+                set data-binding "risk"
+                set data-top 20
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Sandbox-Processing-bar"
+        set disp-name "FortiSandbox Sandbox Processing Bar"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set description "FortiSandbox Sandbox Processing Bar"
+        set dataset "fsa-Sandbox-Processing-bar"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Risk"
+                set data-binding "risk"
+                set data-top 20
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Count-of-Filetypes-Including-Other"
+        set disp-name "FortiSandbox Count of Filetypes Including Other"
+        set description "FortiSandbox Count of Filetypes Including Other"
+        set dev-type FortiSandbox
+         set category "FortiSandbox"
+        set dataset "fsa-Count-of-Filetypes-Including-Other"
+        set chart-type donut
+        set chart-style "{\"size\": \"medium\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header "File Type"
+                set data-binding "ftype"
+                set data-top 5
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Filetype-Breakout-Malware"
+        set disp-name "FortiSandbox Filetype Breakout Malware"
+        set description "FortiSandbox Filetype Breakout Malware"
+        set dev-type FortiSandbox
+         set category "FortiSandbox"
+        set dataset "fsa-Filetype-Breakout-Malware"
+        set chart-type donut
+        set chart-style "{\"size\": \"medium\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header "File Type"
+                set data-binding "ftype"
+                set data-top 5
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Compressed-File-Analysis"
+        set disp-name "FortiSandbox Compressed File Analysis"
+        set description "FortiSandbox Compressed File Analysis"
+        set dev-type FortiSandbox
+         set category "FortiSandbox"
+        set dataset "fsa-Compressed-File-Analysis"
+        set chart-type donut
+        set chart-style "{\"size\": \"medium\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header "risk"
+                set data-binding "risk"
+            next
+            edit 2
+                set header "count_of"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-Files-Scanned-per-Day-and-Hour"
+        set disp-name "FortiSandbox Files Scanned per Day and Hour"
+        set description "FortiSandbox Files Scanned per Day and Hour"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Files-Scanned-per-Day-and-Hour"
+        set chart-style "{\"time-display\": \"hour-only\", \"colormap\":[\"#fad7a0\", \"#f8c471\", \"#f5b041\", \"#f39c12\", \"#d68910\", \"#b9770e\"] }"
+        set chart-type heatmap
+        set hidden enable
+        config table-columns
+            edit 1
+                set header "Hours"
+                set data-binding "hourstamp"
+                set column-attr time
+                set data-top 0
+            next
+            edit 2
+                set column-attr none
+                set data-binding "daystamp"
+                set data-type drilldown
+            next
+            edit 3
+                set header "cnt"
+                set data-binding "cnt"
+                set column-graph-type line-up
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fsa-avg-Scantime-per-Filetype"
+        set disp-name "FortiSandbox Average Scantime per Filetype"
+        set description "FortiSandbox Average Scantime per Filetype"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-avg-Scantime-per-Filetype"
+        set chart-type bar
+        set chart-style "{\"orientation\": \"horizontal\", \"show-value\": \"enable\", \"bar-size\": \"small\"}"
+        set include-other disable
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "ftype"
+                set data-top 10
+            next
+            edit 2
+                set header ""
+                set data-binding "avg_scantime"
+                set data-type aggregate
+                set column-attr timespan
+            next
+        end
+    next
+    edit "fsa-Targeted-Hosts-Lastseen"
+        set disp-name "FortiSandbox Lastseen Targeted Hosts"
+        set description "FortiSandbox Lastseen Targeted Hosts"
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set dataset "fsa-Targeted-Hosts-Lastseen"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hosts"
+                set data-binding "dstip"
+                set data-top 5
+            next
+            edit 2
+                set header "Last Detected"
+                set data-binding "last_seen"
+            next
+            edit 3
+                set header "Targets"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+    set protected enable
+    next
+    edit "fsa-Command-and-Control-Callbacks-Count"
+        set disp-name "FortiSandbox Command and Control Callbacks Count"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Command and Control Callbacks Count"
+        set dataset "fsa-Command-and-Control-Callbacks-Count"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Malware"
+                set data-binding "mcate"
+                set data-top 10
+            next
+            edit 2
+                set header "Count"
+                set column-span 2
+                set column-graph-type bar
+                set data-binding "total_num"
+                set column-attr count
+            next
+            edit 3
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Max-Hourly-Files-Processed"
+        set disp-name "FortiSandbox Max Hourly Files Processed"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Max Hourly Files Processed"
+        set dataset "fsa-Max-Hourly-Files-Processed"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hour"
+                set data-binding "hour_stamp"
+                set data-top 1
+            next
+            edit 2
+                set column-span 2
+                set data-binding "count_of"
+                set column-graph-type bar
+                set column-width 50
+            next
+            edit 3
+                set header "Count"
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Most-Frequent-Malware-Category"
+        set disp-name "FortiSandbox Most Frequent Malware Category"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Most Frequent Malware Category"
+        set dataset "fsa-Most-Frequent-Malware-Category"
+        set chart-type table
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Malware Category"
+                set data-binding "mcate"
+                set data-top 1
+            next
+            edit 2
+                set header "Count"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Most-Frequent-CallbackIP-Domain"
+        set disp-name "FortiSandbox Most Frequent Callback IP Domain"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Most Frequent Callback IP Domain"
+        set dataset "fsa-Most-Frequent-CallbackIP-Domain"
+        set chart-type table
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Hosts"
+                set data-binding "dstip"
+                set data-top 1
+            next
+            edit 2
+                set header "Last Detected"
+                set data-binding "last_seen"
+            next
+            edit 3
+                set header "Count"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Callback-Destinations"
+        set disp-name "FortiSandbox Callback Destinations"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Callback Destinations"
+        set dataset "fsa-Callback-Destinations"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hosts"
+                set data-binding "callback_ip_domain"
+                set data-top 10
+            next
+            edit 2
+                set header "Count"
+                set data-type aggregate
+                set data-binding "attempts"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Sandbox-Threat-Detection-Processing"
+        set disp-name "FortiSandbox Threat Detection Processing"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Threat Detection Processing"
+        set dataset "fsa-Sandbox-Threat-Detection-Processing"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Processed By"
+                set data-binding "rsrc"
+                set data-top 10
+            next
+            edit 2
+                set header "Source Type"
+                set data-type drilldown
+                set data-binding "src_type"
+            next
+            edit 3
+                set header "Severity"
+                set data-type drilldown
+                set data-binding "risk"
+            next
+            edit 4
+                set header "Count"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Sandbox-Processing-Cluster-Bar"
+        set disp-name "FortiSandbox Processing Cluster Bar"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Processing Cluster Bar"
+        set dataset "fsa-Sandbox-Threat-Detection-Processing"
+        set chart-type bar
+        set chart-style "{\"cluster-chart\":\"enable\"}"
+        config table-columns
+            edit 1
+                set header "Processed By"
+                set data-binding "rsrc"
+                set data-top 50
+            next
+            edit 2
+                set header "Source Type"
+                set data-type drilldown
+                set data-binding "src_type"
+                set data-top 2
+            next
+            edit 3
+                set header "Count"
+                set data-type aggregate
+                set data-binding "count_of"
+                set column-attr count
+            next
+        end
+       set protected enable
+    next
+    edit "fsa-Peak-Daily-Total-Scan-Time"
+        set disp-name "FortiSandbox Peak Compute Hours Per Day"
+        set category "FortiSandbox"
+        set dev-type FortiSandbox
+        set description "FortiSandbox Peak Compute Hours Per Day"
+        set dataset "fsa-Peak-Daily-Total-Scan-Time"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Hours"
+                set data-binding "peak_comp_hours"
+                set data-top 10
+            next
+        end
+       set protected enable
+    next
+end
+
+
+config sql-report macro
+
+    edit "fsa-Total-Number-of-Files-Submitted"
+        set disp-name "Total Number of Files Submitted to Sandbox"
+        set dev-type FortiSandbox
+        set description "Total Number of Files Submitted to Sandbox"
+        set dataset "fsa-Totalnum-Files-Submitted-to-Sandbox"
+        set data-binding "totalnum"
+        set protected enable
+    next
+
+    edit "fsa-Total-Number-of-Hosts-Affected"
+        set disp-name "Total Number of Hosts Affected"
+        set dev-type FortiSandbox
+        set description "Total Number of Hosts Affected"
+        set dataset "fsa-Totalnum-of-Hosts-Affected"
+        set data-binding "totalnum"
+        set protected enable
+    next
+    edit "fsa-Total-New-Email-Malware"
+        set disp-name "FSA Number of New Email Malware"
+        set description "FSA Number of New Email Malware"
+        set dev-type FortiSandbox
+        set dataset "fsa-Total-New-Email-Malware"
+        set data-binding "total_new"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Count-of-Known-Malware-Detected"
+        set disp-name "FortiSandbox Count of Known Malware Detected"
+        set description "FortiSandbox Count of Known Malware Detected"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Known-Malware-Detected"
+        set data-binding "count"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Count-of-Unknown-Malware-Detected"
+        set disp-name "FortiSandbox Count of Unknown Malware Detected"
+        set description "FortiSandbox Count of Unknown Malware Detected"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Unknown-Malware-Detected"
+        set data-binding "count"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Count-of-Total-Files-Scanned"
+        set disp-name "FortiSandbox Count of Total Files Scanned"
+        set description "FortiSandbox Count of Total Files Scanned"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Total-Files-Scanned"
+        set data-binding "total_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Count-of-Unique-Filetypes-Found"
+        set disp-name "FortiSandbox Count of Unique Filetypes Found"
+        set description "FortiSandbox Count of Unique Filetypes Found"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Unique-Filetypes-Found"
+        set data-binding "Unique File Types"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Files-Detected-Are-Executables"
+        set disp-name "FortiSandbox Files Detected Are Executables"
+        set description "FortiSandbox Files Detected Are Executables"
+        set dev-type FortiSandbox
+        set dataset "fsa-Files-Detected-Are-Executables"
+        set data-binding "total_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Average-Scan-Time-Per-File"
+        set disp-name "FortiSandbox Average Scan Time Per File"
+        set description "FortiSandbox Average Scan Time Per File"
+        set dev-type FortiSandbox
+        set dataset "fsa-Average-Scan-Time-Per-File"
+        set data-binding "scantime_avg"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Files-Processed-Per-Hour"
+        set disp-name "FortiSandbox Files Processed Per Hour"
+        set description "FortiSandbox Files Processed Per Hour"
+        set dev-type FortiSandbox
+        set dataset "fsa-Files-Processed-Per-Hour"
+        set data-binding "files_processed_per_hour"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Peak-Compute-Hours-Per-Day"
+        set disp-name "FortiSandbox Peak Compute Hours Per Day"
+        set description "FortiSandbox Peak Compute Hours Per Day"
+        set dev-type FortiSandbox
+        set dataset "fsa-Peak-Daily-Total-Scan-Time"
+        set data-binding "peak_comp_hours"
+        set protected enable
+    next
+    edit "fsa-Count-of-Files-Are-Archived-Compressed"
+        set disp-name "FortiSandbox Count of Files Are Archived Compressed"
+        set description "FortiSandbox Count of Files Are Archived Compressed"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Files-Are-Archived-Compressed"
+        set data-binding "total_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Count-of-Files-Are-Macro-Enabled"
+        set disp-name "FortiSandbox Count of Files Are Macro Enabled"
+        set description "FortiSandbox Count of Files Are Macro Enabled"
+        set dev-type FortiSandbox
+        set dataset "fsa-Count-of-Files-Are-Macro-Enabled"
+        set data-binding "total_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-avg-Scantime-Per-Clean-File"
+        set disp-name "FortiSandbox Average Scantime Per Clean File"
+        set description "FortiSandbox Average Scantime Per Clean File"
+        set dev-type FortiSandbox
+        set dataset "fsa-avg-Scantime-Per-Clean-File"
+        set data-binding "scan_avg"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-avg-Scantime-Per-Malicious-File"
+        set disp-name "FortiSandbox Average Scantime Per Malicious File"
+        set description "FortiSandbox Average Scantime Per Malicious File"
+        set dev-type FortiSandbox
+        set dataset "fsa-avg-Scantime-Per-Malicious-File"
+        set data-binding "scan_avg"
+        set data-attr count
+        set protected enable
+    next
+    edit "fsa-Most-Popular-Filetype-count"
+        set disp-name "FortiSandbox Most Popular Filetype Count"
+        set description "FortiSandbox Most Popular Filetype Count"
+        set dev-type FortiSandbox
+        set dataset "fsa-Most-Popular-Filetype"
+        set data-binding "ftype"
+        set protected enable
+    next
+    edit "fsa-Most-Frequent-Attack-Victim"
+        set disp-name "FortiSandbox Most Frequent Attack Victim"
+        set description "FortiSandbox Most Frequent Attack Victim"
+        set dev-type FortiSandbox
+        set dataset "fsa-Most-Frequent-Attack-Victim"
+        set data-binding "dstip"
+        set protected enable
+    next
+    edit "fsa-Max-Hourly-Files-Processed-Hour"
+        set disp-name "FortiSandbox Max Hourly Files Processed Hour"
+        set description "FortiSandbox Max Hourly Files Processed Hour"
+        set dev-type FortiSandbox
+        set dataset "fsa-Max-Hourly-Files-Processed"
+        set data-binding "hour_stamp"
+        set protected enable
+    next
+    edit "fsa-Max-Hourly-Files-Processed-Count"
+        set disp-name "FortiSandbox Max Hourly Files Processed Count"
+        set description "FortiSandbox Max Hourly Files Processed Count"
+        set dev-type FortiSandbox
+        set dataset "fsa-Max-Hourly-Files-Processed"
+        set data-binding "count_of"
+        set data-attr count
+        set protected enable
+    next
+end
+
+
+
+config sql-report layout
+    edit 1000050001
+        set is-template enable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "Template - FortiSandbox Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Threat rating distribution, job severity timeline, malware severity of targeted hosts, top 20 targeted hosts, top 20 malware, top 50 file type and brief job list"
+        set body "<h1>FortiSandbox - File Submission Information</h1><p>&nbsp;</p><p><strong>The following charts show the file type details submitted to FortiSandbox.</strong></p><fazchart mkey=\"fsa-File-Type-Summary-With-VM-Source\" title=\"FortiSandbox-File Type Summary Submitted to FSA by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Details-With-VM-Source\" title=\"FortiSandbox-File Type Breakdown Submitted to FSA by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Summary\" title=\"FortiSandbox-File Type Summary Submitted to FSA\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Details\" title=\"FortiSandbox-File Type Breakdown Submitted to FSA\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>FortiSandbox - File Scan Statistics</h1><p><br /><strong>The following graph displays the number of Malicious events, and other events by Risk Level.</strong></p><fazchart mkey=\"Threat-Rating-Distribution\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following graph displays the number of Malicious events, and other events by Risk Level.</strong></p><fazchart mkey=\"Job-Severity-Timeline\" title=\"{default}\" width=\"100%\"></fazchart><p><strong>The following table shows the Top 50 file types identified.</strong></p><fazchart mkey=\"FSA-File-Type\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following shows the Top 20 Hosts that have been targeted by Malware.</strong></p><fazchart mkey=\"FSA-Targeted-Hosts\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following graph displays the Severity of Malware events detected on Targeted Hosts.</strong></p><fazchart mkey=\"Malware-Severity-of-Targeted-Hosts\" title=\"{default}\" width=\"100%\"></fazchart><p><br /><strong>The following graph shows the Top 20 Malware detected.</strong></p><fazchart mkey=\"FSA-Malware-Count-By-Name\" title=\"{default}\" width=\"100%\"></fazchart><p><strong>The following tables contains the list of job names by count.</strong></p><fazchart mkey=\"Brief-Job-List\" title=\"FortiSandbox-FSA Brief Job List\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>FortiSandbox - Performance Statistics</h1><p><strong>The following charts show the Threat Rating Destribution by&nbsp;VM Host Module.</strong></p><fazchart mkey=\"fsa-File-Source-Stats-Donut\" title=\"FortiSandbox-Threat Rating Summary by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Source-Stats-Table\" title=\"FortiSandbox-Threat Rating Breakdown by VM Module \" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Stats\" title=\"Threat Rating Breakdown by File Type and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Hourly-File-Stats-Count\" title=\"Threat Rating Breakdown by Time and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Scanned-File-Stats-By-Source\" title=\"Average Threat Rating Duration by VM Module\" width=\"100%\"></fazchart><div><p>&nbsp;</p><fazchart mkey=\"fsa-Hourly-Sanned-File-Stats-By-Source\" title=\"Average Threat Rating Duration by Time and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p></div>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90108
+                next
+            end
+        set protected enable
+    next
+    edit 1000050002
+        set is-template enable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "Template - Endpoint Sandbox Detections Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Endpoint report showing the APT threats deteted by sandbox"
+        set body "<h1>Summary</h1><p>Fortinet Advanced Threat Protection relies on multiple types of security technologies, products, and research applied from the network edge through to endpoint devices. To deliver the most effective protection, they are integrated to work together automatically, continuously handing off data from one to the next to identify, evaluate and respond to attacks.</p><p>FortiSandbox, together with FortiClient, provides Advanced Threat Protection to identify and help customers thwart the highly targeted and tailored attacks that increasingly bypass traditional defenses and lurk within networks.</p><p>&nbsp;</p><tr><td style=\"width:352px\"><span style=\"font-size:14px\"><strong>Total Files Submiited to Sandbox:</strong>&nbsp;<fazmacro mkey=\"fsa-Total-Number-of-Files-Submitted\"></fazmacro></span></td></tr><p>&nbsp;</p><tr><td style=\"width:352px\"><span style=\"font-size:14px\"><strong>Total Number of Hosts Affected:</strong>&nbsp;<fazmacro mkey=\"fsa-Total-Number-of-Hosts-Affected\"></fazmacro></span></td></tr><p>&nbsp;</p><h2>Endpoints by Malicious File Count</h2><p>The following are endpoints detected by sandbox.</p><fazchart mkey=\"fsa-Top-Endpoint-by-Number-of-Malicious-File-Detected\" title=\" \" width=\"100%\"></fazchart><p>&nbsp;</p><h1>Malicious Files Detected</h1><fazchart mkey=\"fsa-Malicious-File-Detected-Timeline\" title=\"Malicious File Detections within Current Time Range\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Malicious-File-Detected-by-Host\" title=\"Malicious Files Detected by Hosts\" width=\"100%\"></fazchart>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90108
+                next
+                edit 90202
+                next
+            end
+        set protected enable
+    next
+    edit 1000050003
+        set is-template enable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "Template - FortiSandbox CTAP Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "FortiSandbox CTAP Report"
+        set body "<h1><strong>Executive Summary</strong></h1><p>The assessment report provides organizations a snapshot of their current security posture based on known and unknown malware found in the network. Through the use of sandboxing, organizations can better understand the benefits of using sandbox to uncover potential vulnerabilities in their security architecture and polices, and review the details of these threats.</p><h2><strong>Security</strong></h2><table border=\"0\" cellspacing=\"4\" cellpadding=\"1\" align=\"center\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Known_Malware_detected.png\" style=\"height:100px; width:100px\" /></td><td style=\"width:250px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Known-Malware-Detected\"></fazmacro></strong></span></p><p><span style=\"font-size:14px; text-align:left\">Known Malware Detected</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Unknown_Malware_detected.png\" style=\"height:100px; width:100px\" /></td><td style=\"width:250px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Unknown-Malware-Detected\"></fazmacro></strong></span></p><p><span style=\"font-size:14px; text-align:left\">Unknown Malware Detected</span></p></td></tr></tbody></table><p>Security Summary: As part of your security strategy, protecting against known and unknown malware is critical to reducing risks. In-place security controls are designed to block known malware while sandboxing complements these controls to block unknown malware. Also critical is to uncover any callbacks as a signal to an active or impending threat campaign.</p><p>Additional details are found in Security section below.</p><h2><strong>File Analysis</strong></h2><table border=\"0\" cellspacing=\"4\" cellpadding=\"1\" align=\"center\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Total_files_scanned.png\" style=\"height:100px; width:100px\" /></td><td style=\"height:70px; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Total-Files-Scanned\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Total Files Scanned</span></p></td><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_unique_filetypes_found.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Unique-Filetypes-Found\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Unique Filetypes Found</span></p></td><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_files_detected_executables.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Files-Detected-Are-Executables\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Detected are Executable</span></p></td></tr></tbody></table><p>Based on the number of files submitted for sandboxing, you will be provided intelligence on the various file types including those that are potentially risky found in your organization. This visibility serves as an opportunity for organizations to fine-tune application policies as part of early preventive controls.</p><p>Additional details are found in File Analysis section below.</p><h2><strong>Performance</strong></h2><table border=\"0\" align=\"center\" cellspacing=\"4\" cellpadding=\"1\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_faverage_scan_time_per_file_copy.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Average-Scan-Time-Per-File\"></fazmacro></strong></span><span style=\"font-size:14px\">s</span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Average Scan Time Per File</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_files_processed_per_hour.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Files-Processed-Per-Hour\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Processed Per Hour</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Peak_compute_hours.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Count\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Processed in Peak Hour</span></p></td></tr></tbody></table><p>Besides detecting threats, it is important to deploy a scalable sandboxing solution so there is minimal impact to the threat detection and response during peak periods. Analysis that are AI-powered combined with a powerful pre-filter engine will reduce the number of files requiring detonation.</p><p>Additional details are found in Performance section below.</p><div><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Security</strong></h1></div><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Known-Malware-Detected\"></fazmacro></strong>&nbsp;known malware detected</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Unknown-Malware-Detected\"></fazmacro></strong>&nbsp;unknown malware detected</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Most-Frequent-Attack-Victim\"></fazmacro></strong>most frequent attack victim</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\">&nbsp;</td></tr></tbody></table><h2><strong>Command and Control Callbacks</strong></h2><fazchart mkey=\"fsa-Command-and-Control-Callbacks-Count\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Most Frequent Malware Category</strong></h2><fazchart mkey=\"fsa-Most-Frequent-Malware-Category\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Most Frequent Callback IP Domain</strong></h2><fazchart mkey=\"fsa-Most-Frequent-CallbackIP-Domain\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Callback Destinations</strong></h2><fazchart mkey=\"fsa-Callback-Destinations\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 5 Known Malware Detected</strong></h2><p>Known malware are threats that have been analyzed prior and its characteristics are considered to be malicious. Below is a list of known malware detected by Sandbox pre-filter stage including AI-powered static analysis.</p><fazchart mkey=\"fsa-Known-Malware-Detected\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 5 Unknown Malware Detected</strong></h2><p>Unknown malware are threats that uses new malware techniques or 0-day exploits designed to bypass traditional detection engines. Below is a list of unknown malware detected by Sandbox AI-powered dynamic analysis.</p><fazchart mkey=\"fsa-Unknown-Malware-Detected\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><table border=\"0\" align=\"center\" cellspacing=\"2\" cellpadding=\"1\" style=\"height:200px; width:730px\"><tbody><tr><td style=\"text-align:justify; vertical-align:top; width:360px\"><h2><strong>Malware Disposition Breakdown</strong></h2><p>Characteristics of a malware vary greatly on it&#39;s impact to a user or an organization. This distribution breaks down on the severity of malware seen in your organization.</p></td><td style=\"width:10px\">&nbsp;</td><td style=\"text-align:center; vertical-align:top; width:360px\"><fazchart mkey=\"fsa-Malware-Disposition-Breakdown\" title=\"\" width=\"350px\"></fazchart></td></tr></tbody></table><p>&nbsp;</p><h2><strong>Top 5 Targeted Hosts</strong></h2><p>The ultimate destination of an attack typically lands on a host(s) within an organization thus uncovering these vulnerable host is critical to prioritize proper mitigation and to close these security gaps. Below is a list of suspected destination hosts with associated malware as uncovered during sandbox AI-powered dynamic analysis.</p><fazchart mkey=\"fsa-Targeted-Hosts-Lastseen\" title=\"\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>File Analysis</strong></h1><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Total-Files-Scanned\"></fazmacro></strong>&nbsp;total files scanned</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Unique-Filetypes-Found\"></fazmacro></strong>&nbsp;unique filetypes found</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Most-Popular-Filetype-count\"></fazmacro></strong>&nbsp;most popular filetype</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Files-Are-Archived-Compressed\"></fazmacro></strong>of files are archives/compressed</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Files-Are-Macro-Enabled\"></fazmacro></strong>of files are macro enabled</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Files-Detected-Are-Executables\"></fazmacro></strong>&nbsp;of files are executable</span></li></ul></td></tr></tbody></table><h2><strong>Threat Detection Processing</strong></h2><fazchart mkey=\"fsa-Sandbox-Threat-Detection-Processing\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Sandbox-Processing-Cluster-Bar\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Total Files Scanned Clean to Malicious</strong></h2><p>The chart following shows the total files scanned by FortiSandbox for the selected time period.</p><fazchart mkey=\"fsa-Sandbox-Processing-Donut\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><p>&nbsp;</p><table border=\"0\" cellspacing=\"1\" cellpadding=\"1\" style=\"width:730px\"><tbody><tr><td style=\"vertical-align:top; width:360px\"><h2><strong>Filetype Breakout (Overall)</strong></h2><p>Each organization have their own unique environment when it comes to the composition of file transactions. The pie-chart breaks down the various file types processed by the sandbox.</p><p>&nbsp;</p></td><td style=\"width:10px\">&nbsp;</td><td style=\"vertical-align:middle; width:360px\"><fazchart mkey=\"fsa-Count-of-Filetypes-Including-Other\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p><p>&nbsp;</p></td></tr><tr><td><fazchart mkey=\"fsa-Filetype-Breakout-Malware\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p><p>&nbsp;</p></td><td>&nbsp;</td><td style=\"vertical-align:top\"><p>&nbsp;</p><h2><strong>Filetype Breakout (Malware)</strong></h2><p>Malware can be embedded in various objects. The pie-chart breaks down the various file types associated with malware seen by the sandbox.</p><p>&nbsp;</p></td></tr><tr><td style=\"vertical-align:top\"><p>&nbsp;</p><h2><strong>Compressed File Analysis&nbsp;(Malware)</strong></h2><p>While compression makes file storage and transmission more efficient, attackers use uncommon compression or multi-level compression designed to bypass security controls. The piechart highlights the number of malware associated with the use of compression.</p></td><td>&nbsp;</td><td><fazchart mkey=\"fsa-Compressed-File-Analysis\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p></td></tr></tbody></table><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Performance</strong></h1><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Average-Scan-Time-Per-File\"></fazmacro></strong>&nbsp;seconds average Scan Time Per File</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Files-Processed-Per-Hour\"></fazmacro></strong>&nbsp;Files Processed Per Hour</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Count\"></fazmacro></strong>&nbsp;Files Processed in Peak Hour</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-avg-Scantime-Per-Clean-File\"></fazmacro></strong>seconds average scan time per clean file</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-avg-Scantime-Per-Malicious-File\"></fazmacro></strong>seconds average scan time per malicious file</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Hour\"></fazmacro></strong>&nbsp;Peak Hour of Processing</span></li></ul></td></tr></tbody></table><h2><strong>Files Scanned per Day and Hour</strong></h2><p>High file activity is common during business hours and can be influenced by various events e.g. product announcement, quarterly earnings, etc. It can also highlight anomalies such as a exfiltration of data during off peak hours. The matrix chart breaks down the number of file activity on an hourly basis.</p><fazchart mkey=\"fsa-Files-Scanned-per-Day-and-Hour\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 10 Average Scan Time per Filetype (in seconds)</strong></h2><p>To optimize sandbox resources and security policies, visibility to the file types and associated processing time is essential in the decision-making process. The bar-chart breaks down the various file types and its average sandbox processing time.</p><fazchart mkey=\"fsa-avg-Scantime-per-Filetype\" title=\"\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Recommendations</strong></h1><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Add Threat Protection to Proactively Scan File Repositories.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Add Sandboxing Technology to Detect Unknown Malware.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Remind Users to Be Careful When Opening Macro Enabled Files.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Implement and Enforce Corporate Use Policies Regarding Peer to Peer.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Enact Strict Policies Regarding Executable Files.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Consider Implementing AI Assisted Sandboxing.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Audit Existing Network for Potential Breaches.</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90108
+                next
+                edit 90203
+                next
+            end
+        set protected enable
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90108
+        set folder-name "FortiSandbox Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90202
+        set folder-name "Asset and User Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90203
+        set folder-name "SOC Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config alert basic-handler
+    edit 50003
+        set name "Default-FSA-System-Handler"
+        set description "Default handler to track critical system event of Sandbox"
+        config rule
+            edit 1
+                set name "Critical events"
+                set devtype FortiSandbox
+                set severity critical
+                set logtype "event"
+                set extrainfo "Action: ${action}, Status: ${status}"
+                set extrainfo-type custom
+                set subject "$groupby2"
+                set groupby1 "devname"
+                set groupby2 "msg"
+                set eventstatus "open"
+                set tags "Default,FortiSandbox,System"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "pri"
+                        set value "2"
+                        set oper great-or-equal
+                    next
+                end
+            next
+            edit 2
+                set name "Malicious file detected"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "event"
+                set extrainfo "File Name: ${fname}.${ftype}, Level: ${level}, Action: ${action}, Status: ${status}"
+                set extrainfo-type custom
+                set subject "$groupby2"
+                set groupby1 "devname"
+                set groupby2 "msg"
+                set eventstatus "open"
+                set tags "Default,FortiSandbox,System,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "malicious"
+                        set oper equal
+                    next
+                end
+            next
+            edit 3
+                set name "Error event detected"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "event"
+                set extrainfo "Action: ${action}, Status: ${status}"
+                set extrainfo-type custom
+                set subject "$groupby2"
+                set groupby1 "devname"
+                set groupby2 "msg"
+                set eventstatus "open"
+                set tags "Default,FortiSandbox,System"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "pri"
+                        set value "3"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "msg"
+                        set value "malware package"
+                        set oper not-contain
+                    next
+                    edit 3
+                        set key "msg"
+                        set value "file upload error"
+                        set oper not-contain
+                    next
+                end
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fsa"
+    next
+    edit 50004
+        set name "Default-FSA-Malware-Handler-By-Endpoint"
+        set description "Default handler to track the malware detection by Sandbox per endpoint"
+        config rule
+            edit 1
+                set name "FortiSandbox Malware Detected group by endpoint"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from ${srcip}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Malware $groupby2 from $groupby1"
+                set groupby1 "endpoint"
+                set groupby2 "mname"
+                set eventstatus "open"
+                set tags "Default,By_Endpoint,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "Malicious"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 2
+                set name "FortiSandbox Malware Detected group by dstendpoint"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} to ${dstip}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Malware $groupby2 to $groupby1"
+                set groupby1 "dstendpoint"
+                set groupby2 "mname"
+                set eventstatus "open"
+                set tags "Default,By_Endpoint,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "Malicious"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 3
+                set name "FortiSandbox Detected Risky File group by endpoint"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from ${srcip}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Risky File $groupby2 from $groupby1"
+                set groupby1 "endpoint"
+                set groupby2 "fname"
+                set eventstatus "open"
+                set tags "Default,By_Endpoint,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "high risk"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 4
+                set name "FortiSandbox Detected Risky File group by dstendpoint"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} to ${dstip}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Risky File $groupby2 to $groupby1"
+                set groupby1 "dstendpoint"
+                set groupby2 "fname"
+                set eventstatus "open"
+                set tags "Default,By_Endpoint,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "high risk"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fsa"
+    next
+    edit 50005
+        set name "Default-FSA-Malware-Handler-By-Threat"
+        set description "Default handler to track the malware detection by Sandbox per threat"
+        config rule
+            edit 1
+                set name "FortiSandbox Malware Detected group by endpoint"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from ${groupby2}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Malware from $groupby2"
+                set groupby1 "mname"
+                set groupby2 "endpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "Malicious"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 2
+                set name "FortiSandbox Malware Detected group by dstendpoint"
+                set devtype FortiSandbox
+                set severity high
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} to ${groupby2}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Malware to $groupby2"
+                set groupby1 "mname"
+                set groupby2 "dstendpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "Malicious"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 3
+                set name "FortiSandbox Detected Malware from JSON API request"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from JSON API request"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Malware from JSON API request"
+                set groupby1 "mname"
+                set groupby2 "endpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "Malicious"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper equal
+                    next
+                    edit 3
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper equal
+                    next
+                end
+            next
+            edit 4
+                set name "FortiSandbox Detected Risky File group by endpoint"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from ${groupby2}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Risky File from $groupby2"
+                set groupby1 "fname"
+                set groupby2 "endpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "high risk"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 5
+                set name "FortiSandbox Detected Risky File group by dstendpoint"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} to ${groupby2}"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Risky File to $groupby2"
+                set groupby1 "fname"
+                set groupby2 "dstendpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "high risk"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper not-equal
+                    next
+                end
+            next
+            edit 6
+                set name "FortiSandbox Detected Risky File from JSON API request"
+                set devtype FortiSandbox
+                set severity medium
+                set logtype "malware"
+                set extrainfo "Malware: ${mname} with severity: ${risk} found in file: ${fname}, Checksum: ${md5} from JSON API request"
+                set extrainfo-type custom
+                set subject "FortiSandbox Detected Risky File from JSON API request"
+                set groupby1 "fname"
+                set groupby2 "endpoint"
+                set eventstatus "open"
+                set tags "Default,By_Threat,Sandbox,Malware,Risky"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                config filter
+                    edit 1
+                        set key "risk"
+                        set value "high risk"
+                        set oper equal
+                    next
+                    edit 2
+                        set key "srcip"
+                        set value "0.0.0.0"
+                        set oper equal
+                    next
+                    edit 3
+                        set key "dstip"
+                        set value "0.0.0.0"
+                        set oper equal
+                    next
+                end
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fsa"
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end
+
+config sql-report layout
+    edit 1
+        set  is-template disable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "FortiSandbox Default Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Threat rating distribution, job severity timeline, malware severity of targeted hosts, top 20 targeted hosts, top 20 malware, top 50 file type and brief job list"
+        set body "<h1>FortiSandbox - File Submission Information</h1><p>&nbsp;</p><p><strong>The following charts show the file type details submitted to FortiSandbox.</strong></p><fazchart mkey=\"fsa-File-Type-Summary-With-VM-Source\" title=\"FortiSandbox-File Type Summary Submitted to FSA by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Details-With-VM-Source\" title=\"FortiSandbox-File Type Breakdown Submitted to FSA by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Summary\" title=\"FortiSandbox-File Type Summary Submitted to FSA\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Details\" title=\"FortiSandbox-File Type Breakdown Submitted to FSA\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>FortiSandbox - File Scan Statistics</h1><p><br /><strong>The following graph displays the number of Malicious events, and other events by Risk Level.</strong></p><fazchart mkey=\"Threat-Rating-Distribution\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following graph displays the number of Malicious events, and other events by Risk Level.</strong></p><fazchart mkey=\"Job-Severity-Timeline\" title=\"{default}\" width=\"100%\"></fazchart><p><strong>The following table shows the Top 50 file types identified.</strong></p><fazchart mkey=\"FSA-File-Type\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following shows the Top 20 Hosts that have been targeted by Malware.</strong></p><fazchart mkey=\"FSA-Targeted-Hosts\" title=\"{default}\" width=\"100%\"></fazchart><p>&nbsp;</p><p><strong>The following graph displays the Severity of Malware events detected on Targeted Hosts.</strong></p><fazchart mkey=\"Malware-Severity-of-Targeted-Hosts\" title=\"{default}\" width=\"100%\"></fazchart><p><br /><strong>The following graph shows the Top 20 Malware detected.</strong></p><fazchart mkey=\"FSA-Malware-Count-By-Name\" title=\"{default}\" width=\"100%\"></fazchart><p><strong>The following tables contains the list of job names by count.</strong></p><fazchart mkey=\"Brief-Job-List\" title=\"FortiSandbox-FSA Brief Job List\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1>FortiSandbox - Performance Statistics</h1><p><strong>The following charts show the Threat Rating Destribution by&nbsp;VM Host Module.</strong></p><fazchart mkey=\"fsa-File-Source-Stats-Donut\" title=\"FortiSandbox-Threat Rating Summary by VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Source-Stats-Table\" title=\"FortiSandbox-Threat Rating Breakdown by VM Module \" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-File-Type-Stats\" title=\"Threat Rating Breakdown by File Type and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Hourly-File-Stats-Count\" title=\"Threat Rating Breakdown by Time and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Scanned-File-Stats-By-Source\" title=\"Average Threat Rating Duration by VM Module\" width=\"100%\"></fazchart><div><p>&nbsp;</p><fazchart mkey=\"fsa-Hourly-Sanned-File-Stats-By-Source\" title=\"Average Threat Rating Duration by Time and VM Module\" width=\"100%\"></fazchart><p>&nbsp;</p></div>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 108
+                next
+            end
+        set  protected disable
+    next
+    edit 2
+        set  is-template disable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "Endpoint Sandbox Detections Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "Endpoint report showing the APT threats deteted by sandbox"
+        set body "<h1>Summary</h1><p>Fortinet Advanced Threat Protection relies on multiple types of security technologies, products, and research applied from the network edge through to endpoint devices. To deliver the most effective protection, they are integrated to work together automatically, continuously handing off data from one to the next to identify, evaluate and respond to attacks.</p><p>FortiSandbox, together with FortiClient, provides Advanced Threat Protection to identify and help customers thwart the highly targeted and tailored attacks that increasingly bypass traditional defenses and lurk within networks.</p><p>&nbsp;</p><tr><td style=\"width:352px\"><span style=\"font-size:14px\"><strong>Total Files Submiited to Sandbox:</strong>&nbsp;<fazmacro mkey=\"fsa-Total-Number-of-Files-Submitted\"></fazmacro></span></td></tr><p>&nbsp;</p><tr><td style=\"width:352px\"><span style=\"font-size:14px\"><strong>Total Number of Hosts Affected:</strong>&nbsp;<fazmacro mkey=\"fsa-Total-Number-of-Hosts-Affected\"></fazmacro></span></td></tr><p>&nbsp;</p><h2>Endpoints by Malicious File Count</h2><p>The following are endpoints detected by sandbox.</p><fazchart mkey=\"fsa-Top-Endpoint-by-Number-of-Malicious-File-Detected\" title=\" \" width=\"100%\"></fazchart><p>&nbsp;</p><h1>Malicious Files Detected</h1><fazchart mkey=\"fsa-Malicious-File-Detected-Timeline\" title=\"Malicious File Detections within Current Time Range\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Malicious-File-Detected-by-Host\" title=\"Malicious Files Detected by Hosts\" width=\"100%\"></fazchart>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 108
+                next
+                edit 202
+                next
+            end
+        set  protected disable
+    next
+    edit 3
+        set  is-template disable
+        set dev-type FortiSandbox
+        set category "FortiSandbox"
+        set title "FortiSandbox CTAP Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "FortiSandbox CTAP Report"
+        set body "<h1><strong>Executive Summary</strong></h1><p>The assessment report provides organizations a snapshot of their current security posture based on known and unknown malware found in the network. Through the use of sandboxing, organizations can better understand the benefits of using sandbox to uncover potential vulnerabilities in their security architecture and polices, and review the details of these threats.</p><h2><strong>Security</strong></h2><table border=\"0\" cellspacing=\"4\" cellpadding=\"1\" align=\"center\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Known_Malware_detected.png\" style=\"height:100px; width:100px\" /></td><td style=\"width:250px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Known-Malware-Detected\"></fazmacro></strong></span></p><p><span style=\"font-size:14px; text-align:left\">Known Malware Detected</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Unknown_Malware_detected.png\" style=\"height:100px; width:100px\" /></td><td style=\"width:250px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Unknown-Malware-Detected\"></fazmacro></strong></span></p><p><span style=\"font-size:14px; text-align:left\">Unknown Malware Detected</span></p></td></tr></tbody></table><p>Security Summary: As part of your security strategy, protecting against known and unknown malware is critical to reducing risks. In-place security controls are designed to block known malware while sandboxing complements these controls to block unknown malware. Also critical is to uncover any callbacks as a signal to an active or impending threat campaign.</p><p>Additional details are found in Security section below.</p><h2><strong>File Analysis</strong></h2><table border=\"0\" cellspacing=\"4\" cellpadding=\"1\" align=\"center\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Total_files_scanned.png\" style=\"height:100px; width:100px\" /></td><td style=\"height:70px; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Total-Files-Scanned\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Total Files Scanned</span></p></td><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_unique_filetypes_found.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Count-of-Unique-Filetypes-Found\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Unique Filetypes Found</span></p></td><td style=\"text-align:left; width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_files_detected_executables.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Files-Detected-Are-Executables\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Detected are Executable</span></p></td></tr></tbody></table><p>Based on the number of files submitted for sandboxing, you will be provided intelligence on the various file types including those that are potentially risky found in your organization. This visibility serves as an opportunity for organizations to fine-tune application policies as part of early preventive controls.</p><p>Additional details are found in File Analysis section below.</p><h2><strong>Performance</strong></h2><table border=\"0\" align=\"center\" cellspacing=\"4\" cellpadding=\"1\" style=\"height:140px; width:720px\"><tbody><tr><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_faverage_scan_time_per_file_copy.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Average-Scan-Time-Per-File\"></fazmacro></strong></span><span style=\"font-size:14px\">s</span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Average Scan Time Per File</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_files_processed_per_hour.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Files-Processed-Per-Hour\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Processed Per Hour</span></p></td><td style=\"width:110px\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/icons_Peak_compute_hours.png\" style=\"height:100px; width:100px\" /></td><td style=\"text-align:left; vertical-align:top; width:160px\"><p><span style=\"font-size:24px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Count\"></fazmacro></strong></span></p><p style=\"text-align:left\"><span style=\"font-size:14px; text-align:left\">Files Processed in Peak Hour</span></p></td></tr></tbody></table><p>Besides detecting threats, it is important to deploy a scalable sandboxing solution so there is minimal impact to the threat detection and response during peak periods. Analysis that are AI-powered combined with a powerful pre-filter engine will reduce the number of files requiring detonation.</p><p>Additional details are found in Performance section below.</p><div><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Security</strong></h1></div><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Known-Malware-Detected\"></fazmacro></strong>&nbsp;known malware detected</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Unknown-Malware-Detected\"></fazmacro></strong>&nbsp;unknown malware detected</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Most-Frequent-Attack-Victim\"></fazmacro></strong>most frequent attack victim</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\">&nbsp;</td></tr></tbody></table><h2><strong>Command and Control Callbacks</strong></h2><fazchart mkey=\"fsa-Command-and-Control-Callbacks-Count\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Most Frequent Malware Category</strong></h2><fazchart mkey=\"fsa-Most-Frequent-Malware-Category\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Most Frequent Callback IP Domain</strong></h2><fazchart mkey=\"fsa-Most-Frequent-CallbackIP-Domain\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Callback Destinations</strong></h2><fazchart mkey=\"fsa-Callback-Destinations\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 5 Known Malware Detected</strong></h2><p>Known malware are threats that have been analyzed prior and its characteristics are considered to be malicious. Below is a list of known malware detected by Sandbox pre-filter stage including AI-powered static analysis.</p><fazchart mkey=\"fsa-Known-Malware-Detected\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 5 Unknown Malware Detected</strong></h2><p>Unknown malware are threats that uses new malware techniques or 0-day exploits designed to bypass traditional detection engines. Below is a list of unknown malware detected by Sandbox AI-powered dynamic analysis.</p><fazchart mkey=\"fsa-Unknown-Malware-Detected\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><table border=\"0\" align=\"center\" cellspacing=\"2\" cellpadding=\"1\" style=\"height:200px; width:730px\"><tbody><tr><td style=\"text-align:justify; vertical-align:top; width:360px\"><h2><strong>Malware Disposition Breakdown</strong></h2><p>Characteristics of a malware vary greatly on it&#39;s impact to a user or an organization. This distribution breaks down on the severity of malware seen in your organization.</p></td><td style=\"width:10px\">&nbsp;</td><td style=\"text-align:center; vertical-align:top; width:360px\"><fazchart mkey=\"fsa-Malware-Disposition-Breakdown\" title=\"\" width=\"350px\"></fazchart></td></tr></tbody></table><p>&nbsp;</p><h2><strong>Top 5 Targeted Hosts</strong></h2><p>The ultimate destination of an attack typically lands on a host(s) within an organization thus uncovering these vulnerable host is critical to prioritize proper mitigation and to close these security gaps. Below is a list of suspected destination hosts with associated malware as uncovered during sandbox AI-powered dynamic analysis.</p><fazchart mkey=\"fsa-Targeted-Hosts-Lastseen\" title=\"\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>File Analysis</strong></h1><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Total-Files-Scanned\"></fazmacro></strong>&nbsp;total files scanned</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Unique-Filetypes-Found\"></fazmacro></strong>&nbsp;unique filetypes found</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Most-Popular-Filetype-count\"></fazmacro></strong>&nbsp;most popular filetype</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Files-Are-Archived-Compressed\"></fazmacro></strong>of files are archives/compressed</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Count-of-Files-Are-Macro-Enabled\"></fazmacro></strong>of files are macro enabled</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Files-Detected-Are-Executables\"></fazmacro></strong>&nbsp;of files are executable</span></li></ul></td></tr></tbody></table><h2><strong>Threat Detection Processing</strong></h2><fazchart mkey=\"fsa-Sandbox-Threat-Detection-Processing\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><fazchart mkey=\"fsa-Sandbox-Processing-Cluster-Bar\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Total Files Scanned Clean to Malicious</strong></h2><p>The chart following shows the total files scanned by FortiSandbox for the selected time period.</p><fazchart mkey=\"fsa-Sandbox-Processing-Donut\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><p>&nbsp;</p><table border=\"0\" cellspacing=\"1\" cellpadding=\"1\" style=\"width:730px\"><tbody><tr><td style=\"vertical-align:top; width:360px\"><h2><strong>Filetype Breakout (Overall)</strong></h2><p>Each organization have their own unique environment when it comes to the composition of file transactions. The pie-chart breaks down the various file types processed by the sandbox.</p><p>&nbsp;</p></td><td style=\"width:10px\">&nbsp;</td><td style=\"vertical-align:middle; width:360px\"><fazchart mkey=\"fsa-Count-of-Filetypes-Including-Other\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p><p>&nbsp;</p></td></tr><tr><td><fazchart mkey=\"fsa-Filetype-Breakout-Malware\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p><p>&nbsp;</p></td><td>&nbsp;</td><td style=\"vertical-align:top\"><p>&nbsp;</p><h2><strong>Filetype Breakout (Malware)</strong></h2><p>Malware can be embedded in various objects. The pie-chart breaks down the various file types associated with malware seen by the sandbox.</p><p>&nbsp;</p></td></tr><tr><td style=\"vertical-align:top\"><p>&nbsp;</p><h2><strong>Compressed File Analysis&nbsp;(Malware)</strong></h2><p>While compression makes file storage and transmission more efficient, attackers use uncommon compression or multi-level compression designed to bypass security controls. The piechart highlights the number of malware associated with the use of compression.</p></td><td>&nbsp;</td><td><fazchart mkey=\"fsa-Compressed-File-Analysis\" title=\"\" width=\"350px\"></fazchart><p>&nbsp;</p></td></tr></tbody></table><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Performance</strong></h1><table border=\"0\" align=\"center\" cellspacing=\"1\" cellpadding=\"1\" style=\"line-height:1.2; width:740px\"><tbody><tr><td style=\"text-align:center; vertical-align:top; width:80px\"><p style=\"text-align:center\">Quick Stats<img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/stats.png\" style=\"height:70px; width:70px\" /></p></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Average-Scan-Time-Per-File\"></fazmacro></strong>&nbsp;seconds average Scan Time Per File</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Files-Processed-Per-Hour\"></fazmacro></strong>&nbsp;Files Processed Per Hour</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Count\"></fazmacro></strong>&nbsp;Files Processed in Peak Hour</span></li></ul></td><td style=\"text-align:left; vertical-align:top; width:330px\"><ul><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-avg-Scantime-Per-Clean-File\"></fazmacro></strong>seconds average scan time per clean file</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-avg-Scantime-Per-Malicious-File\"></fazmacro></strong>seconds average scan time per malicious file</span></li><li><span style=\"font-size:12px\"><strong><fazmacro mkey=\"fsa-Max-Hourly-Files-Processed-Hour\"></fazmacro></strong>&nbsp;Peak Hour of Processing</span></li></ul></td></tr></tbody></table><h2><strong>Files Scanned per Day and Hour</strong></h2><p>High file activity is common during business hours and can be influenced by various events e.g. product announcement, quarterly earnings, etc. It can also highlight anomalies such as a exfiltration of data during off peak hours. The matrix chart breaks down the number of file activity on an hourly basis.</p><fazchart mkey=\"fsa-Files-Scanned-per-Day-and-Hour\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Top 10 Average Scan Time per Filetype (in seconds)</strong></h2><p>To optimize sandbox resources and security policies, visibility to the file types and associated processing time is essential in the decision-making process. The bar-chart breaks down the various file types and its average sandbox processing time.</p><fazchart mkey=\"fsa-avg-Scantime-per-Filetype\" title=\"\" width=\"100%\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h1><strong>Recommendations</strong></h1><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Add Threat Protection to Proactively Scan File Repositories.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Add Sandboxing Technology to Detect Unknown Malware.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Remind Users to Be Careful When Opening Macro Enabled Files.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Implement and Enforce Corporate Use Policies Regarding Peer to Peer.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Enact Strict Policies Regarding Executable Files.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Consider Implementing AI Assisted Sandboxing.</p><p><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_internal/icon_check_box.png\" style=\"height:15px; width:15px;\"/> Audit Existing Network for Potential Breaches.</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 108
+                next
+                edit 203
+                next
+            end
+        set  protected disable
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default"
+        set protected disable
+    next
+    edit 108
+        set folder-name "FortiSandbox Reports"
+        set parent-id 99999
+        set protected disable
+    next
+    edit 202
+        set folder-name "Asset and User Reports"
+        set parent-id 99999
+        set protected disable
+    next
+    edit 203
+        set folder-name "SOC Reports"
+        set parent-id 99999
+        set protected disable
+    next
+    edit 205
+        set folder-name "Outbreak Alert Reports"
+        set parent-id 99999
+        set protected disable
+    next
+end
+config sql-report schedule
+    edit 1
+        set dev-type FortiSandbox
+        set description "Default Schedule Config"
+        config report-layout
+            edit 1
+            next
+        end
+        config devices
+            edit All_Device
+            next
+        end
+    next
+    edit 2
+        set dev-type FortiSandbox
+        set description "Default Schedule Config"
+        config report-layout
+            edit 2
+            next
+        end
+        config devices
+            edit All_Device
+            next
+        end
+    next
+    edit 3
+        set dev-type FortiSandbox
+        set description "Default Schedule Config"
+        config report-layout
+            edit 3
+            next
+        end
+        config devices
+            edit All_Device
+            next
+        end
+    next
+end

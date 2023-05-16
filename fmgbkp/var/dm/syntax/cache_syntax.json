@@ -1,0 +1,63 @@
+{
+	"obj": {
+		"diff/start": {
+			"type": "command",
+			"attr": {
+				"src": {
+					"type": "datasrc",
+					"extref": [ "/dvmdb/adom", "/dvmdb/revision" ],
+					"limit": 1,
+					"sz": 128
+				},
+				"dst": {
+					"type": "datasrc",
+					"extref": [ "/dvmdb/adom", "/dvmdb/revision" ],
+					"limit": 1,
+					"sz": 128
+				}
+			},
+			"response": {
+				"token": {
+					"type": "string",
+					"sz": 128
+				}
+			}
+		},
+		"diff/get/summary": {
+			"type": "command",
+			"attr": {
+				"token": {
+					"type": "string",
+					"sz": 128
+				}
+			}
+		},
+		"diff/get/detail/obj": {
+			"type": "command",
+			"attr": {
+				"token": {
+					"type": "string",
+					"sz": 128
+				}
+			}
+		},
+		"diff/download": {
+			"type": "command",
+			"attr": {
+				"token": {
+					"type": "string",
+					"sz": 128
+				}
+			}
+		},
+		"diff/end": {
+			"type": "command",
+			"attr": {
+				"token": {
+					"type": "string",
+					"sz": 128
+				}
+			}
+		}
+	}
+}

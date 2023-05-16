@@ -1,0 +1,1426 @@
+config sql-report dataset
+    edit "fai-Attack-Scenario-Count"
+        set description "Attack Scenario Count"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select scenariotype, count(*) as total_num from $log where $filter and subtype='Attack Chain' and scenariotype is not null group by scenariotype order by total_num desc"
+        set protected enable
+    next
+    edit "fai-Files-Proccessed-Summary"
+        set description "Files Proccessed Summary"
+        set log-type event
+        set dev-type FortiNDR
+        set query "select sum(fileaccepted) as fileaccepted, sum(fileprocessed) as fileprocessed, sum(filedetected) as filedetected from $log where $filter and subtype='file-stats'"
+        set protected enable
+    next
+    edit "fai-Host-quarantined-Summary"
+        set description "Host quarantined Summary"
+        set log-type event
+        set dev-type FortiNDR
+        set query "select targetip as host, max(modtime) as most_recent, string_agg(distinct profilename, ',') as profilename, sum(totalnum) as total_num from ###(select targetip, profilename, max(modtime) as modtime, count(*) as totalnum from $log where $filter and subtype='automation' and targetip is not null group by targetip, profilename)### t group by host order by total_num desc"
+        set protected enable
+    next
+    edit "fai-Learnt-Customer-Features-Summary"
+        set description "Learnt Customer Features Summary"
+        set log-type event
+        set dev-type FortiNDR
+        set query "select feature, sum(featurecount::int) as total_num from (select unnest(string_to_array(featurelst, ',')) as feature, unnest(string_to_array(featurecounts, ',')) as featurecount from $log where $filter and subtype='malware') t group by feature order by total_num desc"
+        set protected enable
+    next
+    edit "fai-System-Events-Summary"
+        set description "System Events Summary"
+        set log-type event
+        set dev-type FortiNDR
+        set query "select from_dtime(dtime) as timestamp, level as severity, user, action, msg from $log where $filter and subtype in ('system', 'user') and  level>'information' order by timestamp desc"
+        set protected enable
+    next
+    edit "fai-Malicious-File-Summary"
+        set description "Malicious File Summary"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select url as file, max(md5) as md5, max(filetype) as filetype, victimip, from_dtime(min(dtime)) as first_seen, from_dtime(max(dtime)) as last_seen, count(*) as total_num from  $log where $filter and subtype='Malware' and url is not null group by file, victimip order by total_num desc"
+        set protected enable
+    next
+    edit "fai-Detection-by-Device-Summary"
+        set description "Detection by Device Summary"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select fossn || ':' || fosvd as devvd, level as risk, sum(total_num) as total_num from  ###(select fossn, fosvd, level, devicetype, count(*) as total_num from $log where $filter and subtype='Malware' group by fossn, fosvd, level, devicetype order by total_num desc)### t where fossn is not null and level is not null group by devvd, risk order by total_num desc"
+        set protected enable
+    next
+    edit "fai-Malware-Detection-Type-Summary"
+        set description "Malware Detection Type Summary"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select detype, count(*) as total_num from $log where $filter and subtype='Malware' and detype IS NOT NULL group by detype order by total_num desc"
+        set protected enable
+    next
+    edit "fai-Hosts-Infection-Summary"
+        set description "Hosts Infection Summary"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select victimip, detype as detection_type, sum(detypecount::int) as total_num from (select victimip, trim(unnest(string_to_array(detypelst, ','))) as detype, unnest(string_to_array(detypecounts, ',')) as detypecount from $log where $filter and subtype='Malware') t group by victimip, detection_type order by total_num desc"
+        set protected enable
+    next
+    edit "fai-CPU-Memory-Summary"
+        set description "CPU Memory Summary"
+        set log-type event
+        set dev-type FortiNDR
+        set query "select timestamp, cast(sum(cpu)/sum(total_num) as decimal(18,0)) as avg_cpu, cast(sum(mem)/sum(total_num) as decimal(18,0)) as avg_mem, max(max_cpu) as max_cpu, max(max_mem) as max_mem from ###(select $flex_timestamp as timestamp, sum(cpu) as cpu, sum(mem) as mem, sum(datadisk) as datadisk, max(cpu) as max_cpu, max(mem) as max_mem, max(datadisk) as max_datadisk, count(*) as total_num from $log where $filter and subtype='perf-stats' group by timestamp order by timestamp)### t group by timestamp order by timestamp"
+        set protected enable
+    next
+    edit "fai-Detection-Summary-by-Device-Type"
+        set description "Detection Summary by Device Type"
+        set log-type attack
+        set dev-type FortiNDR
+        set query "select (CASE WHEN devicetype='fabric device' THEN (fossn || ':' || fosvd) ELSE devicetype END) as device_type, sum(total_num) as total_num from ###(select fossn, fosvd, level, devicetype, count(*) as total_num from $log where $filter and subtype='Malware' group by fossn, fosvd, level, devicetype order by total_num desc)### t where devicetype is not null group by device_type order by total_num desc"
+        set protected enable
+    next
+
+    edit "fndr-Anomaly-Count-by-Severity-Timeline"
+        set description "Toal Number of Anomalies by Severity Timeline"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select $flex_timescale(timestamp) as hodex, sum(case when severity = 'critical' then totalnum else 0 end) as critical_num, sum(case when severity = 'high' then totalnum else 0 end) as high_num, sum(case when severity = 'medium' then totalnum else 0 end) as medium_num, sum(case when severity = 'low' then totalnum else 0 end) as low_num from ###(select $flex_timestamp as timestamp, severity, count(*) as totalnum from $log where $filter group by timestamp, severity order by totalnum desc)### t group by hodex order by hodex"
+        set protected enable
+    next
+    edit "fndr-Anomaly-Count-by-Severity"
+        set description "Total Number of Anomalies by Severity"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select sum(case when severity = 'critical' then totalnum else 0 end) as critical_num, sum(case when severity = 'high' then totalnum else 0 end) as high_num, sum(case when severity = 'medium' then totalnum else 0 end) as medium_num, sum(case when severity = 'low' then totalnum else 0 end) as low_num from ###(select $flex_timestamp as timestamp, severity, count(*) as totalnum from $log where $filter group by timestamp, severity order by totalnum desc)### t"
+        set protected enable
+    next
+    edit "fndr-Anomaly-Type-and-Feature-by-Count"
+        set description "Anomaly Types and Features by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select type, feature, totalnum, sum(totalnum) over (partition by type) as sub_totalnum from (select type, feature, sum(totalnum) as totalnum from ((select subtype as type, botname as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Botnet' group by type, feature order by totalnum desc) union all (select subtype as type, campaign_name as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(campaign, ',')) as campaign_name, count(*) as totalnum from $log where $filter and subtype='IOC' and severity!='info' group by subtype, severity, srcip, campaign_name order by totalnum desc)### t group by type, feature order by totalnum desc) union all (select subtype as type, md5 as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Encrypted' group by type, feature order by totalnum desc) union all (select subtype as type, vname as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='IPS attack' group by type, feature order by totalnum desc) union all (select subtype as type, reason as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(reasons, ',')) as reason, count(*) as totalnum from $log where $filter and subtype='ML' and severity!='info' group by subtype, severity, srcip, reason order by totalnum desc)### t group by type, feature order by totalnum desc) union all (select subtype as type, ciphername as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Weak cipher' group by type, feature order by totalnum desc)) t group by type, feature order by totalnum desc) t order by sub_totalnum desc, type"
+        set protected enable
+    next
+    edit "fndr-Botnet-Name-by-Count"
+        set description "Botnet Name by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select botname, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Botnet' group by botname order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Botnet-Severity-by-Count"
+        set description "Botnet Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Botnet' group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Botnet-Traffic-Summary"
+        set description "Botnet Traffic Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, srcip, dstip, botname, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Botnet' group by severity, srcip, dstip, botname order by severity desc, totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IOC-Campaign-by-Count"
+        set description "IOC Campaign by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select campaign_name, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(campaign, ',')) as campaign_name, count(*) as totalnum from $log where $filter and subtype='IOC' and severity!='info' group by subtype, severity, srcip, campaign_name order by totalnum desc)### t group by campaign_name order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IOC-Severity-by-Count"
+        set description "IOC Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(campaign, ',')) as campaign_name, count(*) as totalnum from $log where $filter and subtype='IOC' and severity!='info' group by subtype, severity, srcip, campaign_name order by totalnum desc)### t group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IOC-Campaign-Summary"
+        set description "IOC Campaign Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, srcip, campaign_name, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(campaign, ',')) as campaign_name, count(*) as totalnum from $log where $filter and subtype='IOC' and severity!='info' group by subtype, severity, srcip, campaign_name order by totalnum desc)### t group by severity, srcip, campaign_name order by severity desc, totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Encrypted-Severity-by-Count"
+        set description "Encrypted Attack Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Encrypted' group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Encrypted-Attack-Summary"
+        set description "Encrypted Attack Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, md5, srcip, dstip, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Encrypted' group by severity, md5, srcip, dstip order by severity desc, totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IPS-Attack-Name-by-Count"
+        set description "IPS Attack Name by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select vname, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='IPS attack' group by vname order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IPS-Severity-by-Count"
+        set description "IPS Attack Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='IPS attack' group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-IPS-Attack-Summary"
+        set description "IPS Attack Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, srcip, dstip, vname, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='IPS attack' group by severity, srcip, dstip, vname order by severity desc, totalnum desc"
+        set protected enable
+    next
+    edit "fndr-ML-Anomaly-Feature-by-Count"
+        set description "Machine Learning Anomaly Feature by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select reason as feature, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(reasons, ',')) as reason, count(*) as totalnum from $log where $filter and subtype='ML' and severity!='info' group by subtype, severity, srcip, reason order by totalnum desc)### t group by feature order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-ML-Severity-by-Count"
+        set description "Machine Learning Anomaly Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(reasons, ',')) as reason, count(*) as totalnum from $log where $filter and subtype='ML' and severity!='info' group by subtype, severity, srcip, reason order by totalnum desc)### t group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-ML-Anomaly-Summary"
+        set description "Machine Learning Anomaly Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, string_agg(distinct reason, ',') as reasons, srcip, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, unnest(string_to_array(reasons, ',')) as reason, count(*) as totalnum from $log where $filter and subtype='ML' and severity!='info' group by subtype, severity, srcip, reason order by totalnum desc)### t group by severity, srcip order by severity desc, totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Protocol-by-Percentage"
+        set description "Weak Cipher Protocol by CouPercentagent"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select alproto, round(sum(totalnum)*100/sum(sum(totalnum)) over (), 2) as percentage from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Weak cipher' group by alproto order by percentage desc"
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Severity-by-Count"
+        set description "Weak Cipher Severity by Count"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Weak cipher' group by severity order by totalnum desc"
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Type-by-Percentage"
+        set description "Weak Cipher Type by Percentage"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select ciphername, round(sum(totalnum)*100/sum(sum(totalnum)) over (), 2) as percentage from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Weak cipher' group by ciphername order by percentage desc"
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Summary"
+        set description "Weak Cipher Summary"
+        set log-type ndr
+        set dev-type FortiNDR
+        set query "select severity, alproto, ciphername, srcip, dstip, sum(totalnum) as totalnum from ###(select subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername, count(*) as totalnum from $log where $filter and subtype in ('Botnet', 'Encrypted', 'IPS attack', 'Weak cipher') and severity != 'info' group by subtype, severity, srcip, dstip, botname, md5, vname, alproto, ciphername order by totalnum desc)### t where subtype='Weak cipher' group by severity, alproto, ciphername, srcip, dstip order by severity desc, totalnum desc"
+        set protected enable
+    next
+end
+
+config sql-report chart
+    edit "fai-Attack-Scenario-Count"
+        set disp-name "Attack Scenario Count"
+        set description "Attack Scenario Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Attack-Scenario-Count"
+        set chart-type donut
+        set chart-style "{\"legend-font\": \"size:9px;\", \"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "scenariotype"
+                set data-top 10
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Files-Proccessed-Summary"
+        set disp-name "Files Proccessed Summary"
+        set description "Files Proccessed Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Files-Proccessed-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Accepted"
+                set data-binding "fileaccepted"
+                set column-attr count
+            next
+            edit 2
+                set header "Processed"
+                set data-binding "fileprocessed"
+                set column-attr count
+            next
+            edit 3
+                set header "Detected(Malcious)"
+                set data-binding "filedetected"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Host-quarantined-Summary"
+        set disp-name "Host quarantined Summary"
+        set description "Host quarantined Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Host-quarantined-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host"
+                set data-binding "host"
+                set data-top 50
+                set column-width 15
+            next
+            edit 2
+                set header "Most Recent Action Time"
+                set data-binding "most_recent"
+                set column-width 20
+            next
+            edit 3
+                set header "Automation Profile Name"
+                set data-binding "profilename"
+            next
+            edit 4
+                set header "Count"
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Learnt-Customer-Features-Summary"
+        set disp-name "Learnt Customer Features Summary"
+        set description "Learnt Customer Features Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Learnt-Customer-Features-Summary"
+        set chart-type donut
+        set chart-style "{\"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "feature"
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fai-System-Events-Summary"
+        set disp-name "System Events Summary"
+        set description "System Events Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-System-Events-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Date\/Time"
+                set data-binding "timestamp"
+                set data-top 200
+            next
+            edit 2
+                set header "Level"
+                set data-binding "severity"
+            next
+            edit 3
+                set header "User"
+                set data-binding "user"
+            next
+            edit 4
+                set header "User Action"
+                set data-binding "action"
+            next
+            edit 5
+                set header "Message"
+                set data-binding "msg"
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Malicious-File-Summary"
+        set disp-name "Malicious File Summary"
+        set description "Malicious File Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Malicious-File-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "File or URL"
+                set data-binding "file"
+                set data-top 100
+                set column-attr obf-url2
+                set column-width 20
+            next
+            edit 2
+                set header "MD5"
+                set data-binding "md5"
+                set column-width 16
+            next
+            edit 3
+                set header "Type"
+                set data-binding "filetype"
+                set column-width 5
+            next
+            edit 4
+                set header "Victim IP"
+                set data-binding "victimip"
+                set data-type drilldown
+                set data-top 5
+                set column-width 15
+            next
+            edit 5
+                set header "First Seen"
+                set data-type drilldown
+                set data-binding "first_seen"
+                set column-width 10
+            next
+            edit 6
+                set header "Last Seen"
+                set data-type drilldown
+                set data-binding "last_seen"
+                set column-width 10
+            next
+            edit 7
+                set header "Count"
+                set data-type aggregate
+                set data-binding "total_num"
+                set column-width 5
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Detection-by-Device-Summary"
+        set disp-name "Detection by Device Summary"
+        set description "Detection by Device Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Detection-by-Device-Summary"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Device Name\/VDOM"
+                set data-type raw
+                set data-binding "devvd"
+                set data-top 50
+            next
+            edit 2
+                set header "Risk"
+                set data-type drilldown
+                set data-binding "risk"
+                set data-top 0
+            next
+            edit 3
+                set header "Count"
+                set data-type aggregate
+                set data-binding "total_num"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Malware-Detection-Type-Summary"
+        set disp-name "Malware Detection Type Summary"
+        set description "Malware Detection Type Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fai-Malware-Detection-Type-Summary"
+        set chart-type donut
+        set chart-style "{\"legend-position\": \"right\", \"inner-content\": \"summary-value\", \"show-value\": \"enable\"}"
+        config table-columns
+            edit 1
+                set header ""
+                set data-binding "detype"
+            next
+            edit 2
+                set header ""
+                set data-binding "total_num"
+                set data-type aggregate
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Hosts-Infection-Summary"
+        set disp-name "Hosts Infection Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Hosts Infection Summary"
+        set dataset "fai-Hosts-Infection-Summary"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Host"
+                set data-binding "victimip"
+                set data-top 50
+                set column-width 14
+            next
+            edit 2
+                set header "Attack Scenario"
+                set data-binding "detection_type"
+                set data-type drilldown
+                set column-attr detection-type
+                set data-top 0
+                set column-width 50
+            next
+            edit 3
+                set header "Count"
+                set data-binding "total_num"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fai-CPU-Memory-Summary"
+        set disp-name "CPU Memory Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "CPU Memory Summary"
+        set dataset "fai-CPU-Memory-Summary"
+        set chart-type line
+        config table-columns
+            edit 1
+                set header "Time Stamp"
+                set data-binding "timestamp"
+                set column-attr time
+                set data-top 0
+            next
+            edit 2
+                set data-binding "avg_cpu"
+                set column-graph-type line-up
+                set legend "CPU"
+            next
+            edit 3
+                set data-binding "avg_mem"
+                set column-graph-type line-up
+                set legend "MEM"
+            next
+            edit 4
+                set data-binding "max_cpu"
+                set column-graph-type line-up
+                set legend "Max CPU"
+            next
+            edit 5
+                set data-binding "max_mem"
+                set column-graph-type line-up
+                set legend "Max MEM"
+            next
+        end
+        set protected enable
+    next
+    edit "fai-Detection-Summary-by-Device-Type"
+        set disp-name "Detection Summary by Device Type"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Detection Summary by Device Type"
+        set dataset "fai-Detection-Summary-by-Device-Type"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Device Type"
+                set data-binding "device_type"
+                set data-top 50
+            next
+            edit 2
+                set header "Count"
+                set data-binding "total_num"
+                set data-type aggregate
+                set legend "Count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+
+    edit "fndr-Anomaly-Count-by-Severity-Timeline"
+        set disp-name "Toal Number of Anomalies by Severity Timeline"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Toal Number of Anomalies by Severity Timeline"
+        set dataset "fndr-Anomaly-Count-by-Severity-Timeline"
+        set chart-type line
+        set chart-style "{\"legend-position\":\"top\", \"y-title\": \"Counts\"}"
+        config table-columns
+            edit 1
+                set header "Time"
+                set data-binding "hodex"
+                set column-attr time
+                set data-top 0
+            next
+            edit 2
+                set data-binding "critical_num"
+                set column-graph-type line-up
+                set legend "Critical"
+            next
+            edit 3
+                set data-binding "high_num"
+                set column-graph-type line-up
+                set legend "High"
+            next
+            edit 4
+                set data-binding "medium_num"
+                set column-graph-type line-up
+                set legend "Medium"
+            next
+            edit 5
+                set data-binding "low_num"
+                set column-graph-type line-up
+                set legend "Low"
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Anomaly-Type-and-Feature-by-Count"
+        set disp-name "Anomalies Types and Features by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Anomalies Types and Features by Count"
+        set dataset "fndr-Anomaly-Type-and-Feature-by-Count"
+        set chart-type bubble-ring
+        set chart-style "{\"show-value\":\"enable\" }"
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Type"
+                set data-binding "type"
+                set data-top 10
+            next
+            edit 2
+                set header "Feature"
+                set data-type drilldown
+                set data-binding "feature"
+                set data-top 5
+            next
+            edit 3
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Botnet-Name-by-Count"
+        set disp-name "Botnet Name by Count"
+        set description "Botnet Name by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Botnet-Name-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "botname"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Botnet-Severity-by-Count"
+        set disp-name "Botnet Severity by Count"
+        set description "Botnet Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Botnet-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Botnet-Traffic-Summary"
+        set disp-name "Botnet Traffic Summary"
+        set description "Botnet Traffic Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Botnet-Traffic-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\":\"dark\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "Source Address"
+                set data-binding "srcip"
+            next
+            edit 4
+                set header "Destination Address"
+                set data-binding "dstip"
+            next
+            edit 5
+                set header "Botnet Name"
+                set data-binding "botname"
+            next
+            edit 6
+                set header "Count"
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IOC-Campaign-by-Count"
+        set disp-name "IOC Campaign by Count"
+        set description "IOC Campaign by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IOC-Campaign-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "campaign_name"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IOC-Severity-by-Count"
+        set disp-name "IOC Severity by Count"
+        set description "IOC Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IOC-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IOC-Campaign-Summary"
+        set disp-name "IOC Campaign Summary"
+        set description "IOC Campaign Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IOC-Campaign-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\": \"dark\", \"show-total\": \"disable\", \"show-others\": \"disable\", \"show-percent\": \"disable\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "Source Address"
+                set data-binding "srcip"
+            next
+            edit 4
+                set header "Campaign Name"
+                set data-binding "campaign_name"
+                set data-type drilldown
+                set data-top 5
+            next
+            edit 5
+                set header "Count"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Encrypted-Severity-by-Count"
+        set disp-name "Encrypted Attack Severity by Count"
+        set description "Encrypted Attack Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Encrypted-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Encrypted-Attack-Summary"
+        set disp-name "Encrypted Attack Summary"
+        set description "Encrypted Attack Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Encrypted-Attack-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\":\"dark\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "IOC Hash"
+                set data-binding "md5"
+            next
+            edit 4
+                set header "Source Address"
+                set data-binding "srcip"
+            next
+            edit 5
+                set header "Destination Address"
+                set data-binding "dstip"
+            next
+            edit 6
+                set header "Count"
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IPS-Attack-Name-by-Count"
+        set disp-name "IPS Attack Name by Count"
+        set description "IPS Attack Name by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IPS-Attack-Name-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "vname"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IPS-Severity-by-Count"
+        set disp-name "IPS Attack Severity by Count"
+        set description "IPS Attack Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IPS-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-IPS-Attack-Summary"
+        set disp-name "IPS Attack Summary"
+        set description "IPS Attack Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-IPS-Attack-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\":\"dark\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "Attack Name"
+                set data-binding "vname"
+            next
+            edit 4
+                set header "Source Address"
+                set data-binding "srcip"
+            next
+            edit 5
+                set header "Destination Address"
+                set data-binding "dstip"
+            next
+            edit 6
+                set header "Count"
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-ML-Anomaly-Feature-by-Count"
+        set disp-name "Machine Learning Anomaly Feature by Count"
+        set description "Machine Learning Anomaly Feature by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-ML-Anomaly-Feature-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "feature"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-ML-Severity-by-Count"
+        set disp-name "Machine Learning Anomaly Severity by Count"
+        set description "Machine Learning Anomaly Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-ML-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-ML-Anomaly-Summary"
+        set disp-name "Machine Learning Anomaly Summary"
+        set description "Machine Learning Anomaly Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-ML-Anomaly-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\":\"dark\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+                set column-width 10
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "Anomaly Feature(s)"
+                set data-binding "reasons"
+            next
+            edit 4
+                set header "Source Address"
+                set data-binding "srcip"
+                set column-width 15
+            next
+            edit 5
+                set header "Count"
+                set data-binding "totalnum"
+                set column-attr count
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Protocol-by-Percentage"
+        set disp-name "Weak Cipher Protocol by Percentage"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Weak Cipher Protocol by Percentage"
+        set dataset "fndr-Weak-Cipher-Protocol-by-Percentage"
+        set chart-type bar
+        set chart-style "{\"orientation\": \"horizontal\", \"show-value\": \"enable\", \"y-label\": \"flat\", \"fixed-bar-width\": \"3\", \"bar-color\": \"bubble-ring\"}"
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Protocol"
+                set data-binding "alproto"
+                set data-top 5
+            next
+            edit 2
+                set header "Percentage"
+                set data-type aggregate
+                set column-attr percent
+                set data-binding "percentage"
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Severity-by-Count"
+        set disp-name "Weak Cipher Severity by Count"
+        set description "Weak Cipher Severity by Count"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Weak-Cipher-Severity-by-Count"
+        set chart-type donut
+        set chart-style "{\"legend-position\":\"right\", \"inner-content\":\"summary\", \"show-header\": \"enable\"}"
+        config table-columns
+            edit 1
+                set data-binding "severity"
+                set data-top 10
+            next
+            edit 2
+                set header "Counts"
+                set data-binding "totalnum"
+                set data-type aggregate
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Type-by-Percentage"
+        set disp-name "Weak Cipher Type by Percentage"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set description "Weak Cipher Type by Percentage"
+        set dataset "fndr-Weak-Cipher-Type-by-Percentage"
+        set chart-type bar
+        set chart-style "{\"orientation\": \"horizontal\", \"show-value\": \"enable\", \"y-label\": \"flat\", \"fixed-bar-width\": \"3\", \"bar-color\": \"bubble-ring\"}"
+        set include-other disable
+        config table-columns
+            edit 1
+                set header "Type"
+                set data-binding "ciphername"
+                set data-top 5
+            next
+            edit 2
+                set header "Percentage"
+                set data-type aggregate
+                set column-attr percent
+                set data-binding "percentage"
+            next
+        end
+        set protected enable
+    next
+    edit "fndr-Weak-Cipher-Summary"
+        set disp-name "Weak Cipher Summary"
+        set description "Weak Cipher Summary"
+        set category "FortiNDR"
+        set dev-type FortiNDR
+        set dataset "fndr-Weak-Cipher-Summary"
+        set chart-type table
+        set chart-style "{\"table-scheme\":\"dark\"}"
+        config table-columns
+            edit 1
+                set header "Severity"
+                set data-binding "severity"
+                set data-top 10
+                set column-attr severity
+                set column-span 2
+            next
+            edit 2
+                set data-binding "severity"
+            next
+            edit 3
+                set header "Protocol"
+                set data-binding "alproto"
+            next
+            edit 4
+                set header "Type"
+                set data-binding "ciphername"
+            next
+            edit 5
+                set header "Source Address"
+                set data-binding "srcip"
+            next
+            edit 6
+                set header "Destination Address"
+                set data-binding "dstip"
+            next
+            edit 7
+                set header "Count"
+                set data-binding "totalnum"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+end
+config sql-report macro
+    edit "fai-Files-Proccessed-Fileaccepted"
+        set dev-type FortiNDR
+        set disp-name "FortiSandbox Files Accepted"
+        set description "FortiSandbox Files Accepted"
+        set dataset "fai-Files-Proccessed-Summary"
+        set data-binding "fileaccepted"
+        set protected enable
+    next
+    edit "fai-Files-Proccessed-Fileprocessed"
+        set dev-type FortiNDR
+        set disp-name "FortiSandbox Files Proccessed"
+        set description "FortiSandbox Files Proccessed"
+        set dataset "fai-Files-Proccessed-Summary"
+        set data-binding "fileprocessed"
+        set protected enable
+    next
+    edit "fai-Files-Proccessed-Filedetected"
+        set dev-type FortiNDR
+        set disp-name "FortiSandbox Files Detected"
+        set description "FortiSandbox Files Detected"
+        set dataset "fai-Files-Proccessed-Summary"
+        set data-binding "filedetected"
+        set protected enable
+    next
+
+    edit "fndr-Total-Number-of-Critical-Anomaly"
+        set dev-type FortiNDR
+        set disp-name "Total Number of Critical Anomalies"
+        set description "FortiNDR Total Number of Critical Anomalies"
+        set dataset "fndr-Anomaly-Count-by-Severity"
+        set data-binding "critical_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fndr-Total-Number-of-High-Anomaly"
+        set dev-type FortiNDR
+        set disp-name "Total Number of High Anomalies"
+        set description "FortiNDR Total Number of High Anomalies"
+        set dataset "fndr-Anomaly-Count-by-Severity"
+        set data-binding "high_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fndr-Total-Number-of-Medium-Anomaly"
+        set dev-type FortiNDR
+        set disp-name "Total Number of Medium Anomalies"
+        set description "FortiNDR Total Number of Medium Anomalies"
+        set dataset "fndr-Anomaly-Count-by-Severity"
+        set data-binding "medium_num"
+        set data-attr count
+        set protected enable
+    next
+    edit "fndr-Total-Number-of-Low-Anomaly"
+        set dev-type FortiNDR
+        set disp-name "Total Number of Low Anomalies"
+        set description "FortiNDR Total Number of Low Anomalies"
+        set dataset "fndr-Anomaly-Count-by-Severity"
+        set data-binding "low_num"
+        set data-attr count
+        set protected enable
+    next
+end
+
+config sql-report layout
+    edit 1000050001
+        set is-template enable
+        set dev-type FortiNDR
+        set category "FortiNDR"
+        set title "Template - FortiNDR Breach Prevention Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_fai.jpg"
+        set description "FortiNDR Breach Prevention Report."
+        set body "<div style=\"background-image: url(/resource/images/fazrpt_external/fai_header_bg.jpg); background-repeat: no-repeat; background-size: 100% 120px;\"><br><br><br><h1><strong><span style=\"color:#F0FFF0; margin-left:5px;\">Introduction to FortiNDR</span></strong></h1></div><p>FortiNDR is the next generation of Fortinet&#39;s malware detection technology, using Artificial Neural Networks (ANN) which can deliver sub-second malware detection and verdict. ANN is able to mimic human behavior using the Virtual Security Analyst<span style=\"font-size:10px\"><sup>TM</sup></span>. VSA<span style=\"font-size:10px\"><sup>TM</sup></span>&nbsp;can assist security operations to perform the following functions:</p><ul><li><span style=\"text-align: justify; font-size: 10pt;\">Analyze malware scientifically by classifying malware based on its detected features, for example, ransomware, downloader, coin-miner, and so on.</span></li><li><span style=\"text-align: justify; font-size: 10pt;\">Trace the origins of the attack, for example, worm infection.</span></li><li><span style=\"text-align: justify; font-size: 10pt;\"> Outbreak search can use the similarity engine to search for malware outbreaks with hashes and similar variants in the network.</span></li><li><span style=\"text-align: justify; font-size: 10pt;\">Take advantage of Fortinet Security Fabric to integrate with different Fortinet and 3rd party solutions, such as FortiGates,&nbsp;FortiSandbox, FortiWeb, FortiAnalyzer and FortiSIEM.</span></li></ul><p>&nbsp;</p><p>The following report will provide a technical summary of FortiNDR solution in your environment.</p><table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\" style=\"width:720px\"><tbody><tr><td style=\"background-color:rgb(0, 102, 102); width:10px; height: 60px;\">&nbsp;</td><td style=\"background-color:rgb(0, 102, 102); width:40px;\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/accepted.png\" style=\"height:40px; width:40px; margin-top: 3px;\" /></td><td style=\"background-color:rgb(0, 102, 102); width:100px\"><strong><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">File</span><br/><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">Accepted</span></strong></td><td style=\"background-color:rgb(0, 102, 102); width:10px;\">&nbsp;</td><td style=\"background-color:rgb(0, 102, 102); width:70px;\"><p><span style=\"color:#FFFFE0; font-size:20px\"><strong><fazmacro mkey=\"fai-Files-Proccessed-Fileaccepted\"></fazmacro></strong></span></p></td><td style=\"width:10px\">&nbsp;</td><td style=\"background-color:rgb(255, 153, 51); width:10px;\">&nbsp;</td><td style=\"background-color:rgb(255, 153, 51); width:40px;\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/processed.png\" style=\"height:40px; width:40px; margin-top: 3px;\" /></td><td style=\"background-color:rgb(255, 153, 51); width:100px\"><strong><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">File</span><br/><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">Processed</span></strong></td><td style=\"background-color:rgb(255, 153, 51); width:10px;\">&nbsp;</td><td style=\"background-color:rgb(255, 153, 51); width:70px;\"><span style=\"color:#FFFFE0; font-size:20px\"><strong><fazmacro mkey=\"fai-Files-Proccessed-Fileprocessed\"></fazmacro></strong></span></td><td style=\"width:10px\">&nbsp;</td><td style=\"background-color:rgb(204, 51, 0); width:10px;\">&nbsp;</td><td style=\"background-color:rgb(204, 51, 0); width:40px;\"><img alt=\"\" data-local=\"true\" src=\"/resource/images/fazrpt_external/detected.png\" style=\"height:40px; width:40px; margin-top: 3px;\" /></td><td style=\"background-color:rgb(204, 51, 0); width:100px;\"><strong><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">Malicious</span><br/><span style=\"color:#F0FFF0; font-size:14px; margin-left:10px\">Detected</span></strong></td><td style=\"background-color:rgb(204, 51, 0); width:10px;\">&nbsp;</td><td style=\"background-color:rgb(204, 51, 0); width:70px;\"><span style=\"color:#FFFFE0; font-size:20px\"><strong><fazmacro mkey=\"fai-Files-Proccessed-Filedetected\"></fazmacro></strong></span></td></tr></tbody></table><p>&nbsp;</p><h2><strong>Virtual Security Analyst &trade; of Attack Scenarios &amp; Malware Types on Network</strong></h2><p>Understanding malware types and intentions is important to investigating attacks. The following chart summarises attack scenarios detected on the network.</p><fazchart mkey=\"fai-Attack-Scenario-Count\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Quarantined Host Summary</strong></h2><p>FortiNDR has the ability to quarantine hosts via FortiGate if required. Below is a list of infected hosts and successful quarantine by FortiNDR detection with FortiGate(s) for the reporting period.</p><fazchart mkey=\"fai-Host-quarantined-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR On-Premise Learning</strong></h2><p>FortiNDR Artificial Neural Network has ability to learn from local traffic to reduce false positive and increase detection rates, please find some of the features learnt below.</p><fazchart mkey=\"fai-Learnt-Customer-Features-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR Malicious Files Details</strong></h2><fazchart mkey=\"fai-Malicious-File-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR Detection by Device Type</strong></h2><p>The following shown detection is by device (e.g. Sniffer, ICAP and FortiGate VDOMs).</p><fazchart mkey=\"fai-Detection-Summary-by-Device-Type\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR Detection by Device</strong></h2><fazchart mkey=\"fai-Detection-by-Device-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>Malware Detection Type</strong></h2><p> Apart from concluded attack scenarios, malware can be made up of different techniques, e.g. A ransomware containing downloader features. FortiNDR call these detection types. The following shows an overall detection types of mwlare on network. Note: this is different to attack scenarios.</p><fazchart mkey=\"fai-Malware-Detection-Type-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR Host(s) Summary Page</strong></h2><p>The following focuses on hosts infection summary over the reporting period. This chart is particularly useful for forensic of particular hosts to determine the history of host infections over the reporting period. </p><fazchart mkey=\"fai-Hosts-Infection-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR System Usage Summary</strong></h2><p>The following shows CPU and memory usage of FortiNDR over the reporting period.</p><fazchart mkey=\"fai-CPU-Memory-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p><h2><strong>FortiNDR System Events</strong></h2><p>The following table details important system events for FortiNDR.</p><fazchart mkey=\"fai-System-Events-Summary\" title=\"\" width=\"100%\"></fazchart><p>&nbsp;</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90119
+                next
+                edit 90203
+                next
+            end
+        set report-tag "fortiai"
+        set protected enable
+    next
+    edit 1000050002
+        set is-template enable
+        set dev-type FortiNDR
+        set category "FortiNDR"
+        set title "Template - FortiNDR Network Anomalies Report"
+        set description "Present a brief report of Network Anomalies detected by Fortinet Network Detection and Response product FortiNDR."
+        set body "<div style=\"height:10px\"></div><table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:middle; width:70px\"><p><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_intro.png\" style=\"height:55px; width:60px\" /></p></td><td style=\"vertical-align:middle\"><span style=\"font-size:16px\"> INTRODUCTION</span></td></tr></table><p>FortiNDR is the Fortinet Network Detection and Response product responsibe for detecting Network Anomalies with auto and manual mitigation techniques. </p><p>Apart from network anomalies and attack, FortiNDR also uses <b>Artificial Neural Networks (ANN)</b> to provide sub-second malware detection and verdict.</p><div style=\"height:15px\"></div><p><b>FortiNDR's ANN</b> is able to mimic human behavior using the Virtual Security Analyst (VSA) <sup>TM</sup>, which is capable of the following:</p><div style=\"height:10px\"></div><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"5\"><tr><td style=\"width:300px; vertical-align:top\"><div style=\"width:260px; height:300px\"><div style=\"padding-top:10px; padding-left:110px; padding-right:5px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_attack.png\" style=\"height:55px; width:55px\" /></div><div style=\"padding-top:2px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Detect encrypted attack (via JA3 hashs), look for presence of malicious web campaigns visited , weaker ciphers, vulnerable protocols, network- and botnet-based attacks.</span></li></ul></div><div style=\"padding-top:10px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Profile ML traffic and identify anomalies with user feedback mechanism.</span></li></ul></div></div></td><td style=\"width:300px; vertical-align:top\"><div style=\"width:260px; height:300px\"><div style=\"padding-top:10px; padding-left:110px; padding-right:5px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_malicious.png\" style=\"height:55px; width:55px\" /></div><div style=\"padding-top:2px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Detect malicious files in sub-seconds through neural network analysis including NFS file scan shares.</span></li></ul></div><div style=\"padding-top:10px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Analyze malware scientifically by classifying malware based on its detected features, for example, Ransomware, Downloader, CoinMiner, and so on.</span></li></ul></div><div style=\"padding-top:10px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Trace the origins of the attack, for example, Worm infection.</span></li></ul></div></div></td><td style=\"width:300px; vertical-align:top\"><div style=\"width:260px; height:300px\"><div style=\"padding-top:10px; padding-left:110px; padding-right:5px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_outbreak.png\" style=\"height:55px; width:55px\" /></div><div style=\"padding-top:2px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">OutBreak search can use the similarity engine to search for malware outbreaks with hashes and similar variants in the network.</span></li></ul></div><div style=\"padding-top:10px; padding-left:8px; padding-right:5px\"><ul><li><span style=\"font-size:12px\">Take advantage of Fortinet's Security Fabric with FortiGate(s) and other Fortinet Security Fabric solutions, along with 3rd party API calls, to quarantine infected hosts.</span></li></ul></div></div></td></tr></table><p></p><div style=\"page-break-after: always\"></div><div style=\"height:10px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">ANOMALIES</span></h2><h2><span style=\"font-size:16px; color:grey\">ANOMALY OVERVIEW</span></h2><div style=\"height:10px\"></div><table style=\"padding-top:5px; width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:bottom; width:28px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_risk_critical.png\" style=\"height:24px; width:24px\" /></td><td style=\"vertical-align:bottom\"><b><span style=\"font-size:24px\"><fazmacro mkey=\"fndr-Total-Number-of-Critical-Anomaly\"></fazmacro></span></b><span style=\"font-size:16px; font-family:Lato\"> Critical Risk</span></td><td style=\"vertical-align:bottom; width:28px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_risk_high.png\" style=\"height:24px; width:24px\" /></td><td style=\"vertical-align:bottom\"><b><span style=\"font-size:24px\"><fazmacro mkey=\"fndr-Total-Number-of-High-Anomaly\"></fazmacro></span></b><span style=\"font-size:16px; font-family:Lato\"> High Risk</span></td><td style=\"vertical-align:bottom; width:28px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_risk_med.png\" style=\"height:24px; width:24px\" /></td><td style=\"vertical-align:bottom\"><b><span style=\"font-size:24px\"><fazmacro mkey=\"fndr-Total-Number-of-Medium-Anomaly\"></fazmacro></span></b><span style=\"font-size:16px; font-family:Lato\"> Medium Risk</span></td><td style=\"vertical-align:bottom; width:27px\"><img data-local=\"true\" src=\"/resource/images/fazrpt_external/fndr_risk_low.png\" style=\"height:24px; width:24px\" /></td><td style=\"vertical-align:bottom\"><b><span style=\"font-size:24px\"><fazmacro mkey=\"fndr-Total-Number-of-Low-Anomaly\"></fazmacro></span></b><span style=\"font-size:16px; font-family:Lato\"> Low Risk</span></td></tr></table><div style=\"height:15px\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; color:grey\">ANOMALIES FOR REPORTING PERIOD</span></h2><div style=\"height:10px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-Anomaly-Count-by-Severity-Timeline\"></fazchart></div><div style=\"page-break-after: always\"></div><div><fazchart width=\"1000px\" title=\"ANOMALIES TYPES\" mkey=\"fndr-Anomaly-Type-and-Feature-by-Count\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 BOTNET TRAFFIC</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Botnet Name\" mkey=\"fndr-Botnet-Name-by-Count\"></fazchart></td><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Severity\" mkey=\"fndr-Botnet-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-Botnet-Traffic-Summary\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 FORTIGUARD IOC (MALICIOUS WEB CAMPAIGNS)</span></h2><h2><span style=\"font-size:15px; color:grey\">(Below DONUT charts show number of infections per campaign and by severity.)</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Campaign Name\" mkey=\"fndr-IOC-Campaign-by-Count\"></fazchart></td><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Severity\" mkey=\"fndr-IOC-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-IOC-Campaign-Summary\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 ENCRYPTED ATTACKS</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Severity\" mkey=\"fndr-Encrypted-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-Encrypted-Attack-Summary\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 NETWORK ATTACKS</span></h2><h2><span style=\"font-size:15px; color:grey\">(BY SEVERITY AND COUNT)</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Attack Name\" mkey=\"fndr-IPS-Attack-Name-by-Count\"></fazchart></td><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Severity\" mkey=\"fndr-IPS-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-IPS-Attack-Summary\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 MACHINE LEARNING NETWORK ANOMALIES</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Anomaly Feature(s)\" mkey=\"fndr-ML-Anomaly-Feature-by-Count\"></fazchart></td><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"Severity\" mkey=\"fndr-ML-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-ML-Anomaly-Summary\"></fazchart></div><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 WEAK CIPHER & VULNERABLE PROTOCOLS</span></h2><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"\" mkey=\"fndr-Weak-Cipher-Protocol-by-Percentage\"></fazchart></td><td style=\"vertical-align:top\"><fazchart width=\"390px\" title=\"Severity\" mkey=\"fndr-Weak-Cipher-Severity-by-Count\"></fazchart></td></tr></table><div style=\"height:15px\"></div><div style=\"height:15px\"></div><div style=\"height:15px\"></div><table style=\"width:100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr><td style=\"vertical-align:top\"><fazchart width=\"490px\" title=\"\" mkey=\"fndr-Weak-Cipher-Type-by-Percentage\"></fazchart></td></tr></table><div style=\"page-break-after: always\"></div><div style=\"height:15px\"></div><h2><span style=\"font-size:16px; font-family:Lato; color:black\">TOP 10 WEAK CIPHER & VULNERABLE PROTOCOLS</span></h2><div><fazchart width=\"1000px\" title=\"\" mkey=\"fndr-Weak-Cipher-Summary\"></fazchart></div>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "header_webusage_bg.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90119
+                next
+            end
+        set report-tag "concise"
+        set protected enable
+    next
+end
+
+config sql-report schedule
+     edit "1000050001"
+         set is-template enable
+         set description "FortiNDR Breach Prevention Report"
+         set schedule-type every-n-weeks
+         set schedule-frequency 1
+         set schedule-valid-start 00:00 2012/10/01
+         set time-period last-7-days
+         set display-table-contents enable
+         set output-format pdf
+         set dev-type FortiNDR
+         set schedule-color "#5484ED"
+         config report-layout
+             edit 1000050001
+             next
+         end
+         config devices
+            edit All_FortiNDR
+            next
+         end
+    next
+    edit "1000050002"
+         set is-template enable
+         set description "FortiNDR Network Anomalies Report"
+         set status disable
+         set include-coverpage disable
+         set display-table-contents disable
+         set output-format pdf
+         set dev-type FortiNDR
+         set schedule-color "#5484ED"
+         set resolve-hostname disable
+         set device-list-type none
+         set orientation landscape
+         config report-layout
+             edit 1000050002
+             next
+         end
+         config devices
+            edit All_FortiNDR
+            next
+         end
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90119
+        set folder-name "FortiNDR Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90203
+        set folder-name "SOC Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config alert basic-handler
+    edit 90001
+        set name "Default-FAI-Malware-Detection-By-FAI"
+        set description "Default FortiNDR event handler to detect malware"
+        config rule
+            edit 1
+                set name "Malware deteted"
+                set devtype FortiAI
+                set severity high
+                set logtype "attack"
+                set utmevent "Malware"
+                set extrainfo ""
+                set extrainfo-type default
+                set subject "Malware: $groupby2 detected"
+                set groupby1 "victimip"
+                set groupby2 "detype"
+                set eventstatus "open"
+                set tags "Default,Malware,Detection"
+                set filter-relation 0
+                set aggregate-expr "COUNT(*) >= 1"
+                set thres-duration 1440
+                set filter-expr ""
+            next
+        end
+        set enable disable
+        set protected enable
+        set template-url "/fazcfg-template/basic-handler/fai"
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end

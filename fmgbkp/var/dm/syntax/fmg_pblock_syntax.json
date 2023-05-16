@@ -1,0 +1,94 @@
+{
+	"macro": {
+		"DOM_GLOBAL":  1,
+		"DOM_VDOM":    2,
+
+		"PKG_TYPE": {
+			"pblock": 0
+		},
+
+		"ENABLE_OPTS": {
+			"disable": 0,
+			"enable": 1
+		},
+
+		"INSPECTION_MODE_OPTS": {
+			"proxy": 0,
+			"flow": 1
+		},
+
+		"NGFW_MODE_OPTS": {
+			"profile-based": 0,
+			"policy-based": 1
+		},
+
+		"POLICY_OFFLOAD_LEVEL_OPTS": {
+			"disable": 0,
+			"default": 1,
+			"dos-offload": 2,
+			"full-offload": 3
+		}
+	},
+	"obj": {
+		"_pkg_obj": {
+			"domain": "$DOM_VDOM",
+			"mapping_name": "",
+			"type": "table",
+			"mkey": "name",
+			"attr": {
+				"name": {
+					"type": "string",
+					"sz": 64
+				},
+				"oid": {
+					"type": "uint64",
+					"read_only": 1
+				},
+				"type": {
+					"type": "uint32",
+					"opts": "$PKG_TYPE"
+				}
+			},
+			"subobj": {
+				"package settings": {
+					"type": "obj",
+					"attr": {
+						"central-nat": {
+							"type": "int32",
+							"opts": "$ENABLE_OPTS"
+						},
+						"fwpolicy-implicit-log": {
+							"type": "int32",
+							"opts": "$ENABLE_OPTS"
+						},
+						"fwpolicy6-implicit-log": {
+							"type": "int32",
+							"opts": "$ENABLE_OPTS"
+						},
+						"inspection-mode": {
+							"type": "int32",
+							"opts": "$INSPECTION_MODE_OPTS"
+						},
+						"consolidated-firewall-mode": {
+							"type": "int32",
+							"opts": "$ENABLE_OPTS"
+						},
+						"ngfw-mode": {
+							"type": "int32",
+							"opts": "$NGFW_MODE_OPTS"
+						},
+						"policy-offload-level": {
+							"type": "int32",
+							"opts": "$POLICY_OFFLOAD_LEVEL_OPTS"
+						},
+						"ssl-ssh-profile": {
+							"type": "datasrc",
+							"extref": "/pm/config/firewall/ssl-ssh-profile",
+							"limit": 1
+						}
+					}
+				}
+			}
+		}
+	}
+}

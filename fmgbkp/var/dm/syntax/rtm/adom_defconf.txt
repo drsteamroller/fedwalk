@@ -1,0 +1,216 @@
+config rtm profile
+
+	edit default
+
+		config chart
+
+			edit cpu
+				set monitor "cpu"
+				set pinterval 10
+				set threshold 90
+			next
+
+			edit memory
+				set monitor "memory"
+				set pinterval 10
+				set threshold 80
+			next
+
+			edit disk
+				set monitor "disk"
+				set pinterval 1800
+				set threshold 90
+			next
+
+			edit session
+				set monitor "session"
+				set pinterval 10
+			next
+
+		end
+
+	next
+
+end
+
+
+config rest profile
+
+	edit csf
+
+		config task
+
+			edit "topology"
+				set monitor "csf"
+				set check-interval 180
+				set post-interval 10
+			next
+
+			edit "user-device"
+				set monitor "user-device"
+				set check-interval 180
+				set post-interval 10
+			next
+
+			edit "intf-role"
+				set monitor "system-interface"
+				set check-interval 180
+				set post-interval 10
+			next
+
+		end
+
+	next
+
+
+	edit sd-wan
+
+		config task
+
+			edit "sd-wan-sla-log"
+				set monitor "sd-wan-sla-log"
+				set check-interval 300
+				set post-interval 30
+			next
+
+			edit "sd-wan-intf-log"
+				set monitor "sd-wan-intf-log"
+				set check-interval 300
+				set post-interval 30
+			next
+
+		end
+
+	next
+
+
+	edit wifi
+
+		set scope alldev
+
+		config task
+
+			edit "fap"
+				set monitor "fap"
+				set check-interval 600
+				set post-interval 10
+			next
+
+			edit "rogue"
+				set monitor "rogue"
+				set check-interval 1800
+				set post-interval 10
+			next
+
+			edit "lte"
+				set monitor "lte"
+				set check-interval 600
+				set post-interval 10
+			next
+
+		end
+
+	next
+
+	edit fsw6
+
+		config task
+
+			edit "fsw"
+				set monitor "fsw"
+				set check-interval 600
+				set post-interval 10
+			next
+
+		end
+
+	next
+
+	edit fsw7
+
+		config task
+
+			edit "fsw7"
+				set monitor "fsw7"
+				set check-interval 600
+				set post-interval 10
+			next
+
+		end
+
+	next
+
+	edit status
+
+		set scope alldev
+
+		config task
+
+			edit "license"
+				set monitor "license-status"
+				set check-interval 180
+				set post-interval 10
+			next
+
+		end
+
+	next
+
+	edit ha-chksum
+
+		config task
+
+			edit "ha-chksum"
+				set monitor "ha-chksum"
+				set check-interval 180
+				set post-interval 10
+				set no-etag-check enable
+			next
+
+		end
+
+	next
+
+	edit ha-nonsync-chksum
+
+		config task
+
+			edit "ha-nonsync-chksum"
+				set monitor "ha-nonsync-chksum"
+				set check-interval 180
+				set post-interval 10
+				set no-etag-check enable
+			next
+
+		end
+
+	next
+
+	edit faz-ha
+
+		config task
+
+			edit "faz-ha-stat"
+				set monitor "faz-ha-stat"
+				set check-interval 300
+				set post-interval 30
+			next
+
+		end
+
+	next
+
+	edit multi-class-shaper
+		set scope limit
+		config task
+			edit "multi-class-shaper"
+				set monitor "multi-class-shaper"
+				set check-interval 10
+				set post-interval 300
+				set max-cache 61440
+			next
+		end
+	next
+
+end
+

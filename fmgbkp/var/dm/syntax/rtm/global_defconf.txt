@@ -1,0 +1,159 @@
+config rtm monitor
+
+edit cpu
+set type gauge 
+set value "1.3.6.1.4.1.12356.101.4.1.3" "1.3.6.1.4.1.12356.101.4.4.2.1.2"
+set idx "1.3.6.1.4.1.12356.101.4.4.2.1.1"
+next
+
+edit memory
+set type gauge 
+set value "1.3.6.1.4.1.12356.101.4.1.4"
+next
+
+edit disk
+set type gauge 
+set value "1.3.6.1.4.1.12356.101.4.1.6"
+set max "1.3.6.1.4.1.12356.101.4.1.7"
+next
+
+edit session
+set type gauge 
+set value "1.3.6.1.4.1.12356.101.4.1.8"
+next
+
+edit bandwidth
+set type gauge 
+set value    "1.3.6.1.2.1.2.2.1.11" "1.3.6.1.2.1.2.2.1.17"
+set idx      "1.3.6.1.2.1.2.2.1.1"
+set name-oid "1.3.6.1.2.1.2.2.1.2"
+next
+
+end
+
+
+config rest monitor
+
+edit csf
+set url "/api/v2/monitor/system/csf/?vdom=*"
+set atype status
+set post-url "/csf"
+set method "get"
+next
+
+edit user-device
+set url "/api/v2/monitor/user/device/?vdom=*"
+set atype status
+set post-url "/user/device"
+set method "get"
+next
+
+edit system-interface
+set url "/api/v2/cmdb/system/interface/?vdom=*"
+set atype status
+set post-url "/system/interface"
+set method "get"
+next
+
+edit sd-wan-sla-log
+set url "/api/v2/monitor/virtual-wan/sla-log/?seconds=360&sampling_interval=30&vdom=*"
+set atype history
+set type container
+set post-url "/virtual-wan/sla-log"
+set method "get"
+next
+
+edit sd-wan-intf-log
+set url "/api/v2/monitor/virtual-wan/interface-log/?seconds=360&sampling_interval=30&vdom=*"
+set atype history
+set type container
+set post-url "/virtual-wan/interface-log"
+set method "get"
+next
+
+edit policy-hitcount
+set url "/api/v2/monitor/firewall/policy/?vdom=*"
+set atype status
+set post-url "/hitcount/policy"
+set method "get"
+next
+
+edit policy6-hitcount
+set url "/api/v2/monitor/firewall/policy/?vdom=*"
+set atype status
+set post-url "/hitcount/policy6"
+set method "get"
+next
+
+edit fap
+set url "/api/v2/monitor/wifi/managed_ap?vdom=*&incl_local=True"
+set atype status
+set post-url "/wifi/fap"
+set method "get"
+next
+
+edit rogue
+set url "/api/v2/monitor/wifi/rogue_ap?vdom=*"
+set atype status
+set post-url "/wifi/rogue"
+set method "get"
+next
+
+edit fsw
+set url "/api/v2/monitor/switch-controller/managed-switch?vdom=*"
+set atype status
+set post-url "/wifi/fsw"
+set method "get"
+next
+
+edit fsw7
+set url "/api/v2/monitor/switch-controller/managed-switch/status?vdom=*"
+set atype status
+set post-url "/wifi/fsw"
+set method "get"
+next
+
+edit lte
+set url "/api/v2/monitor/system/lte-modem/status"
+set atype status
+set post-url "/wifi/lte"
+set method "get"
+next
+
+edit license-status
+set url "/api/v2/monitor/license/status"
+set atype status
+set post-url "/status/license"
+set method get
+next
+
+edit ha-chksum
+set url "/api/v2/monitor/system/ha-checksums"
+set atype status
+set post-url "/status/ha-chksum"
+set method get
+next
+
+edit ha-nonsync-chksum
+set url "/api/v2/monitor/system/ha-nonsync-checksums"
+set atype status
+set post-url "/status/ha-nonsync-chksum"
+set method get
+next
+
+edit faz-ha-stat
+set url "/jsonrpc/sys/ha/status"
+set atype status
+set post-url "/faz-ha/status"
+set method get
+next
+
+edit multi-class-shaper
+set url "/api/v2/monitor/firewall/shaper/multi-class-shaper?vdom=*"
+set atype history
+set type container
+set post-url "/shaper/multi-class-shaper"
+set method get
+next
+
+end

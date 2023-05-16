@@ -1,0 +1,550 @@
+
+config sql-report dataset
+    edit "FortiNAC-Endpoint-By-Rogue-and-Registered"
+        set description "FortiNAC Endpoint By Rogue and Registered"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select count(*) as count, (case when endpointtype='Rogue' then 'Rogue' else 'Registered Host' end) as endpointtype from $ADOM_NACENDPOINT as ept where endpointtype is not null group by endpointtype order by count desc"
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-By-Type"
+        set description "FortiNAC Endpoint By Type"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select count(*) as count, endpointtype as endpoint_type from $ADOM_NACENDPOINT as ept where endpointtype!='Rogue' group by endpoint_type order by count desc"
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-OS"
+        set description "FortiNAC Endpoint OS"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "SELECT count(*) as count, coalesce(os, 'Unknown') as os_type FROM $ADOM_NACENDPOINT WHERE hwtype is null GROUP BY os_type order by count desc"
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-By-Vendor"
+        set description "FortiNAC Endpoint By Vendor"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select count(*) as count, coalesce(adp.vendorname, 'Unknown') as vendor_name from $ADOM_NACENDPOINT as ept, $ADOM_NACADAPTER as adp where adp.endpointid=ept.assetid AND adp.assetid NOT IN (select assetid from $ADOM_NACDEVICE) group by vendor_name order by count desc"
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-Type-By-Location"
+        set description "FortiNAC Endpoint Type By Location"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select ctn.name as location, ept.endpointtype as type, count (*) as total from $ADOM_NACCONTAINER as ctn, $ADOM_NACENDPOINT as ept, $ADOM_NACADAPTER as apd where apd.endpointid = ept.assetid AND ctn.assetid = apd.containerid group by ctn.name, ept.endpointtype order by ctn.name, total desc"
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-Inventory"
+        set description "FortiNAC Endpoint Inventory"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select ept.endpointtype, ept.connected, adp.ip , adp.mac, ctn.name as location, adp.vendorname, ept.hostname from $ADOM_NACENDPOINT as ept,$ADOM_NACADAPTER as adp left join $ADOM_NACCONTAINER as ctn on ctn.assetid = adp.containerid where ept.assetid = adp.endpointid AND ept.assetid NOT IN (select assetid from $ADOM_NACDEVICE) order by mac"
+        set protected enable
+    next
+    edit "FortiNAC-Container-Inventory"
+        set description "FortiNAC Container Inventory"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "Select dev.name as device, ctn.name as container from $ADOM_NACCONTAINER as ctn, $ADOM_NACDEVICE as dev WHERE dev.containerid=ctn.assetid order by device"
+        set protected enable
+    next
+    edit "FortiNAC-Total-Number-of-Rogue"
+        set description "FortiNAC Total Number of Rogue"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "SELECT COUNT(*) as total FROM $ADOM_NACENDPOINT as ept WHERE endpointtype='Rogue'"
+        set protected enable
+    next
+    edit "FortiNAC-Network-Inventory"
+        set description "FortiNAC Network Inventory"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "Select name, curvlan, label,connstate, (case when adminstatus =1 THEN 'On' ELSE 'Off' END) AS adminstatus, (case when operstatus =1 THEN 'Link Up' ELSE 'Link Down' END) AS operationalstatus FROM $ADOM_NACPORT as prt order by name,label"
+        set protected enable
+    next
+    edit "FortiNAC-Total-Number-of-Registered-Host"
+        set description "FortiNAC total Number of Registered Host"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select count(*) as total from $ADOM_NACENDPOINT as ept where endpointtype!='Rogue'"
+        set protected enable
+    next
+    edit "FortiNAC-Highest-Endpoint-By-Type-Name"
+        set description "FortiNAC Highest Endpoint By Type Name"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select endpointtype from (select count(*) as maxtype, endpointtype from $ADOM_NACENDPOINT as ept where endpointtype!='Rogue' group by endpointtype order by maxtype desc) t limit 1"
+        set protected enable
+    next
+    edit "FortiNAC-Highest-Endpoint-By-Type-count"
+        set description "FortiNAC Highest Endpoint By Type count"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select maxtype as maxcount from (select count(*) as maxtype, endpointtype as endpoint_type from $ADOM_NACENDPOINT as ept where endpointtype!='Rogue' group by endpoint_type order by maxtype desc) t limit 1"
+        set protected enable
+    next
+    edit "FortiNAC-Highest-Endpoint-By-OS-Type-Name-and-count"
+        set description "FortiNAC Highest Endpoint By OS Type Name and count"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select bilang, jenis from (select count(*) as bilang, coalesce(os, 'Unknown') as jenis from $ADOM_NACENDPOINT as ept where hwtype is null group by jenis order by bilang desc) as Bilangan limit 1"
+        set protected enable
+    next
+    edit "FortiNAC-total-Number-of-Network-Devices"
+        set description "FortiNAC total Number of Network Devices"
+        set dev-type FortiNAC
+        set log-type asset
+        set query "select count(*) as total from $ADOM_NACDEVICE as dev, $ADOM_NACCONTAINER as ctn where dev.containerid=ctn.assetid AND ctn.assetid NOT IN (select assetid from $ADOM_NACENDPOINT)"
+        set protected enable
+    next
+end
+
+config sql-report chart
+    edit "FortiNAC-Endpoint-By-Rogue-and-Registered"
+        set disp-name "Endpoint by Rogue And Registered-Pie Chart"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint by Rogue And Registered-Pie Chart"
+        set dataset "FortiNAC-Endpoint-By-Rogue-and-Registered"
+        set chart-type pie
+        config table-columns
+            edit 1
+                set header "Hosts Type"
+                set data-binding "endpointtype"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-type aggregate
+                set data-binding "count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-By-Type-Pie-Chart"
+        set disp-name "Endpoint By Type-Pie Chart"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint By Type-Pie Chart"
+        set dataset "FortiNAC-Endpoint-By-Type"
+        set chart-type pie
+        config table-columns
+            edit 1
+                set header "Hosts by Type"
+                set data-binding "endpoint_type"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-type aggregate
+                set data-binding "count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-By-Operating-System-Type-Pie-Chart"
+        set disp-name "Endpoint By Operating System Type - Pie Chart"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint By Operating System Type - Pie Chart"
+        set dataset "FortiNAC-Endpoint-OS"
+        set chart-type pie
+        config table-columns
+            edit 1
+                set header "OS Type"
+                set data-binding "os_type"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-type aggregate
+                set data-binding "count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+
+    edit "FortiNAC-Endpoint-By-Vendor-Pie-Chart"
+        set disp-name "Endpoint By Vendor-Pie Chart"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint By Vendor-Pie Chart"
+        set dataset "FortiNAC-Endpoint-By-Vendor"
+        set chart-type pie
+        config table-columns
+            edit 1
+                set header "Host By Vendor"
+                set data-binding "vendor_name"
+                set data-top 5
+            next
+            edit 2
+                set header ""
+                set data-type aggregate
+                set data-binding "count"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-Type-By-Location-Bar"
+        set disp-name "Endpoint Type By Location-Bar"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint Type By Location-Bar"
+        set dataset "FortiNAC-Endpoint-Type-By-Location"
+        set chart-type bar
+        config table-columns
+            edit 1
+                set header "Hosts Type"
+                set data-type raw
+                set data-binding "type"
+                set data-top 10
+            next
+            edit 2
+                set header " "
+                set data-type drilldown
+                set data-binding "location"
+            next
+            edit 3
+                set header "Count"
+                set data-type aggregate
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-Type-By-Location-Table"
+        set disp-name "Endpoint Type By Location-Table"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint Type By Location-Table"
+        set dataset "FortiNAC-Endpoint-Type-By-Location"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Location"
+                set data-binding "location"
+                set data-top 10
+            next
+            edit 2
+                set header "Type"
+                set data-binding "type"
+            next
+            edit 3
+                set header "Total"
+                set data-binding "total"
+                set column-attr count
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Endpoint-Inventory"
+        set disp-name "Endpoint Inventory"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Endpoint Inventory"
+        set dataset "FortiNAC-Endpoint-Inventory"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "IP Address"
+                set data-binding "ip"
+                set column-width 20
+                set data-top 1000
+            next
+            edit 2
+                set header "Hostname"
+                set data-binding "hostname"
+                set column-width 15
+            next
+            edit 3
+                set header "Endpoint Type"
+                set data-binding "endpointtype"
+            next
+            edit 4
+                set header "MAC Address"
+                set data-binding "mac"
+                set column-width 20
+            next
+            edit 5
+                set header "Vendor Name"
+                set data-binding "vendorname"
+                set column-width 15
+            next
+            edit 6
+                set header "Connection Status"
+                set data-binding "connected"
+            next
+            edit 7
+                set header "Location"
+                set data-binding "location"
+                set column-width 10
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Container-Inventory"
+        set disp-name "Container Inventory"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Container Inventory"
+        set dataset "FortiNAC-Container-Inventory"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Device"
+                set data-binding "device"
+                set data-top 1000
+            next
+            edit 2
+                set header "Container (Location)"
+                set data-binding "container"
+                set column-width 30
+            next
+        end
+        set protected enable
+    next
+    edit "FortiNAC-Network-Inventory"
+        set disp-name "Network Inventory"
+        set dev-type FortiNAC
+        set category "FortiNAC"
+        set description "Network Inventory"
+        set dataset "FortiNAC-Network-Inventory"
+        set chart-type table
+        config table-columns
+            edit 1
+                set header "Device"
+                set data-binding "name"
+                set data-top 5000
+                set column-width 20
+            next
+            edit 2
+                set header "Label"
+                set data-binding "label"
+                set column-width 10
+            next
+            edit 3
+                set header "Current Vlan"
+                set data-binding "curvlan"
+            next
+            edit 4
+                set header "Connection State"
+                set data-binding "connstate"
+            next
+            edit 5
+                set header "Admin Status"
+                set data-binding "adminstatus"
+            next
+            edit 6
+                set header "Operational Status"
+                set data-binding "operationalstatus"
+            next
+        end
+        set protected enable
+    next
+end
+config sql-report macro
+    edit "FortiNAC-Total-Number-of-Rogue"
+        set dev-type FortiNAC
+        set disp-name "Total Number of Rogue"
+        set description "Total Number of Rogue"
+        set dataset "FortiNAC-Total-Number-of-Rogue"
+        set data-binding "total"
+        set protected enable
+    next
+    edit "FortiNAC-Total-Number-of-Registered-Host"
+        set dev-type FortiNAC
+        set disp-name "Total Number of Registered Host"
+        set description "Total Number of Registered Host"
+        set dataset "FortiNAC-Total-Number-of-Registered-Host"
+        set data-binding "total"
+        set protected enable
+    next
+    edit "FortiNAC-Highest-Endpoint-By-Type-Name"
+        set dev-type FortiNAC
+        set disp-name "Highest Endpoint By Type Name"
+        set description "Highest Endpoint By Type Name"
+        set dataset "FortiNAC-Highest-Endpoint-By-Type-Name"
+        set data-binding "endpointtype"
+        set protected enable
+    next
+    edit "FortiNAC-Highest-Endpoint-By-Type-count"
+        set dev-type FortiNAC
+        set disp-name "Highest Endpoint By Type Count"
+        set description "Highest Endpoint By Type Count"
+        set dataset "FortiNAC-Highest-Endpoint-By-Type-count"
+        set data-binding "maxcount"
+        set protected enable
+    next
+    edit "FortiNAC-Type-of-the-highest-endpoint-OS"
+        set dev-type FortiNAC
+        set disp-name "The Type of the highest endpoint OS"
+        set description "The Type of the highest endpoint OS"
+        set dataset "FortiNAC-Highest-Endpoint-By-OS-Type-Name-and-count"
+        set data-binding "jenis"
+        set protected enable
+    next
+    edit "FortiNAC-Count-of-the-highest-endpoint-OS"
+        set dev-type FortiNAC
+        set disp-name "Count of the highest endpoint OS"
+        set description "Count of the highest endpoint OS"
+        set dataset "FortiNAC-Highest-Endpoint-By-OS-Type-Name-and-count"
+        set data-binding "bilang"
+        set protected enable
+    next
+    edit "FortiNAC-Total-Number-of-Network-Devices"
+        set dev-type FortiNAC
+        set disp-name "Total Number of Network Devices"
+        set description "Total Number of Network Devices"
+        set dataset "FortiNAC-total-Number-of-Network-Devices"
+        set data-binding "total"
+        set protected enable
+    next
+end
+
+config sql-report layout
+    edit 1000050001
+        set is-template enable
+        set category "FortiNAC"
+        set dev-type FortiNAC
+        set title "Template - FortiNAC Endpoints and Network Report"
+        set coverpage-background-image "{sys_img_path}/def_cover_bgimg_ver1.png"
+        set description "FortiNAC Endpoints and Network Report."
+        set body "<h1><span style=\"font-size:26px\"><strong>Executive Summary</strong></span></h1><p style=\"text-align:justify\">Explosive device proliferation and continuously evolving sophisticated threats have kept endpoints a top target for cyberattacks. With the cost of an endpoint-based breach reaching into the millions of dollars per event, it is critical for an organization to understand and improve visibility into the network. This report provides summary and detail distrivution of endpoints and inventory of endpoints and the&nbsp;network devices connected in the environment.</p><p style=\"text-align:justify\">&nbsp;</p><h1 style=\"text-align:justify\"><span style=\"font-size:24px\"><strong>1.Endpoint</strong></span></h1><p style=\"text-align:justify\">The below chart illustrate the endpoint overview by the total number of rogue and total number of registered endpoints. A registered endpoint&nbsp;is a device requiring network services that is displayed in the FortiNAC host view and has an ID. Registered ednpoints have a record in the FortiNAC database and are known entities. Rogue endpoints do not have&nbsp;a record and are unknown entities. Rogue endpoints expose further risk to an organzition&nbsp;as these unidentified device are under the radar.</p><p style=\"text-align:justify\">The chart below summarize the total number of Rogue and Registered Endpoints:</p><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"width:600px\"><tbody><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center; width:250px\"><span style=\"color:#FFFFFF\">Total number of Rogue Endpoints</span></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center; width:250px\"><span style=\"color:#FFFFFF\">Total number of Registered Endpoints</span></td></tr><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center\"><strong><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Total-Number-of-Rogue\"></fazmacro></span></strong></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center\"><strong><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Total-Number-of-Registered-Host\"></fazmacro></span></strong></td></tr></tbody></table><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-By-Rogue-and-Registered\" title=\"\" width=\"700px\"></fazchart><h2><span style=\"font-size:24px\"><strong>1.1&nbsp;Endpoint Distribution</strong></span></h2><p style=\"text-align:justify\">With growth in both BYOD and IoT, protecting countless device types with different operating systems that aren&rsquo;t owned, managed, or updated by corporate IT has become a significant challenge for security team. Gaining visibility into the type of the endpoints connected to the enterprise network and their operating system vulnerabilities are fairly important to put on strategy in order to continuosly improve an organization security posture.&nbsp;</p><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"width:600px\"><tbody><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center; width:300px\"><span style=\"color:#FFFFFF\">Top Endpoints Type</span></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center; width:250px\"><span style=\"color:#FFFFFF\">Top Endpoints Count</span></td></tr><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center\"><strong><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Highest-Endpoint-By-Type-Name\"></fazmacro></span></strong></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center\"><strong><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Highest-Endpoint-By-Type-count\"></fazmacro></span></strong></td></tr></tbody></table><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-By-Type-Pie-Chart\" title=\"Endpoint Distribution By Type\" width=\"700px\"></fazchart><p>&nbsp;</p><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"width:600px\"><tbody><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center; width:300px\"><span style=\"color:#FFFFFF\">Top Endpoints OS Type</span></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center; width:250px\"><span style=\"color:#FFFFFF\">Top Endpoints OS Type Count</span></td></tr><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center\"><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Type-of-the-highest-endpoint-OS\"></fazmacro></span></td><td style=\"background-color:rgb(51, 153, 255); border-color:rgb(51, 153, 255); text-align:center\"><strong><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Count-of-the-highest-endpoint-OS\"></fazmacro></span></strong></td></tr></tbody></table><p>&nbsp;</p><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-By-Operating-System-Type-Pie-Chart\" title=\"Endpoint Distribution By Operating System\" width=\"700px\"></fazchart><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-By-Vendor-Pie-Chart\" title=\"Endpoint Distribution By Vendor\" width=\"700px\"></fazchart><p>&nbsp;</p><p style=\"text-align:justify\">The below chart illustrate the distribution of the endpoint by location and by the type of the endpoints. These provide an insight&nbsp;which location in the organization has the highest connected devices and the type of the endpoints at each location. In addition, the following table also&nbsp;provide the details counts of the type of the endpoints and its location.</p><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-Type-By-Location-Bar\" title=\"Endpoint Distribution By Location And Type\" width=\"700px\"></fazchart><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Endpoint-Type-By-Location-Table\" title=\"Endpoint Distribution By Location And Type (Exact Count)\" width=\"700px\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><h2><span style=\"font-size:24px\"><strong>1.2&nbsp;Endpoint Inventory Details</strong></span></h2><p>The table below illustrate the endpoints inventory in details.</p><fazchart mkey=\"FortiNAC-Endpoint-Inventory\" title=\"Endpoint Inventory\" width=\"700px\"></fazchart><div style=\"page-break-after: always\"><span style=\"display:none\">&nbsp;</span></div><p>&nbsp;</p><h1 style=\"text-align:justify\"><span style=\"font-size:24px\"><strong>2. Network</strong></span></h1><p style=\"text-align:justify\">The charts&nbsp;below provides summary and detail inventory of the network devices connected in the environment:</p><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"width:600px\"><tbody><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center; width:250px\"><span style=\"color:#FFFFFF\">Total number of Network Devices</span></td></tr><tr><td style=\"background-color:rgb(255, 153, 51); border-color:rgb(255, 153, 51); text-align:center\"><span style=\"color:#FFFFFF\"><fazmacro mkey=\"FortiNAC-Total-Number-of-Network-Devices\"></fazmacro></span></td></tr></tbody></table><p>&nbsp;</p><h2><strong>2.1 Network Inventory Summary</strong></h2><p>The table below illustrate the network devices inventory</p><fazchart mkey=\"FortiNAC-Container-Inventory\" title=\"Network Inventory\" width=\"700px\"></fazchart><p>&nbsp;</p><h2><strong>2.2&nbsp;Network Inventory Details</strong></h2><p>The table below illustrate the network inventory in details.</p><p>&nbsp;</p><fazchart mkey=\"FortiNAC-Network-Inventory\" title=\"{default}\" width=\"700px\"></fazchart><p>&nbsp;</p><p>&nbsp;</p>"
+            config header
+                edit 1
+                    set type graphic
+                    set graphic "fortinet_grey.png"
+                next
+            end
+            config footer
+                edit 1
+                    set type minicover
+                next
+            end
+            config folders
+                edit 90114
+                next
+                edit 90201
+                next
+                edit 90202
+                next
+            end
+        set protected enable
+    next
+end
+
+config sql-report layout-folder
+    edit 99999
+        set folder-name "Default Templates"
+        set protected enable
+    next
+    edit 90114
+        set folder-name "FortiNAC Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90201
+        set folder-name "Network Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90202
+        set folder-name "Asset and User Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+    edit 90205
+        set folder-name "Outbreak Alert Reports Templates"
+        set parent-id 99999
+        set protected enable
+    next
+end
+
+config system connectors
+    edit 1
+        set uuid "5979abf1-a807-47fd-8aca-c03d3b27c124"
+        set name "Local Connector"
+        set description "Local Connector"
+        set status enable
+        set type LOCALHOST 
+        set auth-type none
+        config action
+            edit 1
+                set name "UPDATE_ASSET_AND_IDENTITY"
+                set description "update asset and identity"
+                set parameters "{}"
+                set status enable
+            next
+            edit 2
+                set name "GET_EVENTS"
+                set description "get events"
+                set parameters "{}"
+                set status enable
+            next
+            edit 3
+                set name "ATTACH_DATA_TO_INCIDENT"
+                set description "attach data to incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 4
+                set name "RUN_REPORT"
+                set description "run report"
+                set parameters "{}"
+                set status enable
+            next
+            edit 5
+                set name "GET_ENDPOINT_VULNERABILITIES"
+                set description "get endpoint vulnerabilities"
+                set parameters "{}"
+                set status enable
+            next
+            edit 6
+                set name "CREATE_INCIDENT"
+                set description "create incident"
+                set parameters "{}"
+                set status enable
+            next
+            edit 7
+                set name "UPDATE_INCIDENT"
+                set description "update incident"
+                set parameters "{}"
+                set status enable
+            next
+        end
+    next
+    edit 2
+        set uuid "d0f89488-b270-11ea-b3de-0242ac130004"
+        set name "FortiGuard Connector"
+        set description "FortiGuard Connector"
+        set status enable
+        set type FGD
+        set auth-type none
+        config action
+            edit 1
+                set name "GET_IOC_INFO"
+                set description "get FortiGuard data for associated IOC"
+                set parameters "{\"addr\":null}"
+                set status enable
+            next
+            edit 2
+                set name "GET_THREAT_INFO"
+                set description "Lookup Fortiguard encyclopedia entry"
+                set parameters "{\"threat-type\":null,\"threatID\":null}"
+                set status enable
+            next
+            edit 3
+                set name "INDICATOR_LOOKUP"
+                set description "Indicator Lookup"
+                set parameters "{\"indicator_type\":null,\"indicator_value\":null}"
+                set status enable
+            next
+        end
+    next
+end

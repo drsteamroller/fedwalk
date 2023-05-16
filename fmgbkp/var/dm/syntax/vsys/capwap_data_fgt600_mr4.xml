@@ -1,0 +1,615 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wireless-controller.wtp>
+  <version version="600" mr="4" branch="2020"/>
+  <cw_platform_type>
+    <platform captype="0" name="FWF" help="FortiWiFi local radio."/>
+    <platform captype="1" name="AP-11N" help="Default 11n AP."/>
+    <platform captype="3" name="220B" help="FAP220B/221B."/>
+    <platform captype="4" name="210B" help="FAP210B."/>
+    <platform captype="5" name="222B" help="FAP222B."/>
+    <platform captype="6" name="112B" help="FAP112B."/>
+    <platform captype="7" name="320B" help="FAP320B."/>
+    <platform captype="8" name="11C" help="FAP11C."/>
+    <platform captype="9" name="14C" help="FAP14C."/>
+    <platform captype="10" name="223B" help="FAP223B."/>
+    <platform captype="11" name="28C" help="FAP28C."/>
+    <platform captype="12" name="320C" help="FAP320C."/>
+    <platform captype="13" name="221C" help="FAP221C."/>
+    <platform captype="14" name="25D" help="FAP25D."/>
+    <platform captype="15" name="222C" help="FAP222C."/>
+    <platform captype="16" name="224D" help="FAP224D."/>
+    <platform captype="17" name="214B" help="FK214B."/>
+    <platform captype="18" name="21D" help="FAP21D."/>
+    <platform captype="19" name="24D" help="FAP24D."/>
+    <platform captype="20" name="112D" help="FAP112D."/>
+    <platform captype="21" name="223C" help="FAP223C."/>
+    <platform captype="22" name="321C" help="FAP321C."/>
+    <platform captype="23" name="C220C" help="FAPC220C."/>
+    <platform captype="24" name="C225C" help="FAPC225C."/>
+    <platform captype="27" name="C23JD" help="FAPC23JD."/>
+    <platform captype="28" name="C24JE" help="FAPC24JE."/>
+    <platform captype="30" name="S321C" help="FAPS321C."/>
+    <platform captype="31" name="S322C" help="FAPS322C."/>
+    <platform captype="32" name="S323C" help="FAPS323C."/>
+    <platform captype="33" name="S311C" help="FAPS311C."/>
+    <platform captype="34" name="S313C" help="FAPS313C."/>
+    <platform captype="35" name="S321CR" help="FAPS321CR."/>
+    <platform captype="36" name="S322CR" help="FAPS322CR."/>
+    <platform captype="37" name="S323CR" help="FAPS323CR."/>
+    <platform captype="38" name="S421E" help="FAPS421E."/>
+    <platform captype="39" name="S422E" help="FAPS422E."/>
+    <platform captype="40" name="S423E" help="FAPS423E."/>
+    <platform captype="41" name="421E" help="FAP421E."/>
+    <platform captype="42" name="423E" help="FAP423E."/>
+    <platform captype="43" name="221E" help="FAP221E."/>
+    <platform captype="44" name="222E" help="FAP222E."/>
+    <platform captype="45" name="223E" help="FAP223E."/>
+    <platform captype="46" name="224E" help="FAP224E."/>
+    <platform captype="47" name="231E" help="FAP231E."/>
+    <platform captype="50" name="S221E" help="FAPS221E."/>
+    <platform captype="51" name="S223E" help="FAPS223E."/>
+    <platform captype="52" name="321E" help="FAP321E."/>
+    <platform captype="53" name="431F" help="FAP431F."/>
+    <platform captype="54" name="432F" help="FAP432F."/>
+    <platform captype="55" name="433F" help="FAP433F."/>
+    <platform captype="56" name="231F" help="FAP231F."/>
+    <platform captype="57" name="234F" help="FAP234F."/>
+    <platform captype="58" name="23JF" help="FAP23JF."/>
+    <platform captype="59" name="831F" help="FAP831F."/>
+    <platform captype="61" name="U421E" help="FAPU421EV."/>
+    <platform captype="62" name="U422EV" help="FAPU422EV."/>
+    <platform captype="63" name="U423E" help="FAPU423EV."/>
+    <platform captype="64" name="U221EV" help="FAPU221EV."/>
+    <platform captype="65" name="U223EV" help="FAPU223EV."/>
+    <platform captype="66" name="U24JEV" help="FAPU24JEV."/>
+    <platform captype="67" name="U321EV" help="FAPU321EV."/>
+    <platform captype="68" name="U323EV" help="FAPU323EV."/>
+    <platform captype="69" name="U431F" help="FAPU431F."/>
+    <platform captype="71" name="U433F" help="FAPU433F."/>
+    <platform captype="73" name="U231F" help="FAPU231F."/>
+    <platform captype="75" name="U234F" help="FAPU234F."/>
+    <platform captype="77" name="U432F" help="FAPU432F."/>
+  </cw_platform_type>
+  <cw_wtp_name>
+    <wtp wtpid="1" name="FWF40F" captype="0"/>
+    <wtp wtpid="2" name="AP-11N" captype="1"/>
+    <wtp wtpid="3" name="FAP22A" captype="2"/>
+    <wtp wtpid="4" name="FAP22B" captype="3"/>
+    <wtp wtpid="5" name="FP221B" captype="3"/>
+    <wtp wtpid="6" name="FAP21B" captype="4"/>
+    <wtp wtpid="7" name="FAP222" captype="5"/>
+    <wtp wtpid="8" name="FP112B" captype="6"/>
+    <wtp wtpid="9" name="FP320B" captype="7"/>
+    <wtp wtpid="10" name="FAP11C" captype="8"/>
+    <wtp wtpid="11" name="FAP14C" captype="9"/>
+    <wtp wtpid="12" name="FP223B" captype="10"/>
+    <wtp wtpid="13" name="FAP28C" captype="11"/>
+    <wtp wtpid="14" name="FP320C" captype="12"/>
+    <wtp wtpid="15" name="FP221C" captype="13"/>
+    <wtp wtpid="16" name="FAP25D" captype="14"/>
+    <wtp wtpid="17" name="FP222C" captype="15"/>
+    <wtp wtpid="18" name="FP224D" captype="16"/>
+    <wtp wtpid="19" name="FK214B" captype="17"/>
+    <wtp wtpid="20" name="FAP21D" captype="18"/>
+    <wtp wtpid="21" name="FAP24D" captype="19"/>
+    <wtp wtpid="22" name="FP112D" captype="20"/>
+    <wtp wtpid="23" name="FP223C" captype="21"/>
+    <wtp wtpid="24" name="FP321C" captype="22"/>
+    <wtp wtpid="25" name="FC220C" captype="23"/>
+    <wtp wtpid="26" name="FC225C" captype="24"/>
+    <wtp wtpid="27" name="FC221E" captype="25"/>
+    <wtp wtpid="28" name="FC226E" captype="26"/>
+    <wtp wtpid="29" name="FC23JD" captype="27"/>
+    <wtp wtpid="30" name="FC24JE" captype="28"/>
+    <wtp wtpid="31" name="FPC21D" captype="29"/>
+    <wtp wtpid="32" name="PS321C" captype="30"/>
+    <wtp wtpid="33" name="PS322C" captype="31"/>
+    <wtp wtpid="34" name="PS323C" captype="32"/>
+    <wtp wtpid="35" name="PS311C" captype="33"/>
+    <wtp wtpid="36" name="PS313C" captype="34"/>
+    <wtp wtpid="37" name="P321CR" captype="35"/>
+    <wtp wtpid="38" name="P322CR" captype="36"/>
+    <wtp wtpid="39" name="P323CR" captype="37"/>
+    <wtp wtpid="40" name="PS421E" captype="38"/>
+    <wtp wtpid="41" name="PS422E" captype="39"/>
+    <wtp wtpid="42" name="PS423E" captype="40"/>
+    <wtp wtpid="43" name="FP421E" captype="41"/>
+    <wtp wtpid="44" name="FP423E" captype="42"/>
+    <wtp wtpid="45" name="FP221E" captype="43"/>
+    <wtp wtpid="46" name="FP222E" captype="44"/>
+    <wtp wtpid="47" name="FP223E" captype="45"/>
+    <wtp wtpid="48" name="FP224E" captype="46"/>
+    <wtp wtpid="49" name="FP231E" captype="47"/>
+    <wtp wtpid="50" name="PS221E" captype="50"/>
+    <wtp wtpid="51" name="PS223E" captype="51"/>
+    <wtp wtpid="52" name="FP321E" captype="52"/>
+    <wtp wtpid="53" name="FP431F" captype="53"/>
+    <wtp wtpid="54" name="FP432F" captype="54"/>
+    <wtp wtpid="55" name="FP433F" captype="55"/>
+    <wtp wtpid="56" name="FP231F" captype="56"/>
+    <wtp wtpid="57" name="FP234F" captype="57"/>
+    <wtp wtpid="58" name="FP23JF" captype="58"/>
+    <wtp wtpid="59" name="FP831F" captype="59"/>
+    <wtp wtpid="60" name="PU421E" captype="61"/>
+    <wtp wtpid="61" name="PU422E" captype="62"/>
+    <wtp wtpid="62" name="PU423E" captype="63"/>
+    <wtp wtpid="63" name="PU221E" captype="64"/>
+    <wtp wtpid="64" name="PU223E" captype="65"/>
+    <wtp wtpid="65" name="PU24JE" captype="66"/>
+    <wtp wtpid="66" name="PU321E" captype="67"/>
+    <wtp wtpid="67" name="PU323E" captype="68"/>
+    <wtp wtpid="68" name="PU431F" captype="69"/>
+    <wtp wtpid="69" name="PU433F" captype="71"/>
+    <wtp wtpid="70" name="PU231F" captype="73"/>
+    <wtp wtpid="71" name="PU234F" captype="75"/>
+    <wtp wtpid="72" name="PU432F" captype="77"/>
+  </cw_wtp_name>
+  <cw_wtpprof_name>
+    <wtpprof wtpid="1" name="11n-only" captype="0"/>
+    <wtpprof wtpid="2" name="AP-11N-default" captype="1"/>
+    <wtpprof wtpid="4" name="FAP220B-default" captype="3"/>
+    <wtpprof wtpid="5" name="FAP220B-default" captype="3"/>
+    <wtpprof wtpid="6" name="FAP210B-default" captype="4"/>
+    <wtpprof wtpid="7" name="FAP222B-default" captype="5"/>
+    <wtpprof wtpid="8" name="FAP112B-default" captype="6"/>
+    <wtpprof wtpid="9" name="FAP320B-default" captype="7"/>
+    <wtpprof wtpid="10" name="FAP11C-default" captype="8"/>
+    <wtpprof wtpid="11" name="FAP14C-default" captype="9"/>
+    <wtpprof wtpid="12" name="FAP223B-default" captype="10"/>
+    <wtpprof wtpid="13" name="FAP28C-default" captype="11"/>
+    <wtpprof wtpid="14" name="FAP320C-default" captype="12"/>
+    <wtpprof wtpid="15" name="FAP221C-default" captype="13"/>
+    <wtpprof wtpid="16" name="FAP25D-default" captype="14"/>
+    <wtpprof wtpid="17" name="FAP222C-default" captype="15"/>
+    <wtpprof wtpid="18" name="FAP224D-default" captype="16"/>
+    <wtpprof wtpid="19" name="FK214B-default" captype="17"/>
+    <wtpprof wtpid="20" name="FAP21D-default" captype="18"/>
+    <wtpprof wtpid="21" name="FAP24D-default" captype="19"/>
+    <wtpprof wtpid="22" name="FAP112D-default" captype="20"/>
+    <wtpprof wtpid="23" name="FAP223C-default" captype="21"/>
+    <wtpprof wtpid="24" name="FAP321C-default" captype="22"/>
+    <wtpprof wtpid="25" name="FAPC220C-default" captype="23"/>
+    <wtpprof wtpid="26" name="FAPC225C-default" captype="24"/>
+    <wtpprof wtpid="27" name="FAPC221E-default" captype="25"/>
+    <wtpprof wtpid="28" name="FAPC226E-default" captype="26"/>
+    <wtpprof wtpid="29" name="FAPC23JD-default" captype="27"/>
+    <wtpprof wtpid="30" name="FAPC24JE-default" captype="28"/>
+    <wtpprof wtpid="31" name="FAPC21D-default" captype="29"/>
+    <wtpprof wtpid="32" name="FAPS321C-default" captype="30"/>
+    <wtpprof wtpid="33" name="FAPS322C-default" captype="31"/>
+    <wtpprof wtpid="34" name="FAPS323C-default" captype="32"/>
+    <wtpprof wtpid="35" name="FAPS311C-default" captype="33"/>
+    <wtpprof wtpid="36" name="FAPS313C-default" captype="34"/>
+    <wtpprof wtpid="37" name="FAPS321CR-default" captype="35"/>
+    <wtpprof wtpid="38" name="FAPS322CR-default" captype="36"/>
+    <wtpprof wtpid="39" name="FAPS323CR-default" captype="37"/>
+    <wtpprof wtpid="40" name="FAPS421E-default" captype="38"/>
+    <wtpprof wtpid="41" name="FAPS422E-default" captype="39"/>
+    <wtpprof wtpid="42" name="FAPS423E-default" captype="40"/>
+    <wtpprof wtpid="43" name="FAP421E-default" captype="41"/>
+    <wtpprof wtpid="44" name="FAP423E-default" captype="42"/>
+    <wtpprof wtpid="45" name="FAP221E-default" captype="43"/>
+    <wtpprof wtpid="46" name="FAP222E-default" captype="44"/>
+    <wtpprof wtpid="47" name="FAP223E-default" captype="45"/>
+    <wtpprof wtpid="48" name="FAP224E-default" captype="46"/>
+    <wtpprof wtpid="49" name="FAP231E-default" captype="47"/>
+    <wtpprof wtpid="50" name="FAPS221E-default" captype="50"/>
+    <wtpprof wtpid="51" name="FAPS223E-default" captype="51"/>
+    <wtpprof wtpid="52" name="FAP321E-default" captype="52"/>
+    <wtpprof wtpid="53" name="FAP431F-default" captype="53"/>
+    <wtpprof wtpid="54" name="FAP432F-default" captype="54"/>
+    <wtpprof wtpid="55" name="FAP433F-default" captype="55"/>
+    <wtpprof wtpid="56" name="FAP231F-default" captype="56"/>
+    <wtpprof wtpid="57" name="FAP234F-default" captype="57"/>
+    <wtpprof wtpid="58" name="FAP23JF-default" captype="58"/>
+    <wtpprof wtpid="59" name="FAP831F-default" captype="59"/>
+    <wtpprof wtpid="60" name="FAPU421E-default" captype="61"/>
+    <wtpprof wtpid="61" name="FAPU422EV-default" captype="62"/>
+    <wtpprof wtpid="62" name="FAPU423E-default" captype="63"/>
+    <wtpprof wtpid="63" name="FAPU221EV-default" captype="64"/>
+    <wtpprof wtpid="64" name="FAPU223EV-default" captype="65"/>
+    <wtpprof wtpid="65" name="FAPU24JEV-default" captype="66"/>
+    <wtpprof wtpid="66" name="FAPU321EV-default" captype="67"/>
+    <wtpprof wtpid="67" name="FAPU323EV-default" captype="68"/>
+    <wtpprof wtpid="68" name="FAPU431F-default" captype="69"/>
+    <wtpprof wtpid="69" name="FAPU433F-default" captype="71"/>
+    <wtpprof wtpid="70" name="FAPU231F-default" captype="73"/>
+    <wtpprof wtpid="71" name="FAPU234F-default" captype="75"/>
+    <wtpprof wtpid="72" name="FAPU432F-default" captype="77"/>
+  </cw_wtpprof_name>
+  <wl_band_type>
+    <wlband name="802.11a" help="802.11a." bn="11A"/>
+    <wlband name="802.11ac" help="802.11ac/n/a." bn="11AC"/>
+    <wlband name="802.11ac,n-only" help="802.11ac/n." bn="11AC"/>
+    <wlband name="802.11ac-2G" help="802.11ac at 2.4GHz." bn="11AC2"/>
+    <wlband name="802.11ac-only" help="802.11ac." bn="11AC"/>
+    <wlband name="802.11ax" help="802.11ax/n/g/b at 2.4GHz." bn="11AX"/>
+    <wlband name="802.11ax,ac,n-only" help="802.11ax/ac/n at 5GHz." bn="11AX5"/>
+    <wlband name="802.11ax,ac-only" help="802.11ax/ac at 5GHz." bn="11AX5"/>
+    <wlband name="802.11ax,n,g-only" help="802.11ax/n/g at 2.4GHz." bn="11AX"/>
+    <wlband name="802.11ax,n-only" help="802.11ax/n at 2.4GHz." bn="11AX"/>
+    <wlband name="802.11ax-5G" help="802.11ax/ac/n/a at 5GHz." bn="11AX5"/>
+    <wlband name="802.11ax-5G-only" help="802.11ax at 5GHz." bn="11AX5"/>
+    <wlband name="802.11ax-only" help="802.11ax at 2.4GHz." bn="11AX"/>
+    <wlband name="802.11b" help="802.11b." bn="11B"/>
+    <wlband name="802.11g" help="802.11g/b." bn="11G"/>
+    <wlband name="802.11g-only" help="802.11g." bn="11G"/>
+    <wlband name="802.11n" help="802.11n/g/b at 2.4GHz." bn="11N"/>
+    <wlband name="802.11n,g-only" help="802.11n/g at 2.4GHz." bn="11N"/>
+    <wlband name="802.11n-5G" help="802.11n/a at 5GHz." bn="11N5"/>
+    <wlband name="802.11n-5G-only" help="802.11n at 5GHz." bn="11N5"/>
+    <wlband name="802.11n-only" help="802.11n at 2.4GHz." bn="11N"/>
+  </wl_band_type>
+  <cw_wtp_cap>
+    <wtpcap captype="0" name="FWF" bint_max="3500" bint_min="40" cap="202009766" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="1" name="AP-11N" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="2" name="220A" bint_max="3500" bint_min="40" cap="131075" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11N5" band_mask="11A 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="3" name="220B" bint_max="3500" bint_min="40" cap="131122" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N5" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="20"/>
+      <radio id="2" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="21" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="4" name="210B" bint_max="3500" bint_min="40" cap="131330" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="5" name="222B" bint_max="3500" bint_min="40" cap="131082" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="29" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11N5" band_mask="11A 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="26"/>
+    </wtpcap>
+    <wtpcap captype="6" name="112B" bint_max="3500" bint_min="40" cap="131114" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="26" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="7" name="320B" bint_max="3500" bint_min="40" cap="131378" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N5" band_mask="11A 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="22"/>
+      <radio id="2" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="8" name="11C" bint_max="3500" bint_min="40" cap="131074" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="9" name="14C" bint_max="3500" bint_min="40" cap="131088" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="22" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="10" name="223B" bint_max="3500" bint_min="40" cap="131122" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N5" band_mask="11A 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="20"/>
+      <radio id="2" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="21" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="11" name="28C" bint_max="3500" bint_min="40" cap="131346" ho_sta_max="35" max_lan="8" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="12" name="320C" bint_max="3500" bint_min="40" cap="131120" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+    </wtpcap>
+    <wtpcap captype="13" name="221C" bint_max="3500" bint_min="40" cap="131120" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="20" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="18"/>
+    </wtpcap>
+    <wtpcap captype="14" name="25D" bint_max="3500" bint_min="40" cap="131120" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="19" pow_max_5g="18"/>
+    </wtpcap>
+    <wtpcap captype="15" name="222C" bint_max="3500" bint_min="40" cap="131096" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="26" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="26"/>
+    </wtpcap>
+    <wtpcap captype="16" name="224D" bint_max="3500" bint_min="40" cap="131128" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N5" band_mask="11A 11N5" band_mask_gui="11A 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="20"/>
+      <radio id="2" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="21" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="17" name="214B" bint_max="3500" bint_min="40" cap="131090" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="18" name="21D" bint_max="3500" bint_min="40" cap="131088" ho_sta_max="35" max_lan="1" max_vaps="4" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="20" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="19" name="24D" bint_max="3500" bint_min="40" cap="131088" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="19" pow_max_5g="18"/>
+    </wtpcap>
+    <wtpcap captype="20" name="112D" bint_max="3500" bint_min="40" cap="131128" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="1" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="18" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap captype="21" name="223C" bint_max="3500" bint_min="40" cap="131120" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="20" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="18"/>
+    </wtpcap>
+    <wtpcap captype="22" name="321C" bint_max="3500" bint_min="40" cap="131120" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+    </wtpcap>
+    <wtpcap captype="23" name="C220C" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="0" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="2" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="0" pow_max_5g="20"/>
+    </wtpcap>
+    <wtpcap captype="24" name="C225C" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="0" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="2" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="0" pow_max_5g="20"/>
+    </wtpcap>
+    <wtpcap captype="25" name="C221E" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="2" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="0" pow_max_5g="20"/>
+    </wtpcap>
+    <wtpcap captype="26" name="C226E" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="2" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="0" pow_max_5g="20"/>
+    </wtpcap>
+    <wtpcap captype="27" name="C23JD" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="0" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="23" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="28" name="C24JE" bint_max="1024" bint_min="20" cap="32" ho_sta_max="35" max_lan="3" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="20"/>
+    </wtpcap>
+    <wtpcap captype="29" name="C21D" bint_max="1024" bint_min="20" cap="258" ho_sta_max="35" max_lan="0" max_vaps="3" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="30" name="S321C" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="28"/>
+    </wtpcap>
+    <wtpcap captype="31" name="S322C" bint_max="3500" bint_min="40" cap="135352" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="28"/>
+    </wtpcap>
+    <wtpcap captype="32" name="S323C" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="28"/>
+    </wtpcap>
+    <wtpcap captype="33" name="S311C" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="34" name="S313C" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="35" name="S321CR" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+    </wtpcap>
+    <wtpcap captype="36" name="S322CR" bint_max="3500" bint_min="40" cap="135352" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+    </wtpcap>
+    <wtpcap captype="37" name="S323CR" bint_max="3500" bint_min="40" cap="135344" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+    </wtpcap>
+    <wtpcap captype="38" name="S421E" bint_max="3500" bint_min="40" cap="67270304" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="39" name="S422E" bint_max="3500" bint_min="40" cap="67269288" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="40" name="S423E" bint_max="3500" bint_min="40" cap="67270304" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="41" name="421E" bint_max="3500" bint_min="40" cap="67266208" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="42" name="423E" bint_max="3500" bint_min="40" cap="67266208" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="43" name="221E" bint_max="3500" bint_min="40" cap="67266720" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="44" name="222E" bint_max="3500" bint_min="40" cap="67266728" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="45" name="223E" bint_max="3500" bint_min="40" cap="67266720" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="46" name="224E" bint_max="3500" bint_min="40" cap="67266728" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="47" name="231E" bint_max="3500" bint_min="40" cap="125724832" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="49" name="231E-D5" bint_max="3500" bint_min="40" cap="123627680" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="11" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="19" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="7" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="50" name="S221E" bint_max="3500" bint_min="40" cap="67270816" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="51" name="S223E" bint_max="3500" bint_min="40" cap="67270816" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="3" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="52" name="321E" bint_max="3500" bint_min="40" cap="67266720" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="3" max_mcs_11ac="9" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="53" name="431F" bint_max="3500" bint_min="40" cap="201879200" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="54" name="432F" bint_max="3500" bint_min="40" cap="201879208" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="55" name="433F" bint_max="3500" bint_min="40" cap="201879200" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="56" name="231F" bint_max="3500" bint_min="40" cap="201878688" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="57" name="234F" bint_max="3500" bint_min="40" cap="201878696" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="58" name="23JF" bint_max="3500" bint_min="40" cap="201878688" ho_sta_max="60" max_lan="3" max_vaps="7" wan_lan="2">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="59" name="831F" bint_max="3500" bint_min="40" cap="226258592" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="63" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="60" name="831F-D5" bint_max="3500" bint_min="40" cap="224161440" ho_sta_max="60" max_lan="1" max_vaps="7" wan_lan="3">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="11" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="19" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="4" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap captype="61" name="U421E" bint_max="1024" bint_min="40" cap="75590304" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="24"/>
+    </wtpcap>
+    <wtpcap captype="62" name="U422EV" bint_max="1024" bint_min="40" cap="75590312" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="24"/>
+    </wtpcap>
+    <wtpcap captype="63" name="U423E" bint_max="1024" bint_min="40" cap="75590304" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="64" name="U221EV" bint_max="1024" bint_min="40" cap="67136160" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="24"/>
+    </wtpcap>
+    <wtpcap captype="65" name="U223EV" bint_max="1024" bint_min="40" cap="67136160" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="24"/>
+    </wtpcap>
+    <wtpcap captype="66" name="U24JEV" bint_max="1024" bint_min="40" cap="67136160" ho_sta_max="35" max_lan="3" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="21" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="22"/>
+    </wtpcap>
+    <wtpcap captype="67" name="U321EV" bint_max="1024" bint_min="40" cap="67136160" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="68" name="U323EV" bint_max="1024" bint_min="40" cap="67136160" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="24" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AC" band_mask="11A 11N5 11AC" band_mask_gui="11A 11N5 11AC" flags="1" max_mcs_11ac="11" max_mcs_11n="23" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="24"/>
+    </wtpcap>
+    <wtpcap captype="69" name="U431F" bint_max="1024" bint_min="40" cap="78768800" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="33" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="70" name="U431F-D5" bint_max="1024" bint_min="40" cap="76671648" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="17" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="9" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="71" name="U433F" bint_max="1024" bint_min="40" cap="78768800" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5" band_mask_gui="11A 11B 11G 11N 11N5" flags="33" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="72" name="U433F-D5" bint_max="1024" bint_min="40" cap="76671648" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="17" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="9" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11N" band_mask="11B 11G 11N" band_mask_gui="11B 11G 11N" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="73" name="U231F" bint_max="1024" bint_min="40" cap="78703264" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="1" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="33" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="74" name="U231F-D5" bint_max="1024" bint_min="40" cap="76606112" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="9" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="17" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="75" name="U234F" bint_max="1024" bint_min="40" cap="78703272" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="1" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="33" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="76" name="U234F-D5" bint_max="1024" bint_min="40" cap="76606120" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="9" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="17" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="77" name="U432F" bint_max="1024" bint_min="40" cap="78768808" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="1" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="33" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+    <wtpcap captype="78" name="U432F-D5" bint_max="1024" bint_min="40" cap="76671656" ho_sta_max="35" max_lan="1" max_vaps="7" wan_lan="1">
+      <radio id="1" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="9" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="25"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="17" max_mcs_11ac="11" max_mcs_11n="31" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="25"/>
+      <radio id="3" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="1" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="23" pow_max_5g="23"/>
+    </wtpcap>
+  </cw_wtp_cap>
+  <wl_local_wifi>
+    <wtpcap plat="FortiWiFi-40F" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-40F-3G4G" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-60E" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-60E-DSL" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131078" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-60E-DSLJ" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131078" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-60F" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-61E" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="35" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-61F" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="131076" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AC" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="2" max_mcs_11ac="0" max_mcs_11n="15" oper_mode="disable fg ap ap" pow_max_2g="17" pow_max_5g="17"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-80F-2R" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="201878692" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-80F-2R-3G4G-DSL" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="201878692" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-81F-2R" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="201878692" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-81F-2R-3G4G-POE" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="201878692" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+    <wtpcap plat="FortiWiFi-81F-2R-POE" captype="0" name="FWF" bint_max="3500" bint_min="40" cap="201878692" ho_sta_max="60" max_lan="0" max_vaps="7" wan_lan="0">
+      <radio id="1" band_dflt="11AX" band_mask="11B 11G 11N 11AX" band_mask_gui="11B 11G 11N 11AX" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+      <radio id="2" band_dflt="11AX5" band_mask="11A 11N5 11AC 11AX5" band_mask_gui="11A 11N5 11AC 11AX5" flags="3" max_mcs_11ac="11" max_mcs_11n="15" oper_mode="disable fg ap apbg2" pow_max_2g="0" pow_max_5g="23"/>
+      <radio id="3" band_dflt="11N" band_mask="11A 11B 11G 11N 11N5 11AC" band_mask_gui="11A 11B 11G 11N 11N5 11AC" flags="39" max_mcs_11ac="0" max_mcs_11n="7" oper_mode="disable fg ap apbg2" pow_max_2g="25" pow_max_5g="0"/>
+    </wtpcap>
+  </wl_local_wifi>
+</wireless-controller.wtp>
