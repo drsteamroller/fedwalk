@@ -15,6 +15,7 @@ import re
 import random
 import os
 from binascii import hexlify, unhexlify
+from binaryornot.check import is_binary
 
 # GLOBAL VARS
 
@@ -26,8 +27,10 @@ ip_repl = dict()
 mac_repl = dict()
 
 ip4 = re.compile(r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)')
+ip4_bin = re.compile(b'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.](25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)')
 ip6 = re.compile(r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))")
-mac = re.compile(r'([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F]){1}')
+ip6_bin = re.compile(b"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))")
+
 
 # Helper Functions
 
@@ -207,11 +210,59 @@ def getFiles(dirTree):
 	
 	return files
 
-def obfTxtFile(txtfile):
-	pass
+def modifyTxtFile(txtfile):
+	if type(txtfile) != list:
+		return txtfile
 
-def obfBinFile(binfile):
-	pass
+	for i, line in enumerate(txtfile):
+		
+		ipsearch = ip4.findall(line)
+		
+		if ipsearch:
+			# Doctor the findings so it's easier to replace
+			ph = []
+			for z in ipsearch:
+				ph.append(f"{z[0]}.{z[1]}.{z[2]}.{z[3]}")
+			ipsearch = ph
+
+			# actually replace
+			for ip in ipsearch:
+				line = line.replace(ip, replace_ip4(ip))
+		
+		ip6search = ip6.findall(line)
+		
+		if ip6search:
+			ph = []
+			for z in ip6search:
+				s = [f"{p}:" for p in z[:-1]][0]
+				s += z[-1]
+				ph.append(s)
+			ip6search = ph
+
+			print(ip6search)
+			for i6 in ip6search:
+				line = line.replace(i6, replace_ip6(i6))
+
+		for k, v in str_repl.items():
+			strsearch = re.findall(k, line)
+			if strsearch:
+				for ss in strsearch:
+					line = line.replace(ss, replace_str(ss))
+		
+		txtfile[i] = line
+
+	return txtfile
+
+def modifyBinFile(binfile):
+	if type(binfile) != list:
+		return binfile
+
+	for i, line in enumerate(binfile):
+		
+		
+		binfile[i] = line
+
+	return binfile
 
 def importMap(filename):
 	lines = []
@@ -250,23 +301,23 @@ def importMap(filename):
 		if imp_ip:
 			components = l.split(':')
 			if ('Original' in components[0]):
-				OG = components[1]
+				OG = components[1].strip()
 			else:
-				ip_repl[OG] = components[1]
+				ip_repl[OG] = components[1].strip()
 				OG = ""
 		elif imp_mac:
 			components = l.split(':')
 			if ('Original' in components[0]):
-				OG = components[1]
+				OG = components[1].strip()
 			else:
 				#mac_repl[OG] = components[1]
 				OG = ""
 		elif imp_str:
 			components = l.split(':')
 			if ('Original' in components[0]):
-				OG = components[1]
+				OG = components[1].strip()
 			else:
-				str_repl[OG] = components[1]
+				str_repl[OG] = components[1].strip()
 				OG = ""
 		
 		else:
@@ -299,7 +350,13 @@ except ValueError:
 	print("Usage: \n\tpy fedwalk.py <directory> <depth> [options]")
 	print("\t\tDirectory needs to be specified. Additionally, it needs to be a directory that fedwalk is NOT in\n\t\t\
 BE CAREFUL when using this tool, specifying the wrong directory can have drastic consequences\n\t\t\
-<depth> needs to be greater than or equal to zero, a warning will be thrown if it's greater than 7\n")
+<depth> needs to be greater than or equal to zero, a warning will be thrown if it's greater than 5\n")
+
+if depth > 5:
+	uin = input("Depth value is greater than 5. Please type 'ACK' to acknowledge this. Please note, operations on large directory structures might take a long time. This is purely a safeguard measure.\n > ")
+	if uin.upper() != "ACK":
+		print("You did not type 'ACK', exiting")
+		sys.exit()
 
 dirTree = []
 try:
@@ -317,6 +374,41 @@ ALLMODFILES = []
 for f in ALLFILES:
 	a = re.search(args[1], f)
 	ALLMODFILES.append(f[:a.span()[0]] + mtd + f[a.span()[1]:])
-print(ALLFILES)
-print()
-print(ALLMODFILES)
+'''
+Roadmap: 
+Have: ALLFILES -> list of target paths to the original files in the path,
+				  no further than 'depth' steps deep into the directory
+	  ALLMODFILES -> list of target paths in the modified directory to write
+	  				 modified files to
+					   
+Need to do: Parse through ALLFILES, open the file and perform modifications. Open
+			corresponding files in ALLMODFILES and write modifications
+
+Challenges: binary files :)
+'''
+
+for index, (path, path_mod) in enumerate(zip(ALLFILES, ALLMODFILES)):
+	contents = None
+	r_mode = ''
+	w_mode = ''
+
+	if is_binary(path):
+		r_mode = 'rb'
+		w_mode = 'wb'
+	else:
+		r_mode = 'r'
+		w_mode = 'w'
+
+	with open(path, r_mode) as rf:
+		contents = rf.readlines()
+
+	if r_mode == 'rb':
+		contents = modifyBinFile(contents)
+	
+	else:
+		contents = modifyTxtFile(contents)
+	
+	with open(path_mod, w_mode) as wf:
+		wf.writelines(contents)
+
+# TODO: (for all replace_ip6 functions in all programs (minus pcapsrb.py), I need to run a check to see if it is a valid ipv6 address)
