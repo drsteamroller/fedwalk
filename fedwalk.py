@@ -234,12 +234,10 @@ def modifyTxtFile(txtfile):
 		if ip6search:
 			ph = []
 			for z in ip6search:
-				s = [f"{p}:" for p in z[:-1]][0]
-				s += z[-1]
-				ph.append(s)
+				s = [f"{p}" for p in z]
+				ph.append(s[0])
 			ip6search = ph
 
-			print(ip6search)
 			for i6 in ip6search:
 				line = line.replace(i6, replace_ip6(i6))
 
@@ -259,6 +257,18 @@ def modifyBinFile(binfile):
 
 	for i, line in enumerate(binfile):
 		
+		bipsearch = ip4_bin.findall(line)
+		
+		reconstruct = []
+		for boct in bipsearch:
+			bip = bytes(f"{str(boct[0])[2:-1]}.{str(boct[1])[2:-1]}.{str(boct[2])[2:-1]}.{str(boct[3])[2:-1]}", encoding="utf-8")
+			reconstruct.append(bip)
+
+		bipsearch = reconstruct
+		for bip in bipsearch:
+			strrep = str(bip)[2:-1]
+			repl = bytes(replace_ip4(strrep), 'utf-8')
+			line = line.replace(bip, repl)
 		
 		binfile[i] = line
 
@@ -358,6 +368,9 @@ if depth > 5:
 		print("You did not type 'ACK', exiting")
 		sys.exit()
 
+if len(args) > 3:
+	for ar in args[2:]: opflags.append(ar)
+
 dirTree = []
 try:
 	dt = buildDirTree(args[1])
@@ -411,4 +424,5 @@ for index, (path, path_mod) in enumerate(zip(ALLFILES, ALLMODFILES)):
 	with open(path_mod, w_mode) as wf:
 		wf.writelines(contents)
 
-# TODO: (for all replace_ip6 functions in all programs (minus pcapsrb.py), I need to run a check to see if it is a valid ipv6 address)
+# TODO: for all replace_ip6 functions in all programs (minus pcapsrb.py), 
+# 		I need to run a check to see if it is a valid ipv6 address. The regex likes to flag non-ipv6 addrs
