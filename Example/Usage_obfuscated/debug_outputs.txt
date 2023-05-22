@@ -1,0 +1,318 @@
+FortiGate-71F # get sys stat
+Version: FortiGate-71F v7.0.9,build0444,221121 (GA.M)
+Firmware Signature: certified
+Virus-DB: 91.01441(2023-03-15 03:26)
+Extended DB: 91.01441(2023-03-15 03:25)
+AV AI/ML Model: 2.10110(2023-03-15 03:45)
+IPS-DB: 23.00511(2023-03-14 01:01)
+IPS-ETDB: 0.00000(2001-01-01 00:00)
+APP-DB: 23.00511(2023-03-14 01:01)
+INDUSTRIAL-DB: 6.00741(2015-12-01 02:30)
+IPS Malicious URL Database: 4.00648(2023-03-14 09:37)
+Serial-Number: FGT71FTK22000706
+BIOS version: 05000001
+System Part-Number: P28213-01
+Log hard disk: Available
+Hostname: FortiGate-71F
+Private Encryption: Disable
+Operation Mode: NAT
+Current virtual domain: root
+Max number of virtual domains: 10
+Virtual domains status: 1 in NAT mode, 0 in TP mode
+Virtual domain configuration: disable
+FIPS-CC mode: disable
+Current HA mode: standalone
+Branch point: 0444
+Release Version Information: GA
+System time: Mon May 22 14:31:10 2023
+Last reboot reason: warm reboot
+
+FortiGate-71F # get router info routing-table database
+Codes: K - kernel, C - connected, S - static, R - RIP, B - BGP
+       O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       > - selected route, * - FIB route, p - stale info
+
+Routing table for VRF=0
+S    *> 0.0.0.0/0 [5/0] via 10.0.8.142, wan1, [1/0]
+C    *> 10.0.217.242/16 is directly connected, wan1
+C    *> 10.20.197.238/24 is directly connected, internal
+C    *> 10.255.89.138/24 is directly connected, fortilink
+C    *> 10.255.9.213/24 is directly connected, quarantine
+C    *> 10.255.68.92/24 is directly connected, rspan
+C    *> 10.255.108.81/24 is directly connected, nac_segment
+C    *> 10.255.240.190/32 is directly connected, SSL_Loopback
+C    *> 192.168.230.65/24 is directly connected, internal1
+
+
+FortiGate-71F # get router info routing-table details 63.213.226.135
+
+Routing table for VRF=0
+Routing entry for 0.0.0.0/0
+  Known via "static", distance 5, metric 0, best
+  * 10.0.8.142, via wan1
+
+
+
+FortiGate-71F # di de app update -1
+Debug messages will be on for 30 minutes.
+
+FortiGate-71F # di de en
+
+FortiGate-71F # exe update-now
+
+FortiGate-71F # upd_daemon[1809]-Received update request from pid=11414
+upd_daemon[1623]-Found cached action=00000002
+do_update[622]-Starting now UPDATE (final try)
+__update_upd_comp_by_settings[469]-Disabling NIDSDB/ISDB/MUDB components.
+__update_upd_comp_by_settings[473]-Disabling APPDB components.
+__update_upd_comp_by_settings[477]-Disabling AVEN components.
+__update_upd_comp_by_settings[481]-Disabling AVDB/FLDB/MMDB components.
+upd_fds_get_next_server[609]-no route, skip addr=[[ad95:cbee:3ef1:7403:424f:b9a6:1e76:3d7]], weight=1510160041
+upd_fds_get_next_server[609]-no route, skip addr=[[ad95:cbee:3ef1:7403:424f:b9a6:1e76:3d7]], weight=1510160041
+upd_fds_get_next_server[609]-no route, skip addr=[[ad95:cbee:3ef1:7403:424f:b9a6:1e76:3d7]], weight=1510160041
+upd_comm_connect_fds[458]-Trying FDS 200.97.184.119:443
+[114] __ssl_cert_ctx_load: Added cert /etc/cert/factory/root_Fortinet_Factory.cer, root ca Fortinet_CA, idx 0 (default)
+[482] ssl_ctx_use_builtin_store: Loaded Fortinet Trusted Certs
+[488] ssl_ctx_use_builtin_store: Enable CRL checking.
+[495] ssl_ctx_use_builtin_store: Enable OCSP Stapling.
+[767] ssl_ctx_create_new_ex: SSL CTX is created
+[794] ssl_new: SSL object is created
+[187] ssl_add_ftgd_hostname_check: Add hostname checking 'globalupdate.fortinet.net'
+[345] __ssl_crl_verify_cb: CRL not found. Depth 0
+__upd_peer_vfy[334]-Server certificate OK.
+__upd_peer_vfy[334]-Server certificate OK.
+__upd_peer_vfy[334]-Server certificate OK.
+__upd_peer_vfy[334]-Server certificate OK.
+[385] __bio_mem_dump: OCSP status good
+
+[360] __ssl_crl_verify_cb: Cert error 20, unable to get local issuer certificate. Depth 0
+upd_pkg_create_update_req[703]-Update comp 0x3e64af8
+pack_obj[186]-Packing obj=Protocol=3.2|Command=Update|Firmware=FGT71F-FW-7.00-0444|SerialNumber=FGT71FTK22000706|UpdateMethod=0|AcceptDelta
+=1|DataItem=07000000DBDB00100-00003.00288-2305191602*07000000CIDB00000-00001.00150-2304211639*07000000IPGO00000031772305172225*00000000FCNI
+00000-00000.00000-0000000000*00000000FDNI00000-00000.00000-0000000000*01000000FSCI00100-00000.00000-0000000000*07000000FLEN07800-00007.0014
+2-2209232256*07000000FLEN05000-00001.00009-1906061402*07000000FFDB00907-00007.03212-2305191714*07000000UWDB00100-00003.00872-2305220805*070
+00000CRDB00000-00001.00042-2305081400*07000000SFAS00000-00000.00000-0101010000*07000000MCDB00100-00001.00429-2305151200*01000000ALCI00000-0
+0000.00000-0000000000*07000000MADB00100-00001.00166-2305160900*07000000AFDB00100-00001.00012-2302020831
+get_fcpr_response[298]-Unpacked obj: Protocol=3.2|Response=300|Firmware=FPT033-FW-6.8-0181|SerialNumber=FPT-FGT-DELL0302|Server=FDSG|Persis
+tent=false|PEER_IP=173.143.219.139|ResponseItem=07000000DBDB00100:200*07000000CIDB00000:204*07000000IPGO00000:204*00000000FCNI00000:200*000000
+00FDNI00000:200*07000000FLEN07800:204*07000000FLEN05000:204*07000000FFDB00907:204*07000000UWDB00100:204*07000000CRDB00000:204*07000000SFAS0
+0000:401*07000000MCDB00100:204*07000000MADB00100:204*07000000AFDB00100:204*01000000FSCI00100:200*01000000ALCI00000:200
+get_fcpr_response[338]-Wan ip=[173.143.219.139]
+doInstallUpdatePackage[941]-Full obj found for FCNI000
+doInstallUpdatePackage[951]-Updating obj FCNI
+installUpdateObject[273]-Step 1:Unpack obj 9, Total=1, cur=0
+installUpdateObject[302]-Step 2:Prepare temp file for obj 9
+installUpdObjRest[652]-Step 3:Signal parent not to respawn
+installUpdObjRest[662]-Step 4:Kill daemon(s)
+installUpdObjRest[693]-Step 5:Backup /etc/fcni.dat->/tmp/update.backup
+installUpdObjRest[707]-Step 6:Copy new object /tmp/updZZDNXc->/etc/fcni.dat
+installUpdObjRest[766]-Step 7:Validate object
+installUpdObjRest[790]-Step 8:Re-initialize using new obj file
+upd_status_extract_support_info[568]-Support addr=support.fortinet.com/registration.aspx
+installUpdObjRest[802]-Step 9:Delete backup /tmp/update.backup
+installUpdObjRest[826]-Step 10:Tell parent to respawn
+doInstallUpdatePackage[941]-Full obj found for FDNI000
+doInstallUpdatePackage[951]-Updating obj FDNI
+installUpdateObject[273]-Step 1:Unpack obj 8, Total=1, cur=0
+installUpdateObject[302]-Step 2:Prepare temp file for obj 8
+installUpdObjRest[652]-Step 3:Signal parent not to respawn
+installUpdObjRest[662]-Step 4:Kill daemon(s)
+installUpdObjRest[790]-Step 8:Re-initialize using new obj file
+installUpdObjRest[802]-Step 9:Delete backup /tmp/update.backup
+installUpdObjRest[826]-Step 10:Tell parent to respawn
+doInstallUpdatePackage[941]-Full obj found for FSCI000
+doInstallUpdatePackage[951]-Updating obj FSCI
+installUpdateObject[273]-Step 1:Unpack obj 10, Total=1, cur=0
+installUpdateObject[302]-Step 2:Prepare temp file for obj 10
+installUpdObjRest[652]-Step 3:Signal parent not to respawn
+installUpdObjRest[662]-Step 4:Kill daemon(s)
+installUpdObjRest[693]-Step 5:Backup /etc/sci.dat->/tmp/update.backup
+installUpdObjRest[707]-Step 6:Copy new object /tmp/updaX2ltb->/etc/sci.dat
+installUpdObjRest[766]-Step 7:Validate object
+installUpdObjRest[790]-Step 8:Re-initialize using new obj file
+upd_status_extract_contract_info[1183]-Extracting contract...(SerialNumber=FGT71FTK22000706|Contract=AVDB-1-06-20231023:0:1:1:0*AVEN-1-06-2
+0231023:0:1:1:0*NIDS-1-06-20231023:0:1:1:0*SPRT-1-20-20231023:0:1:1:0*FURL-1-06-20231023:0:1:1:0*SPAM-1-06-20231023:0:1:1:0*SBCL-1-06-20231
+023:0:1:1:0*ZHVO-1-06-20231023:0:1:1:0*HDWR-1-05-20231023:0:1:1:0*FRVS-1-06-20231023:0:1:1:0*FMWR-1-06-20231023:0:1:1:0*ENHN-1-20-20231023:
+0:1:1:0*COMP-1-20-20231023:0:1:1:0|AccountID=amcconnell@fortinet.com|Industry=Technology|Company=Fortinet Federal|UserID=1475344|)
+
+update_status_obj[676]-SBCL contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-AVDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-ETDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-EXDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-MMDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-FLDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-DBDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-AVAI contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-AVEN contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-NIDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-NIET contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-MUDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-NIEN contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-CFGS contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-SPRT contract expiry=Sun Oct 22 20:00:00 2023
+ level(20) alert(0)
+update_status_obj[676]-FURL contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-MCDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-SPAM contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-SBCL contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-ZHVO contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-HDWR contract expiry=Sun Oct 22 20:00:00 2023
+ level(5) alert(0)
+update_status_obj[676]-FRVS contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-FMWR contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-APDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-CIDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-UWDB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-MADB contract expiry=Sun Oct 22 20:00:00 2023
+ level(6) alert(0)
+update_status_obj[676]-ENHN contract expiry=Sun Oct 22 20:00:00 2023
+ level(20) alert(0)
+update_status_obj[676]-COMP contract expiry=Sun Oct 22 20:00:00 2023
+ level(20) alert(0)
+upd_status_extract_contract_info[1183]-Extracting contract...(SupportLevelDesc=05:Advanced HW*06:Web/Online*20:Premium)
+
+upd_status_extract_contract_info[1183]-Extracting contract...(SupportTypeDesc=AVDB:Advanced Malware Protection*COMP:*ENHN:*FMWR:Firmware &
+General Updates*FRVS:Vulnerability Management*FURL:Web & Video Filtering*HDWR:Hardware*NIDS:NGFW*SBCL:FortiSandbox Cloud*SPAM:AntiSpam*SPRT
+:*ZHVO:FortiGuard Virus Outbreak Protection Service)
+
+upd_status_extract_contract_info[1229]-pending registration(255) support acct(amcconnell@fortinet.com) company(Fortinet Federal) industry(T
+echnology)
+upd_status_extract_contract_info[1237]-valid contract percent=40%
+
+installUpdObjRest[802]-Step 9:Delete backup /tmp/update.backup
+installUpdObjRest[826]-Step 10:Tell parent to respawn
+doInstallUpdatePackage[941]-Full obj found for DBDB001
+doInstallUpdatePackage[951]-Updating obj DBDB
+installUpdateObject[273]-Step 1:Unpack obj 36, Total=1, cur=0
+installUpdateObject[302]-Step 2:Prepare temp file for obj 36
+installUpdObjRest[693]-Step 5:Backup /data2/dbdb->/tmp/update.backup
+installUpdObjRest[707]-Step 6:Copy new object /tmp/updvPerb9->/data2/dbdb
+installUpdObjRest[766]-Step 7:Validate object
+installUpdObjRest[790]-Step 8:Re-initialize using new obj file
+installUpdObjRest[802]-Step 9:Delete backup /tmp/update.backup
+doInstallUpdatePackage[941]-Full obj found for ALCI000
+doInstallUpdatePackage[951]-Updating obj ALCI
+installUpdateObject[273]-Step 1:Unpack obj 47, Total=1, cur=0
+installUpdateObject[302]-Step 2:Prepare temp file for obj 47
+installUpdObjRest[652]-Step 3:Signal parent not to respawn
+installUpdObjRest[662]-Step 4:Kill daemon(s)
+installUpdObjRest[693]-Step 5:Backup /data2/alci.dat->/tmp/update.backup
+installUpdObjRest[707]-Step 6:Copy new object /tmp/updc5Oh29->/data2/alci.dat
+installUpdObjRest[766]-Step 7:Validate object
+installUpdObjRest[790]-Step 8:Re-initialize using new obj file
+upd_status_extract_alci_info[1300]-Extracting account contracts...(
+)
+
+upd_status_extract_alci_info[1322]-Finished reading account contracts
+
+installUpdObjRest[802]-Step 9:Delete backup /tmp/update.backup
+installUpdObjRest[826]-Step 10:Tell parent to respawn
+upd_install_pkg[1332]-FCNI000 installed successfully
+upd_install_pkg[1332]-FDNI000 installed successfully
+upd_install_pkg[1332]-FSCI000 installed successfully
+upd_install_pkg[1306]-FLEN078 is up-to-date
+upd_install_pkg[1306]-FLEN050 is up-to-date
+upd_install_pkg[1306]-CIDB000 is up-to-date
+upd_install_pkg[1306]-IPGO000 is up-to-date
+upd_install_pkg[1306]-FFDB009 is up-to-date
+upd_install_pkg[1306]-UWDB001 is up-to-date
+upd_install_pkg[1306]-CRDB000 is up-to-date
+upd_install_pkg[1332]-DBDB001 installed successfully
+upd_install_pkg[1312]-SFAS000 is unauthorized
+upd_install_pkg[1306]-MCDB001 is up-to-date
+upd_install_pkg[1332]-ALCI000 installed successfully
+upd_install_pkg[1306]-MADB001 is up-to-date
+upd_install_pkg[1306]-AFDB001 is up-to-date
+upd_status_save_status[131]-try to save on status file
+upd_status_save_status[197]-Wrote status file
+__upd_act_update[325]-Package installed successfully
+upd_comm_disconnect_fds[499]-Disconnecting FDS 200.97.184.119:443
+[205] __ssl_data_ctx_free: Done
+[1058] ssl_free: Done
+[197] __ssl_cert_ctx_free: Done
+[1068] ssl_ctx_free: Done
+[1049] ssl_disconnect: Shutdown
+do_update[653]-UPDATE successful
+updated_reap_child[224]-reap child pid: 11448
+
+di de dis
+
+FortiGate-71F # di de reset
+
+FortiGate-71F # di de flow filter port 443
+
+FortiGate-71F # di de flow trace start
+
+FortiGate-71F # di de en
+
+FortiGate-71F # di de dis
+
+FortiGate-71F # di de flow trace stop
+
+FortiGate-71F # di de flow filter proto 1
+
+FortiGate-71F # di de flow filter clear
+
+FortiGate-71F # di de flow filter proto 1
+
+FortiGate-71F # di de flow trace start
+
+FortiGate-71F # di de en
+
+FortiGate-71F # id=20085 trace_id=14 func=print_pkt_detail line=5845 msg="vd-root:0 received a packet(proto=1, 10.0.176.175:1->10.0.155.225:20
+48) tun_id=0.0.0.0 from wan1. type=8, code=0, id=1, seq=1."
+id=20085 trace_id=14 func=init_ip_session_common line=6024 msg="allocate a new session-002154a5, tun_id=0.0.0.0"
+id=20085 trace_id=14 func=vf_ip_route_input_common line=2605 msg="find a route: flag=84000000 gw-10.0.155.225 via root"
+di de dis
+
+FortiGate-71F # di de reset
+
+FortiGate-71F # di sniffer packet any "icmp" 4 250 a
+interfaces=[any]
+filters=[icmp]
+2023-05-22 18:36:16.881266 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:16.881319 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:17.883787 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:17.883836 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:18.886313 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:18.886367 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:19.888823 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:19.888867 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:20.891393 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:20.891450 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:21.893895 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:21.893940 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+2023-05-22 18:36:22.896422 wan1 in 10.0.176.175 -> 10.0.155.225: icmp: echo request
+2023-05-22 18:36:22.896462 wan1 out 10.0.155.225 -> 10.0.176.175: icmp: echo reply
+^C
+16 packets received by filter
+0 packets dropped by kernel
+
+FortiGate-71F #

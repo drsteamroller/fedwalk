@@ -1,0 +1,34 @@
+FortiGate-71F # di de app sslvpn -1
+Debug messages will be on for 30 minutes.
+
+FortiGate-71F # di de en
+
+FortiGate-71F # [11514:root:0]RCV: LCP Configure_Request id(1) len(14) [Maximum_Received_Unit 1400] [Magic_Number 94F66D25]
+[11514:root:0]SND: LCP Configure_Request id(1) len(10) [Magic_Number 24CD698E]
+[11514:root:0]lcp_reqci: returning CONFACK.
+[11514:root:0]SND: LCP Configure_Ack id(1) len(14) [Maximum_Received_Unit 1400] [Magic_Number 94F66D25]
+[11514:root:0]RCV: LCP Configure_Ack id(1) len(10) [Magic_Number 24CD698E]
+[11514:root:0]lcp_up: with mtu 1400
+[11514:root:0]SND: IPCP Configure_Request id(1) [IP_Address 10.255.255.1]
+[11514:root:0]RCV: IPCP Configure_Request id(1) [IP_Address 0.0.0.0]
+[11514:root:0]ipcp: returning Configure-NAK
+[11514:root:0]SND: IPCP Configure_Nak id(1) [IP_Address 10.212.134.200]
+[11514:root:0]RCV: IPCP Configure_Reject id(1) [IP_Address 10.255.255.1]
+[11514:root:0]SND: IPCP Configure_Request id(2) [IP_Addresses Internet_Addresses(deprecated)]
+[11514:root:0]RCV: IPCP Configure_Request id(2)
+[11514:root:0]ipcp: returning Configure-NAK
+[11514:root:0]SND: IPCP Configure_Nak id(2) [IP_Address 10.212.134.200]
+[11514:root:0]RCV: IPCP Configure_Reject id(2) [IP_Addresses Internet_Addresses(deprecated)]
+[11514:root:0]SND: IPCP Configure_Request id(3)
+[11514:root:0]RCV: IPCP Configure_Request id(3)
+[11514:root:0]ipcp: returning Configure-ACK
+[11514:root:0]SND: IPCP Configure_Ack id(3)
+[11514:root:0]RCV: IPCP Configure_Ack id(3)
+[11514:root:0]ipcp: up ppp:0x7f8c606000 caller:0x7f8d356500 tun:25
+[11514:root:0]Cannot determine ethernet address for proxy ARP
+[11514:root:0]local  IP address 10.255.255.1
+[11514:root:0]remote IP address 10.212.134.200
+[11514:root:0]ipcp: down ppp:0x7f8c606000 caller:0x7f8d356500 tun:25
+di de reset
+
+FortiGate-71F #

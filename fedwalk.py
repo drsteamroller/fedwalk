@@ -48,6 +48,36 @@ def isRFC1918(ip):
 	else:
 		return(False)
 
+# Check if valid IPv6 address
+def isValidIP6(addr):
+	if type(addr) == bytes:
+		addr = str(addr)[2:-1]
+	
+	maxcol = 7
+	mincol = 2
+	countcol = 0
+	maxnums = 4
+	countnums = 0
+	validchars = re.compile(r'[A-Fa-f0-9:]')
+
+	for num in addr:
+		ch = validchars.search(num)
+		if not ch:
+			return False
+		
+		if num in ':':
+			countcol += 1
+			if countnums > maxnums:
+				return False
+			countnums = 0
+		else:
+			countnums += 1
+
+	if countcol < mincol or countcol > maxcol:
+		return False
+
+	return True
+
 # Subnet mask detector (Insert if needed)
 '''
 How it works:
@@ -102,6 +132,8 @@ def isNetMask(ip):
 def replace_ip4(ip):
 	if (isNetMask(ip)):
 		return ip
+	if ('0.0.0.0' == ip):
+		return ip
 	if (ip not in ip_repl.keys()):
 		repl = ""
 		if (isRFC1918(ip) and "-sPIP" in opflags and "-pi" not in opflags):
@@ -119,6 +151,10 @@ def replace_ip4(ip):
 		return ip_repl[ip]
 
 def replace_ip6(ip):
+
+	if not isValidIP6(ip):
+		return ip
+	
 	if (ip not in ip_repl.keys() and "-pi" not in opflags):
 		repl = f'{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}:{hex(random.randrange(1, 65535))[2:]}'
 		ip_repl[ip] = repl
@@ -274,12 +310,21 @@ def modifyBinFile(binfile):
 
 	return binfile
 
+def importStrs(filename):
+	lines = []
+	with open(filename, 'r') as st:
+		lines = st.readlines()
+	
+	if len(lines) == 1 and ',' in lines[0]:
+		lines = lines[0].split(',')
+	
+	for s in lines:
+		replace_str(s.strip('\n '))
+
 def importMap(filename):
 	lines = []
 	with open(filename, 'r') as o:
 		lines = o.readlines()
-	
-	print(lines)
 
 	imp_ip = False
 	imp_mac = False
@@ -338,7 +383,8 @@ options = {"-h": "Display this output",\
 		   "-sPIP": "Scrub private IPs. Assumes /16 subnet",\
 		   "-pi":"preserve all ip addresses",\
 		   "-pm":"preserve MAC addresses",\
-		   "-ps":"preserve strings (not recommended, usually enabled for debugging purposes)"}
+		   "-st=<stringfile>:":"Import a file containing strings you wish to replace (csv or newline separated values)",\
+		   "-map=<mapfilename>":"Import IP/MAC/String mappings from other FFI program output"}
 
 args = sys.argv
 
@@ -370,6 +416,29 @@ if depth > 5:
 
 if len(args) > 3:
 	for ar in args[2:]: opflags.append(ar)
+
+for ar in opflags:
+	if ("map=" in ar):
+		try:
+			fn = ar.split('=')[1]
+			importMap(fn)
+		except FileNotFoundError as e:
+			print(f"Could not find file/path specified: '{fn}'")
+		except IndexError:
+			print("-map option needs to be formatted like so:\n\t-map=<filename>")
+		except:
+			print("Something went wrong when importing mapfile (-map=<file> option)")
+	elif ("st=" in ar):
+		try:
+			s = ar.split('=')[1]
+			print(s)
+			importStrs(s)
+		except FileNotFoundError as e:
+			print(f"Could not find file/path specified: '{s}'")
+		except IndexError:
+			print("-st option needs to be formatted like so:\n\t-st=<filename>")
+		except:
+			print("Something went wrong when importing string (-st=<file> option)")
 
 dirTree = []
 try:
@@ -423,6 +492,6 @@ for index, (path, path_mod) in enumerate(zip(ALLFILES, ALLMODFILES)):
 	
 	with open(path_mod, w_mode) as wf:
 		wf.writelines(contents)
-
+print(str_repl)
 # TODO: for all replace_ip6 functions in all programs (minus pcapsrb.py), 
 # 		I need to run a check to see if it is a valid ipv6 address. The regex likes to flag non-ipv6 addrs
