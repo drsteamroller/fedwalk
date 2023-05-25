@@ -492,6 +492,7 @@ for index, (path, path_mod) in enumerate(zip(ALLFILES, ALLMODFILES)):
 	
 	with open(path_mod, w_mode) as wf:
 		wf.writelines(contents)
-print(str_repl)
+	
+
 # TODO: for all replace_ip6 functions in all programs (minus pcapsrb.py), 
 # 		I need to run a check to see if it is a valid ipv6 address. The regex likes to flag non-ipv6 addrs
